@@ -1,0 +1,71 @@
+"use client";
+
+import { useRef, type ReactNode, type HTMLAttributes } from "react";
+import styles from "./button.module.css";
+import { combineCss, shapeCss } from "@/lib/helpers";
+
+const Overrides = {
+	root: "root",
+} as const;
+
+type OverridesKeys = keyof typeof Overrides;
+
+export type ButtonOverrides<T> = {
+	[K in OverridesKeys]?: T;
+};
+
+export const Flavors = {
+	primary: "primary",
+	danger: "danger",
+} as const;
+
+const FlavorStyles = {
+	[Flavors.primary]: "",
+	[Flavors.danger]: styles["button--danger"],
+};
+
+export function Button({
+	onClick = () => {},
+	children,
+	domProps,
+	flavor = "primary",
+	__cssFor,
+}: {
+	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+	children: ReactNode;
+	domProps?: Omit<HTMLAttributes<HTMLButtonElement>, "onClick">;
+	flavor?: keyof typeof Flavors;
+	__cssFor?: ButtonOverrides<string>;
+}) {
+	const buttonRef = useRef<HTMLButtonElement>(null);
+	const { root: rootStyles } = shapeCss<
+		OverridesKeys,
+		ButtonOverrides<string>
+	>(Overrides, styles, __cssFor);
+	const move = (e: React.MouseEvent<HTMLButtonElement>) => {
+		buttonRef.current?.animate(
+			[
+				{ transform: "translateY(3px) translateX(2px)" },
+				{ transform: "translateY(0px) translateX(0px)" },
+			],
+			{
+				easing: "linear",
+				duration: 150,
+				fill: "forwards",
+			}
+		);
+		onClick(e);
+	};
+
+	return (
+		<button
+			type="submit"
+			{...domProps}
+			onClick={move}
+			ref={buttonRef}
+			className={combineCss([rootStyles, FlavorStyles[flavor]])}
+		>
+			{children}
+		</button>
+	);
+}

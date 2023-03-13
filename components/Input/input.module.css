@@ -1,0 +1,19 @@
+.input {
+    /* These styles have to be reset in globals.css to overwrite Tremor.css */
+    border: 1px solid #e5e7eb;
+    border-radius: 3px;
+    box-shadow: 0px 2px 7px -7px grey;
+    display: block;
+    font-size: 14px;
+    padding: 6px 8px;
+    width: 100%;
+}
+
+.label {
+    display: block;
+    color: var(--grey-1);
+    font-size: 12px;
+    margin-right: 16px;
+    margin-bottom: 2px;
+    text-transform: capitalize;
+}

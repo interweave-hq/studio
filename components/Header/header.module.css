@@ -1,0 +1,25 @@
+.header {
+    border-bottom: 1px solid var(--grey-1);
+}
+
+.header__interior {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 16px;
+}
+
+.header__list {
+    display: flex;
+}
+
+.header__list-item {
+    list-style-type: none;
+}
+
+.header__anchor {
+    color: var(--grey-1);
+    margin-left: 32px;
+}

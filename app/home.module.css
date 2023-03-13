@@ -1,0 +1,38 @@
+.main-container {
+    margin: 0 auto;
+    max-width: var(--max-width);
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(var(--max-width) - 1600px);
+    margin: 16px auto;
+    padding: 48px 72px;
+    border: 1px solid var(--grey-4);
+}
+
+.button-overrides {
+    cursor: pointer;
+}
+
+.container {
+    padding: 16px 0;
+}
+
+.footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--grey-4);
+    padding: 16px;
+}
+
+.footer__text {
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+.footer__copy {
+    color: var(--grey-5);
+    font-size: 12px;
+    margin: 8px 0;
+}
