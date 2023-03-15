@@ -1,12 +1,11 @@
 import "server-only";
 import Table from "./table";
 import Interfacer from "./interfacer";
-import { get } from "../../../lib/helpers";
 import styles from "../../home.module.css";
-import { Header } from "@/components/Header";
+import { ComponentError, Header, Logo } from "@/components";
 import { Overview } from "@/experience/interfacer/overview";
-import { Logo } from "@/components";
 import { type Interfacer as InterfacerType } from "@/interfaces";
+import { makeRequest } from "@/lib/api";
 
 export default async function Home({
 	params,
@@ -18,12 +17,15 @@ export default async function Home({
 }) {
 	const projectSlug = params["projectSlug"];
 	const interfaceSlug = params["interfaceSlug"];
-	const { response, interfacer, fetched } = await getData({
+	const { response, interfacer, fetched, error } = await getData({
 		projectSlug,
 		interfaceSlug,
 	});
 	const config = interfacer.schema_config;
 	const keys = config.keys;
+
+	const fetchData = interfacer.schema_config.requests?.get?.uri;
+	const createData = interfacer.schema_config.requests?.create?.uri;
 
 	return (
 		<>
@@ -33,18 +35,30 @@ export default async function Home({
 					title={interfacer.title}
 					projectId={response.results.data.id}
 					interfaceId={interfacer.id}
+					hash={interfacer.hash}
+					buildTime={interfacer.build_time}
 				/>
 				<div className={styles.container}>
-					<Table
-						data={fetched}
-						columnData={keys}
-						dataPath={config?.requests?.get?.data_path}
-						endpoint={interfacer.endpoint}
-					/>
-					<div className={styles["form-container"]}>
-						<h1>Create new</h1>
-						<Interfacer interfacer={interfacer} />
-					</div>
+					{!fetchData ? null : error?.userError ? (
+						<ComponentError
+							componentName="Data Table"
+							text={error.userError}
+							details={error.technicalError}
+						/>
+					) : (
+						<Table
+							data={fetched}
+							columnData={keys}
+							dataPath={config?.requests?.get?.data_path}
+							endpoint={fetchData}
+						/>
+					)}
+					{!createData ? null : (
+						<div className={styles["form-container"]}>
+							<h1>Create new</h1>
+							<Interfacer interfacer={interfacer} />
+						</div>
+					)}
 				</div>
 			</main>
 			<footer className={styles.footer}>
@@ -53,8 +67,8 @@ export default async function Home({
 					Made with love for builders like you.
 				</p>
 				<p className={styles.footer__copy}>
-					&copy; Carbonology Interactive LLC{" "}
-					{new Date().getFullYear()}
+					Carbonology Interactive LLC {new Date().getFullYear()}{" "}
+					&copy;
 				</p>
 			</footer>
 		</>
@@ -81,23 +95,14 @@ async function getData({
 	const interfacer: InterfacerType = results.interfaces.find(
 		(i: { [key: string]: string }) => i.slug === interfaceSlug
 	);
-	const getter = interfacer.schema_config?.requests?.get;
-	let fetched = null;
-	if (getter) {
-		const getRes = await fetch(getter.uri, {
-			method: getter.http_method,
-			cache: "no-cache",
-			headers: { ...getter.headers },
-			body: JSON.stringify(getter.body),
-		});
-		const getJson = await getRes.json();
-		const returnedData = get(getJson, getter?.data_path);
-		fetched = returnedData;
-	}
-
+	const { data, error } = await makeRequest({
+		interfaceId: interfacer.id,
+		method: "get",
+	});
 	return {
 		response,
 		interfacer,
-		fetched,
+		fetched: data,
+		error,
 	};
 }

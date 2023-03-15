@@ -127,18 +127,19 @@ export default function Table({
 												className={styles.table__cell}
 												key={cell.id}
 											>
-												{/* <p
+												<div
 													className={
 														styles[
 															"table__cell-text"
 														]
 													}
-												> */}
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext()
-												)}
-												{/* </p> */}
+												>
+													{flexRender(
+														cell.column.columnDef
+															.cell,
+														cell.getContext()
+													)}
+												</div>
 											</td>
 										);
 									})}

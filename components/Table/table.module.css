@@ -18,18 +18,20 @@
 }
 
 .table__cell {
-    border: 1px solid var(--grey-4);
+    border: 1px solid var(--grey-3);
     min-width: var(--column-min-width);
     padding: 10px 15px;
 }
 
 .table__cell-text {
-    max-height: 100px;
+    color: var(--grey-5);
+    max-height: 30px;
     overflow-y: scroll;
 }
 
 .table__header {
     background-color: var(--grey-3);
+    color: var(--grey-1);
     padding: 8px 12px;
     position: sticky;
     text-align: center;

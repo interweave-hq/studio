@@ -32,6 +32,10 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		const determinedComponents = keysArr.map((k) => {
 			const typeConfig = keys[k];
 			const type = typeConfig.schema.type;
+			const hidden = typeConfig?.interface?.attributes?.hidden;
+			if (hidden) {
+				return null;
+			}
 			if (type === "object") {
 				return getComponentsFromKeys(
 					typeConfig.schema.object_schema.keys
@@ -41,7 +45,9 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 			// This is where we can pass any props
 			return getComponent(k, typeConfig, register, control);
 		});
-		return determinedComponents.flat();
+		return determinedComponents
+			.filter((v) => v !== null)
+			.flat() as ComponentSetup[];
 	};
 
 	const comps = getComponentsFromKeys(schema);

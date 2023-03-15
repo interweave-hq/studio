@@ -1,5 +1,6 @@
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
+import { ComponentError } from "./ComponentError";
 import { Header } from "./Header";
 import { Input } from "./Input";
 import { Logo } from "./Logo";
@@ -13,7 +14,16 @@ import ChevronLeft from "./Icons/ChevronLeft";
 import ChevronRight from "./Icons/ChevronRight";
 
 // Components
-export { Button, Checkbox, Header, Input, Logo, MultiSelect, Table };
+export {
+	Button,
+	Checkbox,
+	ComponentError,
+	Header,
+	Input,
+	Logo,
+	MultiSelect,
+	Table,
+};
 
 // Icons
 export {

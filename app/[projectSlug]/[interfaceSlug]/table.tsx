@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { Table, Checkbox } from "@/components";
+import { Table, Checkbox, ComponentError } from "@/components";
 
 import { getSchema } from "@/lib/helpers";
 import { type KeyConfiguration } from "@interweave/interweave";
@@ -105,7 +105,9 @@ export default function DynamicTable({
 		`Fetched ${data.length} entries in 1.2s`,
 	];
 	if (cols === null || error) {
-		return <p>{error}</p>;
+		return (
+			<ComponentError text="We encountered an unexpected error generating the table for this data." />
+		);
 	}
 	return (
 		<Table columns={cols} data={data} supplementalInfo={supplementalInfo} />

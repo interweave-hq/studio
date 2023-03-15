@@ -7,7 +7,8 @@ export interface Interfacer {
 	slug: string;
 	title: string;
 	schema_config: Schema;
-	endpoint: string;
+	key: string;
+	hash: string;
+	build_time: Date;
 	request_headers: Record<string, unknown>;
-	operations: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 }
