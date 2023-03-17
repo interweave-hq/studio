@@ -1,0 +1,102 @@
+"use client";
+
+import { useId, type ChangeEvent } from "react";
+import styles from "./styles.module.css";
+import { shapeCss } from "@/lib/helpers";
+import {
+	FormFieldError,
+	type FormFieldErrorOverrides,
+} from "@/components/FormFieldError";
+import {
+	FormFieldLabel,
+	type FormFieldLabelOverrides,
+} from "@/components/FormFieldLabel";
+
+const Overrides = {
+	root: "root",
+	container: "container",
+	option: "option",
+	optionLabel: "optionLabel",
+} as const;
+
+type OverridesKeys = keyof typeof Overrides;
+
+type InternalSelectOverrides<T> = {
+	[K in OverridesKeys]?: T;
+};
+
+type ExternalSelectOverrides<T> = {
+	FormFieldError?: FormFieldErrorOverrides<T>;
+	FormFieldLabel?: FormFieldLabelOverrides<T>;
+};
+
+export type SelectOverrides<T> = InternalSelectOverrides<T> &
+	ExternalSelectOverrides<T>;
+
+type Option = {
+	value: string | number;
+	label: string;
+};
+
+type Props = {
+	domProps: React.HTMLProps<HTMLSelectElement>;
+	error?: string;
+	form?: {
+		control: any;
+		name: string;
+	};
+	label: string;
+	onChange?: (e: ChangeEvent<HTMLSelectElement>, value: string) => void;
+	options: Option[];
+	register?: object;
+	__cssFor?: SelectOverrides<string>;
+};
+
+const Select = ({
+	domProps = {},
+	error,
+	form,
+	label,
+	onChange = () => {},
+	options,
+	register = {},
+	__cssFor,
+}: Props) => {
+	const id = useId();
+	const { root: rootStyles, container: containerStyles } = shapeCss<
+		OverridesKeys,
+		SelectOverrides<string>
+	>(Overrides, styles, __cssFor);
+
+	return (
+		<div className={rootStyles} data-component="select">
+			<FormFieldLabel
+				htmlFor={id}
+				helperText="Select one"
+				__cssFor={__cssFor?.FormFieldLabel}
+			>
+				{label}
+			</FormFieldLabel>
+			<select
+				id={id}
+				className={containerStyles}
+				{...domProps}
+				{...register}
+				onChange={(e) => onChange(e, e.target.value)}
+			>
+				{options.map((opt) => (
+					<option key={opt.value} value={opt.value}>
+						{opt.label}
+					</option>
+				))}
+			</select>
+			{error && (
+				<FormFieldError __cssFor={{ ...__cssFor?.FormFieldError }}>
+					{error}
+				</FormFieldError>
+			)}
+		</div>
+	);
+};
+
+export default Select;

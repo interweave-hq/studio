@@ -2,11 +2,12 @@
 
 import { useEffect, useState, cloneElement } from "react";
 import { useForm, type Control } from "react-hook-form";
-import { MultiSelect, Input, Button, Checkbox } from "@/components";
+import { MultiSelect, Input, Button, Checkbox, Select } from "@/components";
 import styles from "./interfacer.module.css";
 import { Card } from "@tremor/react";
-import { type KeyConfiguration } from "@interweave/interweave";
+import { validate, type KeyConfiguration } from "@interweave/interweave";
 import { type Interfacer } from "@/interfaces";
+import { get } from "@/lib/helpers";
 
 interface ComponentSetup {
 	component: JSX.Element;
@@ -16,44 +17,95 @@ interface ComponentSetup {
 /** this will be the Client logic that gets rendered dynamically */
 export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 	const [data, setData] = useState("");
-	const { register, handleSubmit, control } = useForm();
+	const {
+		register,
+		handleSubmit,
+		control,
+		setError,
+		clearErrors,
+		formState: { errors },
+	} = useForm();
 
 	useEffect(() => {
 		console.log(data);
 	}, [data]);
 
+	useEffect(() => {
+		console.log(errors);
+	}, [errors]);
+
 	const config = interfacer.schema_config;
 	const schema = config.keys;
 
-	const getComponentsFromKeys = (keys: {
-		[key: string]: any;
-	}): ComponentSetup[] => {
+	const getComponentsFromKeys = (
+		keys: {
+			[key: string]: KeyConfiguration;
+		},
+		nestedPath?: string
+	): ComponentSetup[] => {
 		const keysArr = Object.keys(keys);
 		const determinedComponents = keysArr.map((k) => {
+			const formKey = nestedPath ? `${nestedPath}.${k}` : k;
 			const typeConfig = keys[k];
 			const type = typeConfig.schema.type;
-			const hidden = typeConfig?.interface?.attributes?.hidden;
+			const hidden = typeConfig?.interface?.form?.hidden;
 			if (hidden) {
 				return null;
 			}
 			if (type === "object") {
-				return getComponentsFromKeys(
-					typeConfig.schema.object_schema.keys
-				);
+				if (typeConfig?.schema?.object_schema?.keys) {
+					return getComponentsFromKeys(
+						typeConfig.schema?.object_schema.keys,
+						formKey
+					);
+				}
 			}
 
+			const props = {
+				// Errors object is post form-combine so we have to parse our key out for nested value errors
+				error: get(errors, `${formKey}.message`),
+			};
 			// This is where we can pass any props
-			return getComponent(k, typeConfig, register, control);
+			return getComponent(formKey, typeConfig, register, control, props);
 		});
 		return determinedComponents
 			.filter((v) => v !== null)
 			.flat() as ComponentSetup[];
 	};
 
+	const onSubmit = (data: Record<string, unknown>) => {
+		// Clear errors from previous submissions
+		clearErrors();
+
+		// Handles new form errors
+		const validation = validate(data, interfacer.schema_config, {
+			returnErrors: true,
+		});
+		if (validation?.didError) {
+			const keysWithError = Object.keys(validation.keys);
+			keysWithError.forEach((key) => {
+				const err = validation.keys[key];
+				const isRequiredAndMissing = err.requiredAndMissing;
+				if (isRequiredAndMissing) {
+					return setError(key, {
+						type: "custom",
+						message: `Required`,
+					});
+				}
+				err.errors.forEach((err) => {
+					setError(key, {
+						type: "custom",
+						message: err,
+					});
+				});
+			});
+		}
+	};
+
 	const comps = getComponentsFromKeys(schema);
 
 	return (
-		<form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
+		<form onSubmit={handleSubmit((data) => onSubmit(data))}>
 			<Card
 				maxWidth="max-w-none"
 				hFull={false}
@@ -77,16 +129,19 @@ const getComponent = (
 	key: string,
 	typeConfig: KeyConfiguration,
 	register: (opts: any) => object,
-	control: Control
+	control: Control,
+	props: {
+		error?: any;
+	}
 ): ComponentSetup => {
 	const type = typeConfig.schema.type;
 	const enumValue = typeConfig.schema.enum;
 	const defaultValue = typeConfig.schema.default_value;
-	const label = typeConfig?.interface?.attributes?.label || key;
+	const label = typeConfig?.interface?.form?.label || key;
 	const sharedStyles = styles["shared-styles"];
 
 	// If is_array, we can render a multiselect
-	if (enumValue) {
+	if (enumValue && typeConfig.schema.is_array) {
 		return {
 			component: (
 				<MultiSelect
@@ -107,11 +162,32 @@ const getComponent = (
 					}
 					form={{ control, name: key }}
 					__cssFor={{ root: sharedStyles }}
+					error={props?.error}
 				/>
 			),
 			key,
 		};
 	}
+	if (enumValue && !typeConfig.schema.is_array) {
+		return {
+			component: (
+				<Select
+					label={label}
+					options={enumValue.map((e: string | number) => ({
+						label: e.toString(),
+						value: e,
+					}))}
+					register={register(key)}
+					domProps={{
+						defaultValue,
+					}}
+					error={props?.error}
+				/>
+			),
+			key,
+		};
+	}
+
 	switch (type) {
 		case "string":
 			return {
@@ -120,6 +196,7 @@ const getComponent = (
 						label={label}
 						register={register(key)}
 						__cssFor={{ root: sharedStyles }}
+						error={props?.error}
 					/>
 				),
 				key,
@@ -132,6 +209,7 @@ const getComponent = (
 						domProps={{ type: "number" }}
 						label={label}
 						register={register(key)}
+						error={props?.error}
 						__cssFor={{ root: sharedStyles }}
 					/>
 				),

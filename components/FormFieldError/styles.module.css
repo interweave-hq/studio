@@ -1,0 +1,6 @@
+.root {
+    color: var(--color-red-light);
+    font-size: 11px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+}

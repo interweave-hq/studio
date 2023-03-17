@@ -9,6 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@interweave/interweave": "^0.0.9",
 		"@tanstack/react-table": "^8.7.9",
 		"@tremor/react": "^1.8.2",
 		"@types/node": "18.14.6",
@@ -22,8 +23,5 @@
 		"react-hook-form": "^7.43.5",
 		"server-only": "^0.0.1",
 		"typescript": "4.9.5"
-	},
-	"devDependencies": {
-		"@interweave/interweave": "^0.0.1"
 	}
 }

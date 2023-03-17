@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "../home.module.css";
 
@@ -31,11 +32,12 @@ export default async function ProjectListing({
 
 async function getData({ projectSlug }: { projectSlug: string }) {
 	const res = await fetch(
-		`https://type-house-api-production.up.railway.app/api/v1/projects/${projectSlug}`,
+		`https://api.interweave.studio/api/v1/projects/${projectSlug}`,
 		{ cache: "no-store" }
 	);
 
 	if (!res.ok) {
+		notFound();
 		// This will activate the closest `error.js` Error Boundary
 		throw new Error("Failed to fetch data");
 	}

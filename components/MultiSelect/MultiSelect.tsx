@@ -2,23 +2,38 @@
 
 import { useState, useEffect, useRef, useId } from "react";
 import { useController } from "react-hook-form";
-import styles from "./multiselect.module.css";
+import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
 import { Checkbox } from "@/components/Checkbox";
+import {
+	FormFieldError,
+	type FormFieldErrorOverrides,
+} from "@/components/FormFieldError";
+import {
+	FormFieldLabel,
+	type FormFieldLabelOverrides,
+} from "@/components/FormFieldLabel";
 
 const Overrides = {
 	root: "root",
 	container: "container",
-	label: "label",
 	option: "option",
 	optionLabel: "optionLabel",
 } as const;
 
 type OverridesKeys = keyof typeof Overrides;
 
-export type MultiSelectOverrides<T> = {
+type InternalMultiSelectOverrides<T> = {
 	[K in OverridesKeys]?: T;
 };
+
+type ExternalMultiSelectOverrides<T> = {
+	FormFieldError?: FormFieldErrorOverrides<T>;
+	FormFieldLabel?: FormFieldLabelOverrides<T>;
+};
+
+export type MultiSelectOverrides<T> = InternalMultiSelectOverrides<T> &
+	ExternalMultiSelectOverrides<T>;
 
 type Option = {
 	value: string | number;
@@ -26,22 +41,24 @@ type Option = {
 };
 
 type Props = {
-	options: Option[];
-	label: string;
-	selectedOptions?: Option[];
-	onChange?: (options: Option[]) => void;
+	error?: string;
 	form: {
 		control: any;
 		name: string;
 	};
+	label: string;
+	onChange?: (options: Option[]) => void;
+	options: Option[];
+	selectedOptions?: Option[];
 	__cssFor?: MultiSelectOverrides<string>;
 };
 
 const MultiSelect = ({
-	options,
-	selectedOptions = [],
+	error,
 	form,
 	label,
+	options,
+	selectedOptions = [],
 	__cssFor,
 }: Props) => {
 	const id = useId();
@@ -50,17 +67,10 @@ const MultiSelect = ({
 	);
 	const { field } = useController(form);
 	const ref = useRef(form.control);
-	const {
-		root: rootStyles,
-		label: labelStyles,
-		container: containerStyles,
-		option: optionStyles,
-		optionLabel: optionLabelStyles,
-	} = shapeCss<OverridesKeys, MultiSelectOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	const { root: rootStyles, container: containerStyles } = shapeCss<
+		OverridesKeys,
+		MultiSelectOverrides<string>
+	>(Overrides, styles, __cssFor);
 
 	// Holy fucking fuck this shit
 	// Makes activeChildren work as expected for fucks sake
@@ -83,11 +93,14 @@ const MultiSelect = ({
 	};
 	return (
 		<div className={rootStyles} data-component="multiselect">
-			<label className={labelStyles}>
-				{label}{" "}
-				<span className={styles["helper-text"]}>(Select multiple)</span>
-			</label>
-			<div className={containerStyles}>
+			<FormFieldLabel
+				htmlFor={id}
+				helperText="Select multiple"
+				__cssFor={__cssFor?.FormFieldLabel}
+			>
+				{label}
+			</FormFieldLabel>
+			<div id={id} className={containerStyles}>
 				{options.map((opt) => (
 					<Checkbox
 						key={opt.value}
@@ -105,6 +118,11 @@ const MultiSelect = ({
 					/>
 				))}
 			</div>
+			{error && (
+				<FormFieldError __cssFor={__cssFor?.FormFieldError}>
+					{error}
+				</FormFieldError>
+			)}
 		</div>
 	);
 };

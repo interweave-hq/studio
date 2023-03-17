@@ -49,7 +49,6 @@ export default async function Home({
 						<Table
 							data={fetched}
 							columnData={keys}
-							dataPath={config?.requests?.get?.data_path}
 							endpoint={fetchData}
 						/>
 					)}
@@ -99,6 +98,7 @@ async function getData({
 		interfaceId: interfacer.id,
 		method: "get",
 	});
+
 	return {
 		response,
 		interfacer,

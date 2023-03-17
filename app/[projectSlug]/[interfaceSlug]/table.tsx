@@ -4,7 +4,6 @@ import { useMemo } from "react";
 
 import { Table, Checkbox, ComponentError } from "@/components";
 
-import { getSchema } from "@/lib/helpers";
 import { type KeyConfiguration } from "@interweave/interweave";
 
 // Given a schema configuration object...
@@ -12,21 +11,10 @@ import { type KeyConfiguration } from "@interweave/interweave";
 // So given obj { products: { schema: { object_keys: Schema } } }
 // So path "products"
 // Will return products.schema.object_keys
-const getColumnsFromKeys = (
-	columnData: { [key: string]: KeyConfiguration },
-	dataPath?: string
-) => {
-	// We have to use the get path to parse our schema
-	// columnData will be a KeyConfiguration
-	// dataPath will be a string of where to look
-	const schema = getSchema(columnData, dataPath || "");
-	if (schema === null) {
-		const error =
-			"requests.get.data_path returned a null or undefined object. Check your configuration.";
-		console.error(error);
-		return { data: null, error };
-	}
-	const keysArr = Object.keys(schema);
+const getColumnsFromKeys = (columnData: {
+	[key: string]: KeyConfiguration;
+}) => {
+	const keysArr = Object.keys(columnData);
 	const selectionColumn = [
 		{
 			id: "select",
@@ -60,7 +48,7 @@ const getColumnsFromKeys = (
 		const typeConfig = columnData[k];
 		// const tableOptions = typeConfig?.interface?.table;
 		return {
-			header: typeConfig?.interface?.attributes?.label || k,
+			header: typeConfig?.interface?.form?.label || k,
 			// footer: (props) => props.column.id,
 			// columns: [
 			// 	{
@@ -88,16 +76,14 @@ const getColumnsFromKeys = (
 export default function DynamicTable({
 	data,
 	columnData,
-	dataPath,
 	endpoint,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
-	dataPath?: string;
 	endpoint: string;
 }) {
 	const { data: cols, error } = useMemo(
-		() => getColumnsFromKeys(columnData, dataPath),
+		() => getColumnsFromKeys(columnData),
 		[]
 	);
 	const supplementalInfo = [

@@ -1,25 +1,41 @@
 "use client";
 
 import { useId } from "react";
-import styles from "./input.module.css";
+import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
+import {
+	FormFieldError,
+	type FormFieldErrorOverrides,
+} from "@/components/FormFieldError";
+import {
+	FormFieldLabel,
+	type FormFieldLabelOverrides,
+} from "@/components/FormFieldLabel";
 
 const Overrides = {
 	root: "root",
 	input: "input",
-	label: "label",
 	description: "description",
 } as const;
 
 type OverridesKeys = keyof typeof Overrides;
 
-export type InputOverrides<T> = {
+type InternalInputOverrides<T> = {
 	[K in OverridesKeys]?: T;
 };
+
+type ExternalInputOverrides<T> = {
+	FormFieldError?: FormFieldErrorOverrides<T>;
+	FormFieldLabel?: FormFieldLabelOverrides<T>;
+};
+
+export type InputOverrides<T> = InternalInputOverrides<T> &
+	ExternalInputOverrides<T>;
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 	description?: string;
 	domProps?: React.HTMLProps<HTMLInputElement>;
+	error?: string;
 	label?: string;
 	register?: object;
 	__cssFor?: InputOverrides<string>;
@@ -28,6 +44,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = ({
 	description,
 	domProps,
+	error,
 	label = "Label",
 	register,
 	__cssFor,
@@ -35,7 +52,6 @@ const Input = ({
 	const id = useId();
 	const {
 		root: rootStyles,
-		label: labelStyles,
 		input: inputStyles,
 		description: descriptionStyles,
 	} = shapeCss<OverridesKeys, InputOverrides<string>>(
@@ -45,12 +61,17 @@ const Input = ({
 	);
 	return (
 		<div className={rootStyles}>
-			{label && (
-				<label htmlFor={id} className={labelStyles}>
+			{label ? (
+				<FormFieldLabel
+					htmlFor={id}
+					__cssFor={__cssFor?.FormFieldLabel}
+				>
 					{label}
-				</label>
-			)}
-			{description && <p className={descriptionStyles}>{description}</p>}
+				</FormFieldLabel>
+			) : null}
+			{description ? (
+				<p className={descriptionStyles}>{description}</p>
+			) : null}
 			<input
 				type="text"
 				{...domProps}
@@ -58,6 +79,11 @@ const Input = ({
 				id={id}
 				className={inputStyles}
 			/>
+			{error && (
+				<FormFieldError __cssFor={__cssFor?.FormFieldError}>
+					{error}
+				</FormFieldError>
+			)}
 		</div>
 	);
 };

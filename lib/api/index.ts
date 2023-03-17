@@ -26,7 +26,7 @@ export async function makeRequest({ interfaceId, ...rest }: MakeRequestParams) {
 					technicalError: data.error?.technical_message,
 					userError: data.error?.user_facing_message,
 				},
-				data: null,
+				data: data?.results?.data,
 			};
 		}
 		return {
@@ -34,7 +34,6 @@ export async function makeRequest({ interfaceId, ...rest }: MakeRequestParams) {
 			data: data.results.data,
 		};
 	} catch (err) {
-		console.error(err);
 		return {
 			error: {
 				technicalError:

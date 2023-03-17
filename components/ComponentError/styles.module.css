@@ -1,6 +1,6 @@
 .root {
-    --color-dark: #5d2020;
-    --color-light: #ba1f1f;
+    --color-dark: var(--color-red-dark);
+    --color-light: var(--color-red-light);
     background-color: #fef2f2;
     border: 1px solid var(--color-dark);
     border-radius: 6px;
@@ -17,10 +17,12 @@
 
 .text {
     color: var(--color-light);
+    font-size: 14px;
     margin-top: 16px;
 }
 
 .details {
     color: var(--color-light);
+    font-size: 14px;
     margin-top: 8px;
 }
