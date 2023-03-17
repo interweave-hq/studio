@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "../home.module.css";
+import { APP_URL } from "@/lib/constants";
 
 export default async function ProjectListing({
 	params,
@@ -20,7 +21,7 @@ export default async function ProjectListing({
 				(i: { id: string; title: string; slug: string }) => (
 					<Link
 						key={i.id}
-						href={`http://localhost:3000/${projectSlug}/${i.slug}`}
+						href={`${APP_URL}/${projectSlug}/${i.slug}`}
 					>
 						{i.title}
 					</Link>
@@ -38,8 +39,6 @@ async function getData({ projectSlug }: { projectSlug: string }) {
 
 	if (!res.ok) {
 		notFound();
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
 	}
 	const json = await res.json();
 	return json;
