@@ -9,7 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@interweave/interweave": "^0.0.9",
+		"@interweave/interweave": "^0.0.10",
 		"@tanstack/react-table": "^8.7.9",
 		"@tremor/react": "^1.8.2",
 		"@types/node": "18.14.6",

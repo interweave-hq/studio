@@ -1,6 +1,5 @@
 import { type ServerResponse } from "@/interfaces";
-
-const API_URL = "https://api.interweave.studio/api/v1";
+import { API_URL } from "../constants";
 
 interface MakeRequestParams {
 	interfaceId: string;
@@ -11,6 +10,8 @@ export async function makeRequest({ interfaceId, ...rest }: MakeRequestParams) {
 	try {
 		const req = await fetch(`${API_URL}/interfaces/${interfaceId}`, {
 			method: "POST",
+			credentials: "include",
+			mode: "cors",
 			headers: {
 				"Content-Type": "application/json",
 			},

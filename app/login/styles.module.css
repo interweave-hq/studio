@@ -1,0 +1,26 @@
+.container {
+    align-items: center;
+    border: 1px solid var(--grey-4);
+    border-radius: 1px;
+    display: flex;
+    flex-direction: column;
+    margin: 25vh auto 0 auto;
+    max-width: 325px;
+    min-height: 250px;
+    padding: 42px 16px;
+    width: 75%;
+}
+
+.logo {
+    width: 210px;
+}
+
+.login-container {
+    margin: 64px 0 32px 0;
+}
+
+.directions {
+    color: var(--grey-1);
+    font-size: 12px;
+    margin-top: 24px;
+}

@@ -6,6 +6,7 @@ import { ComponentError, Header, Logo } from "@/components";
 import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { makeRequest } from "@/lib/api";
+import { API_URL } from "@/lib/constants";
 
 export default async function Home({
 	params,
@@ -81,10 +82,9 @@ async function getData({
 	projectSlug: string;
 	interfaceSlug: string;
 }) {
-	const res = await fetch(
-		`https://api.interweave.studio/api/v1/projects/${projectSlug}`,
-		{ cache: "no-store" }
-	);
+	const res = await fetch(`${API_URL}/api/v1/projects/${projectSlug}`, {
+		cache: "no-store",
+	});
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
 		throw new Error("Failed to fetch data");

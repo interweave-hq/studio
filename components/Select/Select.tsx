@@ -35,11 +35,11 @@ export type SelectOverrides<T> = InternalSelectOverrides<T> &
 
 type Option = {
 	value: string | number;
-	label: string;
+	label?: string;
 };
 
 type Props = {
-	domProps: React.HTMLProps<HTMLSelectElement>;
+	domProps?: React.HTMLProps<HTMLSelectElement>;
 	error?: string;
 	form?: {
 		control: any;
@@ -86,7 +86,7 @@ const Select = ({
 			>
 				{options.map((opt) => (
 					<option key={opt.value} value={opt.value}>
-						{opt.label}
+						{opt.label || opt.value}
 					</option>
 				))}
 			</select>

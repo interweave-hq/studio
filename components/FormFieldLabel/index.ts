@@ -1,3 +1,3 @@
-import { FormFieldLabel } from "./FormFieldLabel";
-export * from "./FormFieldLabel";
-export { FormFieldLabel };
+import { FormFieldLabel, type FormFieldLabelOverrides } from "./FormFieldLabel";
+
+export { FormFieldLabel, type FormFieldLabelOverrides };
