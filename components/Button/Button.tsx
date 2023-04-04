@@ -24,17 +24,41 @@ const FlavorStyles = {
 	[Flavors.danger]: styles["button--danger"],
 };
 
+export const Sizes = {
+	sm: "sm",
+	md: "md",
+} as const;
+
+const SizeStyles = {
+	[Sizes.sm]: styles["button--small"],
+	[Sizes.md]: "",
+};
+
+export const Kinds = {
+	solid: "solid",
+	hollow: "hollow",
+} as const;
+
+const KindStyles = {
+	[Kinds.solid]: "",
+	[Kinds.hollow]: styles["button--hollow"],
+};
+
 export function Button({
 	onClick = () => {},
 	children,
 	domProps,
-	flavor = "primary",
+	flavor = Flavors.primary,
+	size = Sizes.md,
+	kind = Kinds.solid,
 	__cssFor,
 }: {
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 	children: ReactNode;
 	domProps?: Omit<HTMLAttributes<HTMLButtonElement>, "onClick">;
 	flavor?: keyof typeof Flavors;
+	size?: keyof typeof Sizes;
+	kind?: keyof typeof Kinds;
 	__cssFor?: ButtonOverrides<string>;
 }) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
@@ -63,7 +87,12 @@ export function Button({
 			{...domProps}
 			onClick={move}
 			ref={buttonRef}
-			className={combineCss([rootStyles, FlavorStyles[flavor]])}
+			className={combineCss([
+				rootStyles,
+				FlavorStyles[flavor],
+				SizeStyles[size],
+				KindStyles[kind],
+			])}
 		>
 			{children}
 		</button>

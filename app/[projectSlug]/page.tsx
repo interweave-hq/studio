@@ -1,10 +1,12 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import styles from "../home.module.css";
+import styles from "./styles.module.css";
 import { APP_URL } from "@/lib/constants";
 import { serverRequest } from "@/lib/api/serverRequest";
-import { AddTokens } from "@/experience/project/tokens";
+import { AddTokens, TokenDisplay } from "@/experience/project/tokens";
 import { authenticate } from "@/lib/auth";
+import { LoadingDots, Header } from "@/components";
 
 export default async function ProjectListing({
 	params,
@@ -13,44 +15,60 @@ export default async function ProjectListing({
 		projectSlug: string;
 	};
 }) {
-	await authenticate();
+	const { user } = await authenticate();
 	const projectSlug = params["projectSlug"];
-	const { projectData, tokensData } = await getData({ projectSlug });
-	const tokens = tokensData || [];
+	const { data: projectData } = await getProject({ projectSlug });
+	const hasInterfaces = projectData?.interfaces?.length > 0;
+
 	return (
-		<main className={styles["main-container"]}>
-			<h1>{projectData.title}</h1>
-			{projectData.interfaces.map(
-				(i: { id: string; title: string; slug: string }) => (
-					<Link
-						key={i.id}
-						href={`${APP_URL}/${projectSlug}/${i.slug}`}
-					>
-						{i.title}
-					</Link>
-				)
-			)}
-			<AddTokens projectId={projectData.id} />
-			{tokens.map((t) => (
-				<p key={t.id}>{t.nickname}</p>
-			))}
-		</main>
+		<>
+			<Header user={user} />
+			<main className={styles.container}>
+				<h1>{projectData.title}</h1>
+				<div className={styles.section}>
+					<h2 className={styles.section__header}>Interfaces</h2>
+					{hasInterfaces ? (
+						projectData.interfaces.map(
+							(i: {
+								id: string;
+								title: string;
+								slug: string;
+							}) => (
+								<Link
+									key={i.id}
+									href={`${APP_URL}/${projectSlug}/${i.slug}`}
+								>
+									{i.title}
+								</Link>
+							)
+						)
+					) : (
+						<p>No interfaces yet. Create your first.</p>
+					)}
+				</div>
+				<div className={styles.section}>
+					<h2 className={styles.section__header}>API Tokens</h2>
+					<AddTokens projectId={projectData.id} />
+					<Suspense fallback={<LoadingDots />}>
+						{/* @ts-expect-error server component */}
+						<TokenDisplay projectSlug={projectSlug} />
+					</Suspense>
+				</div>
+			</main>
+		</>
 	);
 }
 
-async function getData({ projectSlug }: { projectSlug: string }) {
+async function getProject({ projectSlug }: { projectSlug: string }) {
 	const { data: projectData, error: interfaceError } = await serverRequest(
 		`/api/v1/projects/${projectSlug}`
 	);
-	const { data: tokensData, error: tokensErrors } = await serverRequest(
-		`/api/v1/projects/${projectSlug}/api-tokens`
-	);
+
 	if (!projectData) {
 		notFound();
 	}
 
 	return {
-		projectData,
-		tokensData,
+		data: projectData,
 	};
 }

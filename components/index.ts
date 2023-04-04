@@ -4,6 +4,7 @@ import { ComponentError } from "./ComponentError";
 import { FormFieldError } from "./FormFieldError";
 import { Header } from "./Header";
 import { Input } from "./Input";
+import { LoadingDots } from "./LoadingDots";
 import { Logo } from "./Logo";
 import { MultiSelect } from "./MultiSelect";
 import { Select } from "./Select";
@@ -23,6 +24,7 @@ export {
 	FormFieldError,
 	Header,
 	Input,
+	LoadingDots,
 	Logo,
 	MultiSelect,
 	Select,

@@ -1,12 +1,43 @@
 .root {
-    background-color: black;
-    color: white;
+    --primary-color: #1F1D1D;
+    --secondary-color: #FFFFFF;
+    --hover-color: #FFFFFF;
+    --hover-background: #1F1D1D;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 2px;
+    color: var(--secondary-color);
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 400;
+    display: inline-block;
+    font-size: 14px;
     padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.root:hover {
+    background-color: var(--hover-background);
+    color: var(--hover-color);
 }
 
 .button--danger {
-    background-color: red;
+    --primary-color: red;
+    --hover-background: darkred;
+}
+
+.button--hollow {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    --hover-color: var(--hover-background);
+}
+
+/* Hollow buttons will not have a background hover effect */
+.button--hollow:hover {
+    background-color: unset;
+}
+
+.button--small {
+    font-size: 12px;
+    padding: 8px 16px;
 }
