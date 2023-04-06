@@ -34,7 +34,7 @@ export function TokenRowActions({
 		setIsFetching(false);
 
 		if (error) {
-			console.log(error);
+			console.error(error);
 			if (error.userError) {
 				setIsFetching(false);
 				return setError(error.userError);
@@ -66,7 +66,9 @@ export function TokenRowActions({
 				{confirmActive
 					? "Click again to confirm deletion"
 					: "Revoke Token"}
-				<span>{isMutating ? <LoadingDots /> : null}</span>
+				<span className={styles["token-display__row-button-loading"]}>
+					{isMutating ? <LoadingDots /> : null}
+				</span>
 			</Button>
 			{error ? <p>{error}</p> : null}
 		</div>

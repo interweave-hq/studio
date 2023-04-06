@@ -1,12 +1,15 @@
 import "server-only";
-import Table from "./table";
+
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+
 import Interfacer from "./interfacer";
 import styles from "../../home.module.css";
-import { ComponentError, Header, Logo } from "@/components";
+import { Logo, LoadingDots } from "@/components";
 import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
-import { makeRequest } from "@/lib/api";
-import { API_URL } from "@/lib/constants";
+import { serverRequest } from "@/lib/api/serverRequest";
+import { FetchTableData } from "@/experience/interfacer/FetchTableData";
 
 export default async function Home({
 	params,
@@ -18,7 +21,7 @@ export default async function Home({
 }) {
 	const projectSlug = params["projectSlug"];
 	const interfaceSlug = params["interfaceSlug"];
-	const { response, interfacer, fetched, error } = await getData({
+	const { project, interfacer } = await getData({
 		projectSlug,
 		interfaceSlug,
 	});
@@ -30,29 +33,25 @@ export default async function Home({
 
 	return (
 		<>
-			<Header />
 			<main className={styles["main-container"]}>
 				<Overview
 					title={interfacer.title}
-					projectId={response.results.data.id}
+					projectId={project.id}
 					interfaceId={interfacer.id}
 					hash={interfacer.hash}
 					buildTime={interfacer.build_time}
 				/>
 				<div className={styles.container}>
-					{!fetchData ? null : error?.userError ? (
-						<ComponentError
-							componentName="Data Table"
-							text={error.userError}
-							details={error.technicalError}
-						/>
-					) : (
-						<Table
-							data={fetched}
-							columnData={keys}
-							endpoint={fetchData}
-						/>
-					)}
+					{fetchData ? (
+						<Suspense fallback={<LoadingDots />}>
+							{/* @ts-expect-error server component */}
+							<FetchTableData
+								interfaceId={interfacer.id}
+								keys={keys}
+								endpoint={fetchData}
+							/>
+						</Suspense>
+					) : null}
 					{!createData ? null : (
 						<div className={styles["form-container"]}>
 							<h1>Create new</h1>
@@ -82,27 +81,26 @@ async function getData({
 	projectSlug: string;
 	interfaceSlug: string;
 }) {
-	const res = await fetch(`${API_URL}/api/v1/projects/${projectSlug}`, {
-		cache: "no-store",
-	});
-	if (!res.ok) {
+	// Fetch project
+	const { data: projectData, error: projectError } = await serverRequest(
+		`/api/v1/projects/${projectSlug}`
+	);
+
+	if (!projectData) {
+		notFound();
+	}
+
+	if (projectError) {
 		// This will activate the closest `error.js` Error Boundary
 		throw new Error("Failed to fetch data");
 	}
-	const response = await res.json();
-	const results = response.results.data;
-	const interfacer: InterfacerType = results.interfaces.find(
+
+	const interfacer: InterfacerType = projectData.interfaces.find(
 		(i: { [key: string]: string }) => i.slug === interfaceSlug
 	);
-	const { data, error } = await makeRequest({
-		interfaceId: interfacer.id,
-		method: "get",
-	});
 
 	return {
-		response,
+		project: projectData,
 		interfacer,
-		fetched: data,
-		error,
 	};
 }

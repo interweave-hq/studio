@@ -1,14 +1,14 @@
+import Link from "next/link";
 import styles from "./home.module.css";
 
-import Link from "next/link";
 import { Header } from "@/components";
-import { authenticate } from "@/lib/auth";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
+import { authenticate } from "@/lib/auth";
 
 export default async function Home() {
 	const { user } = await authenticate({ optional: true });
-	const { data: projects, error } = await getProjects({ authorized: !!user });
+	const { data: projects, error } = await getProjects();
 
 	return (
 		<>
@@ -24,19 +24,11 @@ export default async function Home() {
 								</Link>
 						  ))}
 				</Suspense>
-				{user ? <p>{user.id}</p> : null}
-				{user ? <p>{user.display_name}</p> : null}
 			</main>
 		</>
 	);
 }
 
-async function getProjects({ authorized }: { authorized: boolean }) {
-	if (authorized) {
-		return await serverRequest("/api/v1/projects");
-	}
-	return {
-		data: null,
-		error: "Unauthorized",
-	};
+async function getProjects() {
+	return await serverRequest("/api/v1/projects");
 }

@@ -36,7 +36,7 @@ export function AddTokens({ projectId }: { projectId: string }) {
 		setIsFetching(false);
 
 		if (error) {
-			console.log(error);
+			console.error(error);
 			if (error.userError) {
 				return setError(error.userError);
 			}
@@ -44,7 +44,6 @@ export function AddTokens({ projectId }: { projectId: string }) {
 		}
 
 		if (newToken) {
-			console.log(newToken);
 			setCreatedToken(newToken);
 		}
 
@@ -56,7 +55,10 @@ export function AddTokens({ projectId }: { projectId: string }) {
 	};
 	return (
 		<div>
-			<form onSubmit={handleSubmit(onNewTokenSubmit)}>
+			<form
+				onSubmit={handleSubmit(onNewTokenSubmit)}
+				className={styles["add-token__form-container"]}
+			>
 				<Input
 					register={register("nickname")}
 					label="Nickname"
@@ -95,6 +97,7 @@ export function AddTokens({ projectId }: { projectId: string }) {
 					<textarea
 						className={styles["add-token__new-token"]}
 						value={createdToken}
+						readOnly
 					/>
 				</div>
 			) : null}

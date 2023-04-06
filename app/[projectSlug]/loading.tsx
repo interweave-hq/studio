@@ -1,3 +1,16 @@
+import { LoadingDots } from "@/components";
+
 export default function Loading() {
-	return <p>Loading...</p>;
+	return (
+		<div
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				margin: "50px auto",
+				width: "100%",
+			}}
+		>
+			<LoadingDots />
+		</div>
+	);
 }

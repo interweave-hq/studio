@@ -1,15 +1,17 @@
-"use client";
+import { serverRequest } from "@/lib/api/serverRequest";
+import { LogOutButton } from "./LogOutButton";
 
-import { API_URL } from "@/lib/constants";
+export async function Profile() {
+	const { data: user, error } = await getProfile();
 
-export function Profile({ user }: { user: { display_name: string } }) {
-	const logOut = async () => {
-		window.location.href = `${API_URL}/auth/logout`;
-	};
 	return (
 		<div>
 			<h1>{user.display_name}</h1>
-			<button onClick={logOut}>Log Out</button>
+			<LogOutButton />
 		</div>
 	);
+}
+
+async function getProfile() {
+	return await serverRequest(`/api/v1/profile`);
 }

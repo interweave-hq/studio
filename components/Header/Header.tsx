@@ -4,7 +4,7 @@ import styles from "./header.module.css";
 import { Logo } from "@/components";
 import { UserAuth } from "@/interfaces";
 
-export default function Header({ user }: { user?: UserAuth }) {
+export default async function Header({ user }: { user?: UserAuth }) {
 	return (
 		<header className={styles.header}>
 			<div className={styles.header__interior}>

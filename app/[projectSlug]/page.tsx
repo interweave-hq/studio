@@ -15,14 +15,12 @@ export default async function ProjectListing({
 		projectSlug: string;
 	};
 }) {
-	const { user } = await authenticate();
 	const projectSlug = params["projectSlug"];
 	const { data: projectData } = await getProject({ projectSlug });
 	const hasInterfaces = projectData?.interfaces?.length > 0;
 
 	return (
 		<>
-			<Header user={user} />
 			<main className={styles.container}>
 				<h1>{projectData.title}</h1>
 				<div className={styles.section}>

@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "@tremor/react/dist/esm/tremor.css";
-import "./globals.css";
+import "../app/globals.css";
 
 export const metadata = {
 	title: "Create Next App",
@@ -12,7 +12,7 @@ const font = Inter({
 	subsets: ["latin"],
 });
 
-export default async function RootLayout({
+export async function NoHeaderLayout({
 	children,
 }: {
 	children: React.ReactNode;

@@ -2,10 +2,15 @@
 	margin-bottom: 16px;
 }
 
+.add-token__form-container {
+	max-width: 500px;
+}
+
 .add-token__new-token {
 	background-color: #dcf7da;
-	border: 1px solid #222e21;
-	color: #222e21;
+	border: 1px solid #50664e;
+	border-radius: var(--border-radius-primary);
+	color: #50664e;
 	line-height: 1.4;
 	resize: none;
 	padding: 16px;
@@ -31,6 +36,9 @@
 }
 
 .token-display__no-tokens {
+	color: var(--grey-5);
+	font-size: 14px;
+	text-align: center;
 	margin-top: 16px;
 }
 
@@ -69,6 +77,10 @@
 
 .token-display__row-button-overrides {
 	padding-left: 0;
+}
+
+.token-display__row-button-loading {
+	margin-left: 4px;
 }
 
 @media (max-width: 700px) {
