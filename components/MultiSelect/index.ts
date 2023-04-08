@@ -1,3 +1,3 @@
-import MultiSelect from "./MultiSelect";
-export * from "./MultiSelect";
-export { MultiSelect };
+import MultiSelect, { type MultiSelectOverrides } from "./MultiSelect";
+
+export { MultiSelect, type MultiSelectOverrides };

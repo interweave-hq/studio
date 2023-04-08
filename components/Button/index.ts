@@ -1,4 +1,4 @@
-import { Button } from "./Button";
+import { Button, type ButtonOverrides, Flavors, Sizes, Kinds } from "./Button";
 import { getButtonStyle } from "./getButtonStyle";
-export * from "./Button";
-export { Button, getButtonStyle };
+
+export { Button, getButtonStyle, type ButtonOverrides, Flavors, Sizes, Kinds };

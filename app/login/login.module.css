@@ -1,0 +1,33 @@
+.google-btn {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid var(--grey-2);
+    border-radius: 1px;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 6px 18px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.google-btn:hover {
+    background-color: #ededed;
+}
+
+.google-btn img {
+    margin-right: 10px;
+}
+
+.google-btn span {
+    line-height: 1;
+}
+
+.excuse {
+    font-size: 10px;
+    color: var(--grey-5);
+    text-align: center;
+    margin: 16px 0;
+}

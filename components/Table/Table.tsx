@@ -11,14 +11,14 @@ import {
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import styles from "./table.module.css";
+import { Input } from "@/components/Input";
 import {
 	Beaker,
 	ChevronDoubleLeft,
 	ChevronDoubleRight,
 	ChevronLeft,
 	ChevronRight,
-	Input,
-} from "@/components";
+} from "@/components/Icons";
 
 function FilterButton({
 	hidden,

@@ -1,6 +1,5 @@
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
-import { type ReactNode } from "react";
 
 const Overrides = {
 	root: "root",

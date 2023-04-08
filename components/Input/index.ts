@@ -1,3 +1,3 @@
-import Input from "./Input";
-export * from "./Input";
-export { Input };
+import Input, { type InputOverrides } from "./Input";
+
+export { Input, type InputOverrides };

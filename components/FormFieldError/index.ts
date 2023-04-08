@@ -1,3 +1,3 @@
-import { FormFieldError } from "./FormFieldError";
-export * from "./FormFieldError";
-export { FormFieldError };
+import { FormFieldError, type FormFieldErrorOverrides } from "./FormFieldError";
+
+export { FormFieldError, type FormFieldErrorOverrides };

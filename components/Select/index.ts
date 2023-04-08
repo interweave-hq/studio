@@ -1,3 +1,3 @@
-import Select from "./Select";
-export * from "./Select";
-export { Select };
+import Select, { type SelectOverrides } from "./Select";
+
+export { Select, type SelectOverrides };

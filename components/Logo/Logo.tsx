@@ -1,11 +1,31 @@
 import styles from "./logo.module.css";
+import { shapeCss } from "@/lib/helpers";
 
-export default function Logo() {
+const Overrides = {
+	root: "root",
+} as const;
+
+type OverridesKeys = keyof typeof Overrides;
+
+export type LogoOverrides<T> = {
+	[K in OverridesKeys]?: T;
+};
+
+export interface LogoProps {
+	__cssFor?: LogoOverrides<string>;
+}
+
+export default function Logo({ __cssFor }: LogoProps) {
+	const { root: rootStyles } = shapeCss<OverridesKeys, LogoOverrides<string>>(
+		Overrides,
+		styles,
+		__cssFor
+	);
 	return (
 		<svg
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
-			className={styles.logo}
+			className={rootStyles}
 			viewBox="0 0 3400 900"
 		>
 			<title>Interweaver</title>

@@ -1,3 +1,3 @@
-import Checkbox from "./Checkbox";
-export * from "./Checkbox";
-export { Checkbox };
+import Checkbox, { type CheckboxOverrides } from "./Checkbox";
+
+export { Checkbox, type CheckboxOverrides };
