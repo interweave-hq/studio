@@ -2,6 +2,7 @@ import "server-only";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { TokenRowActions } from ".";
 import styles from "./styles.module.css";
+import { combineCss } from "@/lib/helpers";
 
 async function getTokens({ projectSlug }: { projectSlug: string }) {
 	const { data, error } = await serverRequest(
@@ -20,11 +21,46 @@ export async function TokenDisplay({ projectSlug }: { projectSlug: string }) {
 		<div>
 			<div className={styles["token-display__table"]}>
 				<div className={styles["token-display__row-header"]}>
-					<p className={styles["token-display__entry"]}>Nickname</p>
-					<p className={styles["token-display__entry"]}>Permission</p>
-					<p className={styles["token-display__entry"]}>Created</p>
-					<p className={styles["token-display__entry"]}>Expires</p>
-					<p className={styles["token-display__entry"]}>Revoke?</p>
+					<p
+						className={combineCss([
+							styles["token-display__entry"],
+							styles["token-display__entry--header"],
+						])}
+					>
+						Nickname
+					</p>
+					<p
+						className={combineCss([
+							styles["token-display__entry"],
+							styles["token-display__entry--header"],
+						])}
+					>
+						Permission
+					</p>
+					<p
+						className={combineCss([
+							styles["token-display__entry"],
+							styles["token-display__entry--header"],
+						])}
+					>
+						Created
+					</p>
+					<p
+						className={combineCss([
+							styles["token-display__entry"],
+							styles["token-display__entry--header"],
+						])}
+					>
+						Expires
+					</p>
+					<p
+						className={combineCss([
+							styles["token-display__entry"],
+							styles["token-display__entry--header"],
+						])}
+					>
+						Revoke?
+					</p>
 				</div>
 				{hasTokens ? (
 					tokensData.map((t: any) => (

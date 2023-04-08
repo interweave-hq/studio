@@ -5,8 +5,7 @@ import styles from "./styles.module.css";
 import { APP_URL } from "@/lib/constants";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { AddTokens, TokenDisplay } from "@/experience/project/tokens";
-import { authenticate } from "@/lib/auth";
-import { LoadingDots, Header } from "@/components";
+import { LoadingDots, Header, InterfaceCard } from "@/components";
 
 export default async function ProjectListing({
 	params,
@@ -26,20 +25,23 @@ export default async function ProjectListing({
 				<div className={styles.section}>
 					<h2 className={styles.section__header}>Interfaces</h2>
 					{hasInterfaces ? (
-						projectData.interfaces.map(
-							(i: {
-								id: string;
-								title: string;
-								slug: string;
-							}) => (
-								<Link
-									key={i.id}
-									href={`${APP_URL}/${projectSlug}/${i.slug}`}
-								>
-									{i.title}
-								</Link>
-							)
-						)
+						projectData.interfaces.map((i: any) => (
+							<Link
+								key={i.id}
+								href={`${APP_URL}/${projectSlug}/${i.slug}`}
+							>
+								<InterfaceCard
+									hash={i.hash}
+									lastBuild={i.build_time}
+									privacy={i.privacy}
+									description={i.description}
+									titleParts={{
+										one: projectData.slug,
+										two: i.slug,
+									}}
+								/>
+							</Link>
+						))
 					) : (
 						<p>No interfaces yet. Create your first.</p>
 					)}
@@ -58,11 +60,15 @@ export default async function ProjectListing({
 }
 
 async function getProject({ projectSlug }: { projectSlug: string }) {
-	const { data: projectData, error: interfaceError } = await serverRequest(
-		`/api/v1/projects/${projectSlug}`
-	);
+	const {
+		data: fetchProjectData,
+		error: interfaceError,
+		status,
+	} = await serverRequest(`/api/v1/projects/${projectSlug}`);
 
-	if (!projectData) {
+	const { project: projectData, access } = fetchProjectData;
+
+	if (!projectData || status === 401 || access) {
 		notFound();
 	}
 

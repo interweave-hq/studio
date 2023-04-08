@@ -21,15 +21,25 @@ export default async function Home({
 }) {
 	const projectSlug = params["projectSlug"];
 	const interfaceSlug = params["interfaceSlug"];
-	const { project, interfacer } = await getData({
+	const { project, interfacer, access } = await getData({
 		projectSlug,
 		interfaceSlug,
 	});
 	const config = interfacer.schema_config;
 	const keys = config.keys;
 
-	const fetchData = interfacer.schema_config.requests?.get?.uri;
-	const createData = interfacer.schema_config.requests?.create?.uri;
+	const accessPermissions = access?.permissions;
+	const canRead =
+		!access ||
+		accessPermissions.includes("Read") ||
+		accessPermissions.includes("All");
+	const canCreate =
+		!access ||
+		accessPermissions.includes("Create") ||
+		accessPermissions.includes("All");
+	const fetchData = canRead && interfacer.schema_config.requests?.get?.uri;
+	const createData =
+		canCreate && interfacer.schema_config.requests?.create?.uri;
 
 	return (
 		<>
@@ -82,11 +92,15 @@ async function getData({
 	interfaceSlug: string;
 }) {
 	// Fetch project
-	const { data: projectData, error: projectError } = await serverRequest(
-		`/api/v1/projects/${projectSlug}`
-	);
+	const {
+		data: fetchProjectData,
+		error: projectError,
+		status,
+	} = await serverRequest(`/api/v1/projects/${projectSlug}`);
 
-	if (!projectData) {
+	const { project: projectData, access } = fetchProjectData;
+
+	if (!projectData || status === 401) {
 		notFound();
 	}
 
@@ -102,5 +116,6 @@ async function getData({
 	return {
 		project: projectData,
 		interfacer,
+		access,
 	};
 }

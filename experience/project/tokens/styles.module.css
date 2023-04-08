@@ -64,6 +64,7 @@
 }
 
 .token-display__entry {
+	color: var(--grey-5);
 	font-family: monospace;
 	font-size: 12px;
 	margin-right: 8px;
@@ -73,6 +74,10 @@
 	padding: 16px 16px 16px 0;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.token-display__entry--header {
+	color: var(--grey-1);
 }
 
 .token-display__row-button-overrides {

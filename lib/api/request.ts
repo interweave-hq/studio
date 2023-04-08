@@ -14,6 +14,7 @@ type RequestReturn = {
 		technicalError?: string;
 		userError?: string;
 	};
+	status: number;
 };
 
 export async function request(
@@ -42,7 +43,6 @@ export async function request(
 
 		// Return request if specified
 		if (options.returnRequest) {
-			/* @ts-expect-error we'll have to type cast as Response if this option is present */
 			return madeFetch;
 		}
 
@@ -57,11 +57,13 @@ export async function request(
 					userError: data.error?.user_facing_message,
 				},
 				data: data?.results?.data,
+				status: res.status,
 			};
 		}
 		return {
 			error: undefined,
 			data: data.results.data,
+			status: res.status,
 		};
 	} catch (error) {
 		console.error(error);
@@ -72,6 +74,7 @@ export async function request(
 				userError: "Could not make request.",
 			},
 			data: null,
+			status: 500,
 		};
 	}
 }
