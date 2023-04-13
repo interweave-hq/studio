@@ -1,11 +1,9 @@
 import "server-only";
 
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import Interfacer from "./interfacer";
 import styles from "../../home.module.css";
-import { Logo, LoadingDots } from "@/components";
 import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { serverRequest } from "@/lib/api/serverRequest";
@@ -37,30 +35,26 @@ export default async function Home({
 		!access ||
 		accessPermissions.includes("Create") ||
 		accessPermissions.includes("All");
-	const fetchData = canRead && interfacer.schema_config.requests?.get?.uri;
-	const createData =
-		canCreate && interfacer.schema_config.requests?.create?.uri;
+	const fetchData = canRead && interfacer.schema_config.requests?.get;
+	const createData = canCreate && interfacer.schema_config.requests?.create;
 
 	return (
 		<>
 			<main className={styles["main-container"]}>
 				<Overview
 					title={interfacer.title}
-					projectId={project.id}
+					description={interfacer.description}
 					interfaceId={interfacer.id}
 					hash={interfacer.hash}
 					buildTime={interfacer.build_time}
 				/>
 				<div className={styles.container}>
 					{fetchData ? (
-						<Suspense fallback={<LoadingDots />}>
-							{/* @ts-expect-error server component */}
-							<FetchTableData
-								interfaceId={interfacer.id}
-								keys={keys}
-								endpoint={fetchData}
-							/>
-						</Suspense>
+						<FetchTableData
+							interfaceId={interfacer.id}
+							keys={keys}
+							request={fetchData}
+						/>
 					) : null}
 					{!createData ? null : (
 						<div className={styles["form-container"]}>
@@ -70,16 +64,6 @@ export default async function Home({
 					)}
 				</div>
 			</main>
-			<footer className={styles.footer}>
-				<Logo />
-				<p className={styles.footer__text}>
-					Made with love for builders like you.
-				</p>
-				<p className={styles.footer__copy}>
-					Carbonology Interactive LLC {new Date().getFullYear()}{" "}
-					&copy;
-				</p>
-			</footer>
 		</>
 	);
 }

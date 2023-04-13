@@ -1,7 +1,8 @@
 import Link from "next/link";
 import styles from "./home.module.css";
 
-import { Header, InterfaceCard } from "@/components";
+import { Header, InterfaceCard, Footer } from "@/components";
+import { getButtonStyle } from "@/components/Button";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
@@ -15,6 +16,11 @@ export default async function Home() {
 			<Header user={user} />
 			<section className={styles.section}>
 				<h1>Welcome</h1>
+				<div className={styles["main-links"]}>
+					<Link href="/create" className={getButtonStyle()}>
+						Create New Project
+					</Link>
+				</div>
 			</section>
 			<main className={styles["main-container"]}>
 				<Suspense>
@@ -50,17 +56,23 @@ export default async function Home() {
 										</div>
 									)}
 									<div
-										style={{
-											display: "flex",
-											padding: "24px 0",
-										}}
+										className={
+											styles["interface-container"]
+										}
 									>
 										{data.projects.map((p: any) => (
 											<Link
 												key={p.id}
 												href={`/${p.slug}`}
 											>
-												<InterfaceCard title={p.slug} />
+												<InterfaceCard
+													title={p.slug}
+													__cssFor={{
+														root: styles[
+															"interface-card"
+														],
+													}}
+												/>
 											</Link>
 										))}
 									</div>
@@ -93,10 +105,9 @@ export default async function Home() {
 											</Link>
 										</div>
 										<div
-											style={{
-												display: "flex",
-												padding: "24px 0",
-											}}
+											className={
+												styles["interface-container"]
+											}
 										>
 											{data.interfaces.map(
 												(access: any) => (
@@ -130,6 +141,11 @@ export default async function Home() {
 																	.interface
 																	.slug,
 															}}
+															__cssFor={{
+																root: styles[
+																	"interface-card"
+																],
+															}}
 														/>
 													</Link>
 												)
@@ -142,6 +158,7 @@ export default async function Home() {
 					</>
 				</Suspense>
 			</main>
+			<Footer />
 		</>
 	);
 }

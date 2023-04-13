@@ -3,6 +3,10 @@
 import { forwardRef, useId } from "react";
 import styles from "./checkbox.module.css";
 import { shapeCss } from "@/lib/helpers";
+import {
+	FormFieldLabel,
+	type FormFieldLabelOverrides,
+} from "@/components/FormFieldLabel";
 
 const Overrides = {
 	root: "root",
@@ -14,13 +18,21 @@ const Overrides = {
 
 type OverridesKeys = keyof typeof Overrides;
 
-export type CheckboxOverrides<T> = {
+type ExternalCheckboxOverrides<T> = {
+	FormFieldLabel?: FormFieldLabelOverrides<T>;
+};
+
+type InternalCheckboxOverrides<T> = {
 	[K in OverridesKeys]?: T;
 };
+
+export type CheckboxOverrides<T> = InternalCheckboxOverrides<T> &
+	ExternalCheckboxOverrides<T>;
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 	description?: string;
 	domProps?: React.HTMLProps<HTMLInputElement>;
+	helperText?: string;
 	label?: string;
 	ref?: any;
 	register?: object;
@@ -31,12 +43,18 @@ type ChildRef = HTMLInputElement;
 
 const Checkbox = forwardRef<ChildRef, Props>((props, ref) => {
 	Checkbox.displayName = "Checkbox";
-	const { description, domProps, label, register, __cssFor } = props;
+	const {
+		description,
+		domProps,
+		helperText = "",
+		label,
+		register,
+		__cssFor,
+	} = props;
 	const id = useId();
 	const {
 		root: rootStyles,
 		container: containerStyles,
-		label: labelStyles,
 		input: inputStyles,
 		description: descriptionStyles,
 	} = shapeCss<OverridesKeys, CheckboxOverrides<string>>(
@@ -55,11 +73,15 @@ const Checkbox = forwardRef<ChildRef, Props>((props, ref) => {
 					className={inputStyles}
 					ref={ref}
 				/>
-				{label && (
-					<label htmlFor={id} className={labelStyles}>
+				{label ? (
+					<FormFieldLabel
+						htmlFor={id}
+						__cssFor={__cssFor?.FormFieldLabel}
+						helperText={helperText}
+					>
 						{label}
-					</label>
-				)}
+					</FormFieldLabel>
+				) : null}
 			</div>
 			{description && <p className={descriptionStyles}>{description}</p>}
 		</div>

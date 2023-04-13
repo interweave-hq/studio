@@ -5,10 +5,10 @@ export async function Profile() {
 	const { data: user, error } = await getProfile();
 
 	return (
-		<div>
+		<main>
 			<h1>{user.display_name}</h1>
 			<LogOutButton />
-		</div>
+		</main>
 	);
 }
 

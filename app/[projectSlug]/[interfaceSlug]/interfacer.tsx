@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useState, cloneElement } from "react";
-import { useForm, type Control } from "react-hook-form";
-import { MultiSelect, Input, Button, Checkbox, Select } from "@/components";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components";
 import styles from "./interfacer.module.css";
 import { Card } from "@tremor/react";
 import { validate, type KeyConfiguration } from "@interweave/interweave";
 import { type Interfacer } from "@/interfaces";
 import { get } from "@/lib/helpers";
-
-interface ComponentSetup {
-	component: JSX.Element;
-	key: string;
-}
+import {
+	getComponent,
+	type ComponentSetup,
+} from "@/experience/interfacer/getComponent";
 
 /** this will be the Client logic that gets rendered dynamically */
 export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
@@ -61,12 +60,21 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 				}
 			}
 
-			const props = {
+			// This is where we can pass any props
+			return getComponent(formKey, {
+				type: typeConfig.schema.type,
+				enum: typeConfig?.schema?.enum,
+				defaultValue: typeConfig?.schema?.default_value,
+				isArray: typeConfig?.schema?.default_value,
+				label: typeConfig?.interface?.form?.label,
+				required: !typeConfig?.schema?.is_optional,
+				styles: styles["shared-styles"],
+				description: typeConfig?.interface?.form?.description,
+				disabled: typeConfig?.interface?.form?.disabled,
 				// Errors object is post form-combine so we have to parse our key out for nested value errors
 				error: get(errors, `${formKey}.message`),
-			};
-			// This is where we can pass any props
-			return getComponent(formKey, typeConfig, register, control, props);
+				form: { register, control },
+			});
 		});
 		return determinedComponents
 			.filter((v) => v !== null)
@@ -124,121 +132,3 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		</form>
 	);
 }
-
-const getComponent = (
-	key: string,
-	typeConfig: KeyConfiguration,
-	register: (opts: any) => object,
-	control: Control,
-	props: {
-		error?: any;
-	}
-): ComponentSetup => {
-	const type = typeConfig.schema.type;
-	const enumValue = typeConfig.schema.enum;
-	const defaultValue = typeConfig.schema.default_value;
-	const label = typeConfig?.interface?.form?.label || key;
-	const sharedStyles = styles["shared-styles"];
-
-	// If is_array, we can render a multiselect
-	if (enumValue && typeConfig.schema.is_array) {
-		return {
-			component: (
-				<MultiSelect
-					options={enumValue.map((e: string | number) => ({
-						label: e.toString(),
-						value: e,
-					}))}
-					label={label}
-					selectedOptions={
-						defaultValue
-							? Array.isArray(defaultValue)
-								? defaultValue.map((d) => ({
-										value: d,
-										label: d,
-								  }))
-								: [{ value: defaultValue, label: defaultValue }]
-							: []
-					}
-					form={{ control, name: key }}
-					__cssFor={{ root: sharedStyles }}
-					error={props?.error}
-				/>
-			),
-			key,
-		};
-	}
-	if (enumValue && !typeConfig.schema.is_array) {
-		return {
-			component: (
-				<Select
-					label={label}
-					options={enumValue.map((e: string | number) => ({
-						label: e.toString(),
-						value: e,
-					}))}
-					register={register(key)}
-					domProps={{
-						defaultValue,
-					}}
-					error={props?.error}
-				/>
-			),
-			key,
-		};
-	}
-
-	switch (type) {
-		case "string":
-			return {
-				component: (
-					<Input
-						label={label}
-						register={register(key)}
-						__cssFor={{ root: sharedStyles }}
-						error={props?.error}
-					/>
-				),
-				key,
-			};
-
-		case "number":
-			return {
-				component: (
-					<Input
-						domProps={{ type: "number" }}
-						label={label}
-						register={register(key)}
-						error={props?.error}
-						__cssFor={{ root: sharedStyles }}
-					/>
-				),
-				key,
-			};
-
-		case "boolean":
-			return {
-				component: (
-					<Checkbox
-						label={label}
-						register={register(key)}
-						__cssFor={{ root: sharedStyles }}
-					/>
-				),
-				key,
-			};
-
-		// case "object":
-		// 	return Checkbox;
-		// case "object":
-		// 	return <Checkbox label={"test"} />;
-		// case "object":
-		// 	return <p>other</p>;
-
-		default:
-			return {
-				component: <p className={sharedStyles}>{label}</p>,
-				key,
-			};
-	}
-};

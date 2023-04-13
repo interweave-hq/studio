@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { request, type RequestOptions } from "./request";
+import { request, type RequestOptions, type RequestReturn } from "./request";
 
 export async function serverRequest(url: string, options?: RequestOptions) {
 	const cookieHeaders = new Headers();
@@ -14,3 +14,5 @@ export async function serverRequest(url: string, options?: RequestOptions) {
 		headers: cookieHeaders,
 	});
 }
+
+export { type RequestOptions, type RequestReturn };

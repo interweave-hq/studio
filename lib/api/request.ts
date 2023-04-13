@@ -8,7 +8,7 @@ export interface RequestOptions {
 	returnRequest?: boolean;
 }
 
-type RequestReturn = {
+export type RequestReturn = {
 	data?: any;
 	error?: {
 		technicalError?: string;

@@ -1,12 +1,8 @@
 .container {
-    display: flex;
+	display: flex;
 }
 
 .input {
-    cursor: pointer;
-    margin-right: 8px;
-}
-
-.label {
-    font-size: 12px;
+	cursor: pointer;
+	margin-right: 8px;
 }
