@@ -1,0 +1,24 @@
+.container {
+	max-width: var(--max-width-md);
+	margin: 64px auto 0 auto;
+	min-height: 75vh;
+}
+
+.header {
+	margin-bottom: 24px;
+}
+
+.input {
+	max-width: 450px;
+	margin-bottom: 24px;
+}
+
+.button {
+	margin-top: 16px;
+}
+
+.error {
+	margin: 16px 0 0 0;
+	width: fit-content;
+	padding: 24px;
+}

@@ -2,13 +2,13 @@ import styles from "./overview.module.css";
 
 export default function Overview({
 	title,
-	projectId,
+	description,
 	interfaceId,
 	hash,
 	buildTime,
 }: {
 	title: string;
-	projectId: string;
+	description?: string;
 	interfaceId: string;
 	hash: string;
 	buildTime: Date;
@@ -18,10 +18,9 @@ export default function Overview({
 		<div className={styles.overview}>
 			<div className={styles.overview__interior}>
 				<h1 className={styles.overview__title}>{title}</h1>
+				<p className={styles.overview__description}>{description}</p>
 				<div className={styles.overview__ids}>
-					<p className={styles.overview__id}>pID: {projectId}</p>
-					<span className={styles.overview__id}>/</span>
-					<p className={styles.overview__id}>iID: {interfaceId}</p>
+					<p className={styles.overview__id}>ID: {interfaceId}</p>
 					<span className={styles.overview__id}>/</span>
 					<p className={styles.overview__id}>#{hash}</p>
 					<span className={styles.overview__id}>/</span>

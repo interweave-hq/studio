@@ -1,6 +1,6 @@
 "use client";
 
-import { request, type RequestOptions } from "./request";
+import { request, type RequestOptions, type RequestReturn } from "./request";
 
 export async function clientRequest(url: string, options?: RequestOptions) {
 	return request(url, {
@@ -8,3 +8,5 @@ export async function clientRequest(url: string, options?: RequestOptions) {
 		headers: { "Content-Type": "application/json" },
 	});
 }
+
+export { type RequestOptions, type RequestReturn };

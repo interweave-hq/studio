@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { Table, Checkbox, ComponentError } from "@/components";
+import { Table, Checkbox, Error } from "@/components";
 
 import { type KeyConfiguration } from "@interweave/interweave";
 
@@ -76,23 +76,26 @@ const getColumnsFromKeys = (columnData: {
 export default function DynamicTable({
 	data,
 	columnData,
-	endpoint,
+	uri,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
-	endpoint: string;
+	uri: string;
 }) {
 	const { data: cols, error } = useMemo(
 		() => getColumnsFromKeys(columnData),
 		[]
 	);
 	const supplementalInfo = [
-		`GET ${endpoint}`,
+		`GET ${uri}`,
 		`Fetched ${data.length} entries in 1.2s`,
 	];
 	if (cols === null || error) {
 		return (
-			<ComponentError text="We encountered an unexpected error generating the table for this data." />
+			<Error
+				title="Error Loading Table"
+				text="We encountered an unexpected error generating the table for this data."
+			/>
 		);
 	}
 	return (

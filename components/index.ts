@@ -1,7 +1,8 @@
 import { Badge } from "./Badge";
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
-import { ComponentError } from "./ComponentError";
+import { Error } from "./Error";
+import { Footer } from "./Footer";
 import { FormFieldError } from "./FormFieldError";
 import { Header } from "./Header";
 import { Input } from "./Input";
@@ -17,7 +18,8 @@ export {
 	Badge,
 	Button,
 	Checkbox,
-	ComponentError,
+	Error,
+	Footer,
 	FormFieldError,
 	Header,
 	Input,

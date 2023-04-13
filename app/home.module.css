@@ -42,19 +42,16 @@
 	padding: 16px 0;
 }
 
-.footer {
-	margin-top: 64px;
-	border-top: 1px solid var(--grey-4);
-	padding: 16px;
+.interface-container {
+	display: flex;
+	padding: 24px 0;
+	flex-wrap: wrap;
 }
 
-.footer__text {
-	font-size: 12px;
-	margin-top: 16px;
+.interface-card {
+	margin: 0 16px 16px 0;
 }
 
-.footer__copy {
-	color: var(--grey-5);
-	font-size: 12px;
-	margin: 8px 0;
+.main-links {
+	margin-top: 32px;
 }

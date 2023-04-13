@@ -1,10 +1,38 @@
 .input {
-    /* These styles have to be reset in globals.css to overwrite Tremor.css */
-    border: 1px solid #e5e7eb;
-    border-radius: 3px;
-    box-shadow: 0px 2px 7px -7px grey;
-    display: block;
-    font-size: 14px;
-    padding: 6px 8px;
-    width: 100%;
+	/* These styles have to be reset in globals.css to overwrite Tremor.css */
+	border: 1px solid #e5e7eb;
+	border-radius: 3px;
+	box-shadow: 0px 2px 7px -7px grey;
+	display: block;
+	font-size: 14px;
+	padding: 6px 8px;
+	width: 100%;
+}
+
+.input::placeholder {
+	color: #767676;
+	font-weight: 300;
+}
+
+.input:disabled {
+	color: var(--grey-5);
+	cursor: not-allowed;
+}
+
+.input:read-only,
+.input:-moz-read-only {
+	color: var(--grey-5);
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.top-container {
+	align-items: baseline;
+	display: flex;
+	margin-bottom: 4px;
+}
+
+.description {
+	font-size: 10px;
+	color: var(--grey-5);
 }

@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 import { APP_URL } from "@/lib/constants";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { AddTokens, TokenDisplay } from "@/experience/project/tokens";
-import { LoadingDots, Header, InterfaceCard } from "@/components";
+import { LoadingDots, InterfaceCard } from "@/components";
 
 export default async function ProjectListing({
 	params,

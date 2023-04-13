@@ -47,6 +47,7 @@ type Props = {
 		name: string;
 	};
 	label: string;
+	helperText?: string;
 	onChange?: (options: Option[]) => void;
 	options: Option[];
 	selectedOptions?: Option[];
@@ -57,6 +58,7 @@ const MultiSelect = ({
 	error,
 	form,
 	label,
+	helperText = "Select multiple",
 	options,
 	selectedOptions = [],
 	__cssFor,
@@ -95,7 +97,7 @@ const MultiSelect = ({
 		<div className={rootStyles} data-component="multiselect">
 			<FormFieldLabel
 				htmlFor={id}
-				helperText="Select multiple"
+				helperText={helperText}
 				__cssFor={__cssFor?.FormFieldLabel}
 			>
 				{label}

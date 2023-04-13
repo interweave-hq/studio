@@ -45,6 +45,7 @@ type Props = {
 		control: any;
 		name: string;
 	};
+	helperText?: string;
 	label: string;
 	onChange?: (e: ChangeEvent<HTMLSelectElement>, value: string) => void;
 	options: Option[];
@@ -56,6 +57,7 @@ const Select = ({
 	domProps = {},
 	error,
 	form,
+	helperText = "Select one",
 	label,
 	onChange = () => {},
 	options,
@@ -72,7 +74,7 @@ const Select = ({
 		<div className={rootStyles} data-component="select">
 			<FormFieldLabel
 				htmlFor={id}
-				helperText="Select one"
+				helperText={helperText}
 				__cssFor={__cssFor?.FormFieldLabel}
 			>
 				{label}

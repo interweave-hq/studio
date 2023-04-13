@@ -1,5 +1,5 @@
 import { authenticate } from "@/lib/auth";
-import { Header } from "@/components";
+import { Header, Footer } from "@/components";
 
 export async function AuthLayout({ children }: { children: React.ReactNode }) {
 	const { user } = await authenticate();
@@ -7,6 +7,7 @@ export async function AuthLayout({ children }: { children: React.ReactNode }) {
 		<>
 			<Header user={user} />
 			{children}
+			<Footer />
 		</>
 	);
 }

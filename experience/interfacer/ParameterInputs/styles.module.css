@@ -1,0 +1,18 @@
+.outer-container {
+	max-width: var(--max-width-md);
+	margin: 0 auto 24px auto;
+}
+
+.inner-container {
+	align-items: flex-start;
+	display: inline-flex;
+}
+
+.input-styles {
+	margin-right: 16px;
+}
+
+.button {
+	display: block;
+	margin-top: 16px;
+}

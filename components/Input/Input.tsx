@@ -36,6 +36,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 	description?: string;
 	domProps?: React.HTMLProps<HTMLInputElement>;
 	error?: string;
+	helperText?: string;
 	label?: string;
 	register?: object;
 	__cssFor?: InputOverrides<string>;
@@ -45,6 +46,7 @@ const Input = ({
 	description,
 	domProps,
 	error,
+	helperText = "",
 	label = "Label",
 	register,
 	__cssFor,
@@ -61,17 +63,20 @@ const Input = ({
 	);
 	return (
 		<div className={rootStyles}>
-			{label ? (
-				<FormFieldLabel
-					htmlFor={id}
-					__cssFor={__cssFor?.FormFieldLabel}
-				>
-					{label}
-				</FormFieldLabel>
-			) : null}
-			{description ? (
-				<p className={descriptionStyles}>{description}</p>
-			) : null}
+			<div className={styles["top-container"]}>
+				{label ? (
+					<FormFieldLabel
+						htmlFor={id}
+						__cssFor={__cssFor?.FormFieldLabel}
+						helperText={helperText}
+					>
+						{label}
+					</FormFieldLabel>
+				) : null}
+				{description ? (
+					<p className={descriptionStyles}>{description}</p>
+				) : null}
+			</div>
 			<input
 				type="text"
 				{...domProps}
