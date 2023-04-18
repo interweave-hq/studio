@@ -5,7 +5,7 @@ import { API_URL } from "@/lib/constants";
 export async function authenticate(params?: { optional?: boolean }) {
 	const originalUrl = headers().get("x-url");
 	const cookieStore = cookies();
-	const cookie = cookieStore.get("connect.sid");
+	const cookie = cookieStore.get("XSRF-TOKEN");
 	const isOptional = !!params?.optional;
 	const cookieHeaders = new Headers();
 	if (cookie) {
