@@ -26,6 +26,11 @@
 	pointer-events: none;
 }
 
+.input-error {
+	border: solid 1px var(--color-red-light);
+	background-color: rgba(186, 31, 31, 0.05);
+}
+
 .top-container {
 	align-items: baseline;
 	display: flex;
@@ -35,4 +40,19 @@
 .description {
 	font-size: 10px;
 	color: var(--grey-5);
+}
+
+.bottom-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 2px 0;
+}
+
+.max-length {
+	color: #ccc;
+	font-size: 11px;
+}
+
+.max-length-error {
+	color: var(--color-red-light);
 }

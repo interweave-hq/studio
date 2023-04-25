@@ -42,6 +42,12 @@
 	padding: 16px 0;
 }
 
+.table-container {
+	display: flex;
+	justify-content: center;
+	padding: 0 16px;
+}
+
 .interface-container {
 	display: flex;
 	padding: 24px 0;
@@ -54,4 +60,11 @@
 
 .main-links {
 	margin-top: 32px;
+}
+
+.delete-authentication-button-container {
+	display: flex;
+	margin: 0 auto;
+	max-width: var(--max-width-md);
+	justify-content: flex-end;
 }

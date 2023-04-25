@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import { type Request } from "@interweave/interweave";
 import { clientRequest, type RequestReturn } from "@/lib/api/clientRequest";
-import { Error } from "@/components";
+import { Error, LoadingDots } from "@/components";
+import { type Error as ErrorType } from "@/interfaces/Error";
 import Table from "./table";
 import { ParameterInputs } from "../ParameterInputs";
-
-type Error = Omit<RequestReturn, "status" | "data">["error"];
 
 const notReadyReturn: RequestReturn = {
 	data: [],
@@ -36,7 +35,7 @@ function getUrlQueryParamaters(valueState: ValueState) {
 	return query;
 }
 
-const DEFAULT_ERROR: Error = { userError: "", technicalError: "" };
+const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
 /**
  * We'll process this in two steps
@@ -54,10 +53,12 @@ export function FetchTableData({
 	interfaceId: string;
 }) {
 	const [data, setData] = useState(null);
-	const [error, setError] = useState<Error>(DEFAULT_ERROR);
+	const [error, setError] = useState(DEFAULT_ERROR);
 	const [valueState, setValueState] = useState<ValueState>({});
 	const [makeRequest, setMakeRequest] = useState(false);
 	const [url, setUrl] = useState(request.uri);
+	const [isLoading, setLoading] = useState(false);
+	const [requestDuration, setRequestDuration] = useState(0);
 
 	// if theres URL parameters, wait until something has been submitted
 	// if theres required query parameters, wait until something has been submitted
@@ -139,20 +140,25 @@ export function FetchTableData({
 		(async () => {
 			try {
 				setError(DEFAULT_ERROR);
+				setLoading(true);
 				const fullUrl = new URL(url);
 				const query = getUrlQueryParamaters(valueState);
 				fullUrl.search = query.toString().replaceAll("%2C", ",");
-				const { data, error } = makeRequest
+				const { data, error, duration } = makeRequest
 					? await getTableData({ interfaceId, url: fullUrl.href })
 					: notReadyReturn;
 
 				if (error) {
 					setError(error);
-					// console.error(error);
+					setLoading(false);
+					console.error(error);
 					return;
 				}
+				setRequestDuration(duration || 0);
 				setData(data);
+				setLoading(false);
 			} catch (err) {
+				setLoading(false);
 				console.error(error);
 			}
 		})();
@@ -184,7 +190,15 @@ export function FetchTableData({
 					details={error.technicalError}
 				/>
 			) : null}
-			{data ? <Table data={data} columnData={keys} uri={url} /> : null}
+			{isLoading ? <LoadingDots /> : null}
+			{data ? (
+				<Table
+					data={data}
+					columnData={keys}
+					uri={url}
+					requestDuration={requestDuration}
+				/>
+			) : null}
 		</div>
 	);
 }
@@ -196,9 +210,8 @@ async function getTableData({
 	interfaceId: string;
 	url: string;
 }) {
-	console.log(url);
 	return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
 		method: "POST",
-		requestBody: { method: "get", uri: url },
+		requestBody: { method: "get", uri: url, return_array: true },
 	});
 }

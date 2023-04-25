@@ -2,20 +2,31 @@
 
 import { useEffect, useState, cloneElement } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components";
+import { Button, Error, LoadingDots } from "@/components";
 import styles from "./interfacer.module.css";
-import { Card } from "@tremor/react";
-import { validate, type KeyConfiguration } from "@interweave/interweave";
-import { type Interfacer } from "@/interfaces";
+import { validate, type SchemaKeys } from "@interweave/interweave";
+import { type Interfacer, type Error as ErrorType } from "@/interfaces";
 import { get } from "@/lib/helpers";
 import {
 	getComponent,
 	type ComponentSetup,
 } from "@/experience/interfacer/getComponent";
+import { clientRequest } from "@/lib/api/clientRequest";
+
+const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
+
+const getValueFromValidationOption = (x: any) => {
+	if (typeof x === "object") {
+		return x.value;
+	}
+	return x;
+};
 
 /** this will be the Client logic that gets rendered dynamically */
 export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
-	const [data, setData] = useState("");
+	const [formLoading, setFormLoading] = useState(false);
+	const [formSuccess, setFormSuccess] = useState(false);
+	const [submissionError, setSubmissionError] = useState(DEFAULT_ERROR);
 	const {
 		register,
 		handleSubmit,
@@ -24,10 +35,8 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		clearErrors,
 		formState: { errors },
 	} = useForm();
-
-	useEffect(() => {
-		console.log(data);
-	}, [data]);
+	const hasSubmissionError =
+		submissionError?.technicalError || submissionError?.userError;
 
 	useEffect(() => {
 		console.log(errors);
@@ -37,9 +46,7 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 	const schema = config.keys;
 
 	const getComponentsFromKeys = (
-		keys: {
-			[key: string]: KeyConfiguration;
-		},
+		keys: SchemaKeys,
 		nestedPath?: string
 	): ComponentSetup[] => {
 		const keysArr = Object.keys(keys);
@@ -74,6 +81,9 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 				// Errors object is post form-combine so we have to parse our key out for nested value errors
 				error: get(errors, `${formKey}.message`),
 				form: { register, control },
+				maxLength: getValueFromValidationOption(
+					typeConfig?.validation?.max_length
+				),
 			});
 		});
 		return determinedComponents
@@ -81,7 +91,11 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 			.flat() as ComponentSetup[];
 	};
 
-	const onSubmit = (data: Record<string, unknown>) => {
+	const onSubmit = async (data: Record<string, unknown>) => {
+		setFormLoading(true);
+		setFormSuccess(false);
+		setSubmissionError(DEFAULT_ERROR);
+
 		// Clear errors from previous submissions
 		clearErrors();
 
@@ -107,28 +121,58 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 					});
 				});
 			});
+			setFormLoading(false);
+			// stop further execution
+			return;
 		}
+
+		const { data: submitData, error } = await clientRequest(
+			`/api/v1/interfaces/${interfacer.id}`,
+			{
+				method: "POST",
+				requestBody: { method: "create", request_body: data },
+			}
+		);
+		if (error?.technicalError || error?.userError) {
+			setFormLoading(false);
+			return setSubmissionError(error);
+		}
+		setFormSuccess(true);
+		setFormLoading(false);
+		return;
 	};
 
 	const comps = getComponentsFromKeys(schema);
 
 	return (
-		<form onSubmit={handleSubmit((data) => onSubmit(data))}>
-			<Card
-				maxWidth="max-w-none"
-				hFull={false}
-				shadow={true}
-				decoration=""
-				decorationColor="blue"
-				marginTop="mt-0"
+		<form
+			onSubmit={handleSubmit((data) => onSubmit(data))}
+			autoComplete="off"
+			autoCorrect="off"
+		>
+			{comps.map(({ component, key }) =>
+				cloneElement(component, { key })
+			)}
+			<Button
+				__cssFor={{ root: styles["submit-button"] }}
+				domProps={{ disabled: formLoading }}
 			>
-				{comps.map(({ component, key }) =>
-					cloneElement(component, { key })
-				)}
-				<Button __cssFor={{ root: styles["submit-button"] }}>
-					Submit
-				</Button>
-			</Card>
+				Submit
+			</Button>
+			{formLoading ? <LoadingDots /> : null}
+			{hasSubmissionError ? (
+				<Error
+					title="Error Saving New Data"
+					text={submissionError?.technicalError || ""}
+					details={submissionError?.userError}
+					__cssFor={{ root: styles["submission-error"] }}
+				/>
+			) : null}
+			{formSuccess ? (
+				<p className={styles["submission-success"]}>
+					Data successfully saved!
+				</p>
+			) : null}
 		</form>
 	);
 }

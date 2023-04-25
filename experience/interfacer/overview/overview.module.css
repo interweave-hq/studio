@@ -5,6 +5,16 @@
 	padding: 0 0 32px 0;
 }
 
+.overview__badge-desc-container {
+	align-items: center;
+	display: flex;
+	margin-top: 16px;
+}
+
+.overview__privacy-badge {
+	margin-right: 16px;
+}
+
 .overview__title {
 	font-weight: 600;
 	font-size: 36px;
@@ -15,7 +25,6 @@
 .overview__description {
 	color: var(--grey-1);
 	font-size: 14px;
-	margin-top: 16px;
 }
 
 .overview__id {

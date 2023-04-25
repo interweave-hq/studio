@@ -1,8 +1,8 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useRef, useState } from "react";
 import styles from "./styles.module.css";
-import { shapeCss } from "@/lib/helpers";
+import { shapeCss, combineCss } from "@/lib/helpers";
 import {
 	FormFieldError,
 	type FormFieldErrorOverrides,
@@ -38,6 +38,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 	error?: string;
 	helperText?: string;
 	label?: string;
+	maxLength?: number;
 	register?: object;
 	__cssFor?: InputOverrides<string>;
 }
@@ -48,10 +49,20 @@ const Input = ({
 	error,
 	helperText = "",
 	label = "Label",
+	maxLength,
 	register,
 	__cssFor,
 }: Props) => {
+	const [inputLength, setInputValueLength] = useState(
+		domProps?.defaultValue?.toString().length || 0
+	);
 	const id = useId();
+	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (domProps?.onChange) {
+			domProps.onChange(e);
+		}
+		setInputValueLength(e.currentTarget.value.length);
+	};
 	const {
 		root: rootStyles,
 		input: inputStyles,
@@ -61,6 +72,14 @@ const Input = ({
 		styles,
 		__cssFor
 	);
+	const invalidLength = maxLength ? inputLength > maxLength : false;
+	const inputElementClass =
+		error || invalidLength
+			? combineCss([inputStyles, styles["input-error"]])
+			: inputStyles;
+	const maxLengthClass = invalidLength
+		? combineCss([styles["max-length"], styles["max-length-error"]])
+		: styles["max-length"];
 	return (
 		<div className={rootStyles}>
 			<div className={styles["top-container"]}>
@@ -82,13 +101,25 @@ const Input = ({
 				{...domProps}
 				{...register}
 				id={id}
-				className={inputStyles}
+				className={inputElementClass}
+				onChange={(e) => handleOnChange(e)}
 			/>
-			{error && (
-				<FormFieldError __cssFor={__cssFor?.FormFieldError}>
-					{error}
-				</FormFieldError>
-			)}
+			{error || maxLength ? (
+				<div className={styles["bottom-container"]}>
+					{error ? (
+						<FormFieldError __cssFor={__cssFor?.FormFieldError}>
+							{error}
+						</FormFieldError>
+					) : (
+						<span></span>
+					)}
+					{maxLength ? (
+						<span className={maxLengthClass}>
+							{maxLength - inputLength}
+						</span>
+					) : null}
+				</div>
+			) : null}
 		</div>
 	);
 };

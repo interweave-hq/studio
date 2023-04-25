@@ -15,6 +15,7 @@ export type RequestReturn = {
 		userError?: string;
 	};
 	status: number;
+	duration?: number;
 };
 
 export async function request(
@@ -58,12 +59,14 @@ export async function request(
 				},
 				data: data?.results?.data,
 				status: res.status,
+				duration: data.operation_duration,
 			};
 		}
 		return {
 			error: undefined,
 			data: data.results.data,
 			status: res.status,
+			duration: data.operation_duration,
 		};
 	} catch (error) {
 		console.error(error);

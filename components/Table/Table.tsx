@@ -155,28 +155,36 @@ export default function Table({
 					disabled={!table.getCanPreviousPage()}
 					className={styles["table-controls__button"]}
 				>
-					<ChevronDoubleLeft />
+					<ChevronDoubleLeft
+						className={styles["table-controls__button-svg"]}
+					/>
 				</button>
 				<button
 					onClick={() => table.previousPage()}
 					disabled={!table.getCanPreviousPage()}
 					className={styles["table-controls__button"]}
 				>
-					<ChevronLeft />
+					<ChevronLeft
+						className={styles["table-controls__button-svg"]}
+					/>
 				</button>
 				<button
 					onClick={() => table.nextPage()}
 					disabled={!table.getCanNextPage()}
 					className={styles["table-controls__button"]}
 				>
-					<ChevronRight />
+					<ChevronRight
+						className={styles["table-controls__button-svg"]}
+					/>
 				</button>
 				<button
 					onClick={() => table.setPageIndex(table.getPageCount() - 1)}
 					disabled={!table.getCanNextPage()}
 					className={styles["table-controls__button"]}
 				>
-					<ChevronDoubleRight />
+					<ChevronDoubleRight
+						className={styles["table-controls__button-svg"]}
+					/>
 				</button>
 				<span>
 					<p className={styles["table-controls__page-text"]}>Page</p>

@@ -59,9 +59,6 @@ export function TokenRowActions({
 						? removeToken({ tokenId })
 						: setConfirmActive(!confirmActive)
 				}
-				__cssFor={{
-					root: styles["token-display__row-button-overrides"],
-				}}
 			>
 				{confirmActive
 					? "Click again to confirm deletion"

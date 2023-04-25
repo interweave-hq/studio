@@ -21,7 +21,12 @@ export default async function ProjectListing({
 	return (
 		<>
 			<main className={styles.container}>
-				<h1>{projectData.title}</h1>
+				<div className={styles.section}>
+					<h2 className={styles.section__header}>
+						{projectData.title}
+					</h2>
+					<p>Project ID: {projectData.id}</p>
+				</div>
 				<div className={styles.section}>
 					<h2 className={styles.section__header}>Interfaces</h2>
 					{hasInterfaces ? (

@@ -8,6 +8,8 @@ import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { FetchTableData } from "@/experience/interfacer/FetchTableData";
+import { AuthorizationKeysWizard } from "@/experience/interfacer/AuthorizationKeysWizard";
+import { DeleteAPITokens } from "@/experience/interfacer/DeleteAPITokens";
 
 export default async function Home({
 	params,
@@ -19,7 +21,7 @@ export default async function Home({
 }) {
 	const projectSlug = params["projectSlug"];
 	const interfaceSlug = params["interfaceSlug"];
-	const { project, interfacer, access } = await getData({
+	const { project, interfacer, access, needsKeys } = await getData({
 		projectSlug,
 		interfaceSlug,
 	});
@@ -38,6 +40,26 @@ export default async function Home({
 	const fetchData = canRead && interfacer.schema_config.requests?.get;
 	const createData = canCreate && interfacer.schema_config.requests?.create;
 
+	const hasAuthKeys =
+		Object.keys(interfacer.schema_config.authentication || {}).length > 0;
+	// Figure out if more API keys are needed
+	const authSchemesThatNeedUserInput = needsKeys.map((kString: string) => ({
+		...interfacer.schema_config.authentication![kString],
+		key: kString,
+	}));
+
+	if (authSchemesThatNeedUserInput.length > 0) {
+		return (
+			<main>
+				<AuthorizationKeysWizard
+					projectId={project.id}
+					interfaceId={interfacer.id}
+					schemes={authSchemesThatNeedUserInput}
+				/>
+			</main>
+		);
+	}
+
 	return (
 		<>
 			<main className={styles["main-container"]}>
@@ -47,14 +69,29 @@ export default async function Home({
 					interfaceId={interfacer.id}
 					hash={interfacer.hash}
 					buildTime={interfacer.build_time}
+					privacy={interfacer.privacy}
 				/>
+				{hasAuthKeys ? (
+					<div
+						className={
+							styles["delete-authentication-button-container"]
+						}
+					>
+						<DeleteAPITokens
+							interfaceId={interfacer.id}
+							projectId={project.id}
+						/>
+					</div>
+				) : null}
 				<div className={styles.container}>
 					{fetchData ? (
-						<FetchTableData
-							interfaceId={interfacer.id}
-							keys={keys}
-							request={fetchData}
-						/>
+						<div className={styles["table-container"]}>
+							<FetchTableData
+								interfaceId={interfacer.id}
+								keys={keys}
+								request={fetchData}
+							/>
+						</div>
 					) : null}
 					{!createData ? null : (
 						<div className={styles["form-container"]}>
@@ -97,9 +134,32 @@ async function getData({
 		(i: { [key: string]: string }) => i.slug === interfaceSlug
 	);
 
+	// Check if the token is present and valid on the backend
+	// The token doesnt ever have to come to the frontend
+	// Fetch tokens that need inputting
+	const { data: requiredTokensData, error: requiredTokensError } =
+		await serverRequest(
+			`/api/v1/projects/${projectData.id}/third-party-tokens/require-auth`,
+			{
+				method: "POST",
+				requestBody: {
+					projectId: projectData.id,
+					interfaceId: interfacer.id,
+				},
+			}
+		);
+	if (requiredTokensError) {
+		console.error(requiredTokensError.technicalError);
+		throw new Error(
+			"Failed to find required token data. Returning an error to protect user data."
+		);
+	}
+	const needsKeys = requiredTokensData.unsatisifed_auth_keys;
+
 	return {
 		project: projectData,
 		interfacer,
 		access,
+		needsKeys,
 	};
 }

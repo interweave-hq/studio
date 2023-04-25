@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode, type HTMLAttributes } from "react";
+import { useRef, type ReactNode, type ButtonHTMLAttributes } from "react";
 import styles from "./button.module.css";
 import { combineCss, shapeCss } from "@/lib/helpers";
 
@@ -55,7 +55,7 @@ export function Button({
 }: {
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 	children: ReactNode;
-	domProps?: Omit<HTMLAttributes<HTMLButtonElement>, "onClick">;
+	domProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
 	flavor?: keyof typeof Flavors;
 	size?: keyof typeof Sizes;
 	kind?: keyof typeof Kinds;

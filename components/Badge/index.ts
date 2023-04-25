@@ -1,3 +1,3 @@
-import { Badge } from "./Badge";
+import { Badge, type BadgeOverrides } from "./Badge";
 
-export { Badge };
+export { Badge, type BadgeOverrides };

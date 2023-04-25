@@ -1,0 +1,99 @@
+.overlay {
+	animation: veil 0.4s ease-in-out forwards;
+	height: 100vh;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	transform: scale(1.2);
+	width: 100vw;
+	z-index: 10;
+}
+
+.center-container {
+	display: flex;
+	height: 100vh;
+	left: 0;
+	justify-content: center;
+	position: absolute;
+	top: 0;
+	width: 100vw;
+	z-index: 20;
+}
+
+.dialog {
+	animation: appear 0.35s ease-in-out 0.15s forwards;
+	border-radius: var(--border-radius-secondary);
+	box-shadow: 0 5px 15px -7px black;
+	background-color: #f8f8f8;
+	height: fit-content;
+	min-height: 200px;
+	min-width: 350px;
+	opacity: 0.01;
+	overflow: hidden;
+	padding: 56px 56px;
+	transform: scale(1.2);
+	margin: 20vh 0;
+	width: 650px;
+}
+
+.dialog__title {
+	color: var(--grey-1);
+	font-size: 20px;
+}
+
+.dialog__description {
+	color: var(--grey-5);
+	font-size: 14px;
+	line-height: 1.5;
+	margin: 8px 0;
+}
+
+.dialog__form {
+	margin: 40px 0 0 0;
+}
+
+.dialog__link {
+	color: var(--grey-5);
+	display: block;
+	font-size: 12px;
+	text-decoration: underline;
+}
+
+.dialog__input-container {
+	margin: 24px 0;
+}
+
+.dialog__bottom {
+	align-items: baseline;
+	display: flex;
+	height: min-content;
+	justify-content: space-between;
+	margin: 56px 0 0 0;
+}
+
+.dialog__loading-dots {
+	margin-right: 8px;
+}
+
+@keyframes veil {
+	from {
+		background-color: transparent;
+		filter: blur(0);
+	}
+	to {
+		background-color: rgba(0, 0, 0, 0.8);
+		filter: blur(5px);
+	}
+}
+
+@keyframes appear {
+	from {
+		opacity: 0.01;
+		transform: translateY(35px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}

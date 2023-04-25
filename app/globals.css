@@ -8,6 +8,7 @@
 		"Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
 	--border-radius-primary: 1px;
+	--border-radius-secondary: 4px;
 
 	--grey-1: #454545;
 	--grey-2: #afafaf;
@@ -18,6 +19,8 @@
 
 	--color-red-dark: #5d2020;
 	--color-red-light: #ba1f1f;
+
+	--color-brand-primary: #bcefce;
 }
 
 .tremor-base input {
@@ -40,6 +43,7 @@
 
 html,
 body {
+	background-color: #fafafa;
 	max-width: 100vw;
 	overflow-x: hidden;
 }

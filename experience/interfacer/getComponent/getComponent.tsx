@@ -19,6 +19,7 @@ interface GetComponentOptions {
 	styles?: string;
 	hidden?: boolean;
 	error?: string;
+	maxLength?: number;
 	form: {
 		register: (key: string, opts?: RegisterOptions) => object;
 		control?: Control;
@@ -40,6 +41,7 @@ export const getComponent = (
 	const styles = options?.styles;
 	const description = options?.description;
 	const register = options?.form?.register;
+	const maxLength = options.maxLength;
 
 	// If is_array, we can render a multiselect
 	if (enumValue && isArray) {
@@ -106,6 +108,7 @@ export const getComponent = (
 							readOnly: disabled,
 						}}
 						helperText={description}
+						maxLength={maxLength}
 					/>
 				),
 				key,
@@ -126,6 +129,7 @@ export const getComponent = (
 						error={options?.error}
 						__cssFor={{ root: styles }}
 						helperText={description}
+						maxLength={maxLength}
 					/>
 				),
 				key,

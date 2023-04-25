@@ -77,18 +77,31 @@ export default function DynamicTable({
 	data,
 	columnData,
 	uri,
+	requestDuration,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
 	uri: string;
+	requestDuration?: number;
 }) {
 	const { data: cols, error } = useMemo(
 		() => getColumnsFromKeys(columnData),
 		[]
 	);
+	const getDurationNumber = (num: number) => {
+		const seconds = num / 1000;
+		if (seconds < 1) {
+			return `${num.toFixed(0)}ms`;
+		}
+		return `${seconds.toFixed(2)}s`;
+	};
 	const supplementalInfo = [
 		`GET ${uri}`,
-		`Fetched ${data.length} entries in 1.2s`,
+		requestDuration
+			? `Fetched ${data.length} entries in ${getDurationNumber(
+					requestDuration
+			  )}`
+			: "",
 	];
 	if (cols === null || error) {
 		return (

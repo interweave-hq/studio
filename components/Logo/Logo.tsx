@@ -28,7 +28,7 @@ export default function Logo({ __cssFor }: LogoProps) {
 			className={rootStyles}
 			viewBox="0 0 3400 900"
 		>
-			<title>Interweaver</title>
+			<title>Interweave</title>
 			<g clipPath="url(#a)">
 				<path
 					d="M194.05 185.082c-41.936 40.395-70.463 79.696-56.081 118.475 20.326 54.794 120.364 63.681 217.739 60.877l.737 70.406c-172.879 5.132-272.4646-6.606-306.3889-98.112-24.011-64.75 23.6068-130.379 93.6429-197.791"
