@@ -78,11 +78,13 @@ export default function DynamicTable({
 	columnData,
 	uri,
 	requestDuration,
+	reload,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
 	uri: string;
 	requestDuration?: number;
+	reload?: () => void;
 }) {
 	const { data: cols, error } = useMemo(
 		() => getColumnsFromKeys(columnData),
@@ -112,6 +114,11 @@ export default function DynamicTable({
 		);
 	}
 	return (
-		<Table columns={cols} data={data} supplementalInfo={supplementalInfo} />
+		<Table
+			columns={cols}
+			data={data}
+			supplementalInfo={supplementalInfo}
+			reload={reload}
+		/>
 	);
 }

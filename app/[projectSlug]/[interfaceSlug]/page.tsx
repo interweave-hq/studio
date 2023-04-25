@@ -71,18 +71,6 @@ export default async function Home({
 					buildTime={interfacer.build_time}
 					privacy={interfacer.privacy}
 				/>
-				{hasAuthKeys ? (
-					<div
-						className={
-							styles["delete-authentication-button-container"]
-						}
-					>
-						<DeleteAPITokens
-							interfaceId={interfacer.id}
-							projectId={project.id}
-						/>
-					</div>
-				) : null}
 				<div className={styles.container}>
 					{fetchData ? (
 						<div className={styles["table-container"]}>
@@ -100,6 +88,18 @@ export default async function Home({
 						</div>
 					)}
 				</div>
+				{hasAuthKeys ? (
+					<div
+						className={
+							styles["delete-authentication-button-container"]
+						}
+					>
+						<DeleteAPITokens
+							interfaceId={interfacer.id}
+							projectId={project.id}
+						/>
+					</div>
+				) : null}
 			</main>
 		</>
 	);

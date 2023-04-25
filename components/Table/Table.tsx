@@ -18,7 +18,9 @@ import {
 	ChevronDoubleRight,
 	ChevronLeft,
 	ChevronRight,
+	Reload,
 } from "@/components/Icons";
+import { combineCss } from "@/lib/helpers";
 
 function FilterButton({
 	hidden,
@@ -27,6 +29,8 @@ function FilterButton({
 	hidden: boolean;
 	setHidden: (value: boolean) => void;
 }) {
+	// temporarily disabling until we have bandwidth to make it better looking
+	return null;
 	return (
 		<button
 			onClick={() => setHidden(!hidden)}
@@ -41,10 +45,12 @@ export default function Table({
 	data,
 	columns,
 	supplementalInfo = [],
+	reload,
 }: {
 	data: any;
 	columns: any[];
 	supplementalInfo?: string[];
+	reload?: () => void;
 }) {
 	const [rowSelection, setRowSelection] = useState({});
 	useEffect(() => {
@@ -71,11 +77,6 @@ export default function Table({
 
 	return (
 		<div className={styles.root}>
-			{supplementalInfo.map((s, i) => (
-				<span key={s} className={styles["table__supplemental-info"]}>
-					{s}
-				</span>
-			))}
 			<div className={styles.table__outer}>
 				<table className={styles.table}>
 					<thead>
@@ -149,79 +150,115 @@ export default function Table({
 					</tbody>
 				</table>
 			</div>
-			<div className={styles["table-controls"]}>
-				<button
-					onClick={() => table.setPageIndex(0)}
-					disabled={!table.getCanPreviousPage()}
-					className={styles["table-controls__button"]}
-				>
-					<ChevronDoubleLeft
-						className={styles["table-controls__button-svg"]}
-					/>
-				</button>
-				<button
-					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
-					className={styles["table-controls__button"]}
-				>
-					<ChevronLeft
-						className={styles["table-controls__button-svg"]}
-					/>
-				</button>
-				<button
-					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
-					className={styles["table-controls__button"]}
-				>
-					<ChevronRight
-						className={styles["table-controls__button-svg"]}
-					/>
-				</button>
-				<button
-					onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-					disabled={!table.getCanNextPage()}
-					className={styles["table-controls__button"]}
-				>
-					<ChevronDoubleRight
-						className={styles["table-controls__button-svg"]}
-					/>
-				</button>
-				<span>
-					<p className={styles["table-controls__page-text"]}>Page</p>
-					<strong
-						className={styles["table-controls__page-range-number"]}
+			<div className={styles["table__bottom-container"]}>
+				<div className={styles["table-controls"]}>
+					<button
+						onClick={() => table.setPageIndex(0)}
+						disabled={!table.getCanPreviousPage()}
+						className={styles["table-controls__button"]}
 					>
-						{table.getState().pagination.pageIndex + 1} of{" "}
-						{table.getPageCount()}
-					</strong>
-				</span>
-				<span className={styles["table-controls__go-to-text"]}>
-					Go to page:
-					<input
-						className={styles["table-controls__input"]}
-						type="number"
-						defaultValue={table.getState().pagination.pageIndex + 1}
+						<ChevronDoubleLeft
+							className={styles["table-controls__button-svg"]}
+						/>
+					</button>
+					<button
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+						className={styles["table-controls__button"]}
+					>
+						<ChevronLeft
+							className={styles["table-controls__button-svg"]}
+						/>
+					</button>
+					<button
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}
+						className={styles["table-controls__button"]}
+					>
+						<ChevronRight
+							className={styles["table-controls__button-svg"]}
+						/>
+					</button>
+					<button
+						onClick={() =>
+							table.setPageIndex(table.getPageCount() - 1)
+						}
+						disabled={!table.getCanNextPage()}
+						className={styles["table-controls__button"]}
+					>
+						<ChevronDoubleRight
+							className={styles["table-controls__button-svg"]}
+						/>
+					</button>
+					<span>
+						<p className={styles["table-controls__page-text"]}>
+							Page
+						</p>
+						<strong
+							className={
+								styles["table-controls__page-range-number"]
+							}
+						>
+							{table.getState().pagination.pageIndex + 1} of{" "}
+							{table.getPageCount()}
+						</strong>
+					</span>
+					<span className={styles["table-controls__go-to-text"]}>
+						Go to page:
+						<input
+							className={styles["table-controls__input"]}
+							type="number"
+							defaultValue={
+								table.getState().pagination.pageIndex + 1
+							}
+							onChange={(e) => {
+								const page = e.target.value
+									? Number(e.target.value) - 1
+									: 0;
+								table.setPageIndex(page);
+							}}
+						/>
+					</span>
+					<select
+						className={styles["table-controls__select"]}
+						value={table.getState().pagination.pageSize}
 						onChange={(e) => {
-							const page = e.target.value
-								? Number(e.target.value) - 1
-								: 0;
-							table.setPageIndex(page);
+							table.setPageSize(Number(e.target.value));
 						}}
-					/>
-				</span>
-				<select
-					className={styles["table-controls__select"]}
-					value={table.getState().pagination.pageSize}
-					onChange={(e) => {
-						table.setPageSize(Number(e.target.value));
-					}}
-				>
-					{[10, 20, 30, 40, 50].map((pageSize) => (
-						<option key={pageSize} value={pageSize}>
-							Show {pageSize}
-						</option>
+					>
+						{[10, 20, 30, 40, 50].map((pageSize) => (
+							<option key={pageSize} value={pageSize}>
+								Show {pageSize}
+							</option>
+						))}
+					</select>
+					{reload ? (
+						<button
+							onClick={() => reload()}
+							className={combineCss([
+								styles["table-controls__button"],
+								styles["table__reload-button"],
+							])}
+						>
+							<Reload
+								className={combineCss([
+									styles["table-controls__button-svg"],
+									styles["table__reload-button-svg"],
+								])}
+							/>
+						</button>
+					) : null}
+				</div>
+				<div>
+					{supplementalInfo.map((s, i) => (
+						<span
+							key={s}
+							className={styles["table__supplemental-info"]}
+						>
+							{s}
+						</span>
 					))}
-				</select>
+				</div>
 			</div>
 		</div>
 	);

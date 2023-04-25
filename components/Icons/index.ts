@@ -4,9 +4,10 @@ import ChevronDoubleRight from "./ChevronDoubleRight";
 import ChevronLeft from "./ChevronLeft";
 import ChevronRight from "./ChevronRight";
 import EyeSlash from "./EyeSlash";
+import Globe from "./Globe";
 import HandRaised from "./HandRaised";
 import LockClosed from "./LockClosed";
-import Globe from "./Globe";
+import Reload from "./Reload";
 import UserGroup from "./UserGroup";
 
 // Icons
@@ -17,8 +18,9 @@ export {
 	ChevronLeft,
 	ChevronRight,
 	EyeSlash,
+	Globe,
 	HandRaised,
 	LockClosed,
-	Globe,
+	Reload,
 	UserGroup,
 };

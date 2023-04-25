@@ -57,8 +57,10 @@ export function FetchTableData({
 	const [valueState, setValueState] = useState<ValueState>({});
 	const [makeRequest, setMakeRequest] = useState(false);
 	const [url, setUrl] = useState(request.uri);
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
+	// Boolean switch, whenever value changes, we rerun the query
+	const [triggerReload, setTriggerReload] = useState(false);
 
 	// if theres URL parameters, wait until something has been submitted
 	// if theres required query parameters, wait until something has been submitted
@@ -159,10 +161,10 @@ export function FetchTableData({
 				setLoading(false);
 			} catch (err) {
 				setLoading(false);
-				console.error(error);
+				console.error(err);
 			}
 		})();
-	}, [valueState, makeRequest]);
+	}, [valueState, makeRequest, triggerReload]);
 
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
@@ -197,6 +199,7 @@ export function FetchTableData({
 					columnData={keys}
 					uri={url}
 					requestDuration={requestDuration}
+					reload={() => setTriggerReload(!triggerReload)}
 				/>
 			) : null}
 		</div>

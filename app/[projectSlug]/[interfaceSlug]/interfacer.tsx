@@ -34,6 +34,7 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		setError,
 		clearErrors,
 		formState: { errors },
+		reset,
 	} = useForm();
 	const hasSubmissionError =
 		submissionError?.technicalError || submissionError?.userError;
@@ -139,6 +140,7 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		}
 		setFormSuccess(true);
 		setFormLoading(false);
+		reset();
 		return;
 	};
 

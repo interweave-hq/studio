@@ -62,6 +62,7 @@ function WizardPanel({
 				}
 			);
 			if (error?.userError) {
+				setLoading(false);
 				setError(error?.userError);
 				return;
 			}

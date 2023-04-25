@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Button, Input, Select } from "@/components";
+import { Button, Input, Select, LoadingDots } from "@/components";
 import { clientRequest } from "@/lib/api/clientRequest";
 import styles from "./styles.module.css";
 
@@ -83,7 +83,7 @@ export function AddTokens({ projectId }: { projectId: string }) {
 					__cssFor={{ root: styles["add-token__input"] }}
 				/>
 				<Button>Create API Token</Button>
-				{isMutating ? "Loading..." : null}
+				{isMutating ? <LoadingDots /> : null}
 				{error ? (
 					<p className={styles["add-token__error"]}>{error}</p>
 				) : null}
