@@ -91,7 +91,15 @@ const getColumnsFromKeys = (columnData: {
 			// hide: tableOptions?.hidden,
 		};
 	});
-	return { data: cols, error: null };
+	// Having a bunch of empty columns makes the table look and function better
+	// The accessibility of this may not be great...
+	const MIN_COLUMNS = 8;
+	const diff = MIN_COLUMNS - cols.length;
+	const emptyCols = new Array(diff)
+		.fill({ header: "", key: null })
+		.map((e, i) => ({ ...e, id: `empty-col-${i}` }));
+	const fullCols = cols.concat(emptyCols);
+	return { data: fullCols, error: null };
 };
 
 export default function DynamicTable({

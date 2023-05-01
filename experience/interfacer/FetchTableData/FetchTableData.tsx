@@ -148,6 +148,7 @@ export function FetchTableData({
 	useEffect(() => {
 		(async () => {
 			try {
+				if (!makeRequest) return;
 				setError(DEFAULT_ERROR);
 				setLoading(true);
 				const fullUrl = new URL(url);

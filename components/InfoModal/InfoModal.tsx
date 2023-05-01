@@ -12,6 +12,9 @@ const Overrides = {
 	title: "title",
 	body: "body",
 	ctaContainer: "ctaContainer",
+	ctaContainerRight: "ctaContainerRight",
+	ctaContainerLeft: "ctaContainerLeft",
+	contextLink: "contextLink",
 	mainContent: "mainContent",
 } as const;
 
@@ -26,6 +29,7 @@ export interface InfoModalProps {
 	children?: React.ReactNode;
 	cancelCtaProps?: Partial<ButtonProps>;
 	confirmCtaProps?: Partial<ButtonProps>;
+	contextLink?: string;
 	isLoading?: boolean;
 	errorProps?: ErrorProps;
 	modalProps: Omit<ModalProps, "children">;
@@ -44,6 +48,7 @@ export function InfoModal(props: InfoModalProps) {
 		cancelCtaProps,
 		children,
 		confirmCtaProps,
+		contextLink,
 		errorProps,
 		isLoading,
 		title,
@@ -56,6 +61,9 @@ export function InfoModal(props: InfoModalProps) {
 		title: titleStyles,
 		body: bodyStyles,
 		ctaContainer: ctaContainerStyles,
+		ctaContainerLeft: ctaContainerLeftStyles,
+		ctaContainerRight: ctaContainerRightStyles,
+		contextLink: contextLinkStyles,
 		mainContent: mainContentStyles,
 	} = useMemo(() => {
 		return shapeCss<OverridesKeys, InfoModalOverrides<string>>(
@@ -91,22 +99,40 @@ export function InfoModal(props: InfoModalProps) {
 					__renderBottom(props)
 				) : confirmCtaProps || cancelCtaProps ? (
 					<div className={ctaContainerStyles}>
-						{isLoading ? (
-							<LoadingDots __cssFor={{ root: styles.loading }} />
-						) : null}
-						{cancelCtaProps ? (
-							<Button
-								onClick={() => modalProps.setClosed?.()}
-								{...cancelCtaProps}
-							>
-								{cancelCtaProps?.children}
-							</Button>
-						) : null}
-						{confirmCtaProps ? (
-							<Button {...confirmCtaProps}>
-								{confirmCtaProps?.children}
-							</Button>
-						) : null}
+						{contextLink ? (
+							<div className={ctaContainerLeftStyles}>
+								<a
+									className={contextLinkStyles}
+									target="_blank"
+									rel="noopener noreferrer"
+									href={contextLink}
+								>
+									More Information
+								</a>
+							</div>
+						) : (
+							<span></span>
+						)}
+						<div className={ctaContainerRightStyles}>
+							{isLoading ? (
+								<LoadingDots
+									__cssFor={{ root: styles.loading }}
+								/>
+							) : null}
+							{cancelCtaProps ? (
+								<Button
+									onClick={() => modalProps.setClosed?.()}
+									{...cancelCtaProps}
+								>
+									{cancelCtaProps?.children}
+								</Button>
+							) : null}
+							{confirmCtaProps ? (
+								<Button {...confirmCtaProps}>
+									{confirmCtaProps?.children}
+								</Button>
+							) : null}
+						</div>
 					</div>
 				) : null}
 			</div>

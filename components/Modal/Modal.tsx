@@ -128,10 +128,12 @@ export function Modal({
 					) : null}
 					{children}
 				</div>
-				<div
-					className={styles["dialog__overlay-click-target"]}
-					onClick={handleModalClose}
-				></div>
+				{isDismissible ? (
+					<div
+						className={styles["dialog__overlay-click-target"]}
+						onClick={handleModalClose}
+					></div>
+				) : null}
 			</div>
 		</div>
 	);

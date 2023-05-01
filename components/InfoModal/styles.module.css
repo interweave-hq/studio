@@ -15,20 +15,34 @@
 }
 
 .ctaContainer {
+	align-items: center;
 	border-top: 1px solid var(--grey-3);
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	margin-top: 24px;
-	padding: 24px calc(var(--dialog-padding) / 2);
+	padding: 24px var(--dialog-padding);
 	position: sticky;
 	bottom: 0;
 	background-color: var(--dialog-background-color);
 }
 
-.ctaContainer *:last-child {
+.ctaContainerRight {
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.ctaContainerRight *:last-child {
 	margin-left: 16px;
 }
 
 .loading {
 	margin-right: 16px;
+}
+
+.contextLink {
+	color: var(--grey-5);
+	display: block;
+	font-size: 12px;
+	text-decoration: underline;
 }

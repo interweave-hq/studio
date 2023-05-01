@@ -1,38 +1,3 @@
-.dialog__title {
-	color: var(--grey-1);
-	font-size: 20px;
-}
-
-.dialog__description {
-	color: var(--grey-5);
-	font-size: 14px;
-	line-height: 1.5;
-	margin: 8px 0;
-}
-
 .dialog__form {
-	margin: 40px 0 0 0;
-}
-
-.dialog__link {
-	color: var(--grey-5);
-	display: block;
-	font-size: 12px;
-	text-decoration: underline;
-}
-
-.dialog__input-container {
-	margin: 24px 0;
-}
-
-.dialog__bottom {
-	align-items: baseline;
-	display: flex;
-	height: min-content;
-	justify-content: space-between;
-	margin: 56px 0 0 0;
-}
-
-.dialog__loading-dots {
-	margin-right: 8px;
+	margin: 40px 0;
 }
