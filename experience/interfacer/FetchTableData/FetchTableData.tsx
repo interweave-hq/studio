@@ -7,6 +7,7 @@ import { Error, LoadingDots } from "@/components";
 import { type Error as ErrorType } from "@/interfaces/Error";
 import Table from "./table";
 import { ParameterInputs } from "../ParameterInputs";
+import { parseUrl } from "@/lib/parsers";
 
 const notReadyReturn: RequestReturn = {
 	data: [],
@@ -17,7 +18,7 @@ const notReadyReturn: RequestReturn = {
 	status: 400,
 };
 
-interface ValueState {
+interface QueryState {
 	[key: string]: {
 		isOptional: boolean;
 		isSearchParam: boolean;
@@ -25,9 +26,9 @@ interface ValueState {
 	};
 }
 
-function getUrlQueryParamaters(valueState: ValueState) {
+function getUrlQueryParamaters(queryState: QueryState) {
 	const query = new URLSearchParams();
-	for (const [key, value] of Object.entries(valueState)) {
+	for (const [key, value] of Object.entries(queryState)) {
 		if (value.isSearchParam) {
 			query.append(key, value.value);
 		}
@@ -45,18 +46,22 @@ const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
  */
 export function FetchTableData({
 	keys,
-	request,
+	getRequest,
+	updateRequest,
+	deleteRequest,
 	interfaceId,
 }: {
 	keys: any;
-	request: Request;
+	getRequest: Request;
+	updateRequest: Request;
+	deleteRequest: Request;
 	interfaceId: string;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
-	const [valueState, setValueState] = useState<ValueState>({});
+	const [queryState, setQueryState] = useState<QueryState>({});
 	const [makeRequest, setMakeRequest] = useState(false);
-	const [url, setUrl] = useState(request.uri);
+	const [url, setUrl] = useState(getRequest.uri);
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
 	// Boolean switch, whenever value changes, we rerun the query
@@ -64,13 +69,13 @@ export function FetchTableData({
 
 	// if theres URL parameters, wait until something has been submitted
 	// if theres required query parameters, wait until something has been submitted
-	const parameters = request?.parameters;
+	const parameters = getRequest?.parameters;
 	const parameterKeys = parameters ? Object.keys(parameters) : [];
 	const hasUrlParameters = url.indexOf("{") > -1;
 
 	const setFormState = (data: any) => {
 		for (const [key, value] of Object.entries(data)) {
-			setValueState((prev: ValueState) => ({
+			setQueryState((prev: QueryState) => ({
 				...prev,
 				[key]: {
 					...prev[key],
@@ -86,8 +91,10 @@ export function FetchTableData({
 			if (parameterKeys.length > 0) {
 				parameterKeys.forEach((paramKey) => {
 					const param = parameters[paramKey];
-					const isSearchParam = !(request.uri.indexOf(paramKey) > -1);
-					setValueState((prev) => ({
+					const isSearchParam = !(
+						getRequest.uri.indexOf(paramKey) > -1
+					);
+					setQueryState((prev) => ({
 						...prev,
 						[paramKey]: {
 							isOptional: !!param.schema?.is_optional,
@@ -109,7 +116,7 @@ export function FetchTableData({
 				parameterKeys.forEach((paramKey) => {
 					const param = parameters[paramKey];
 					const value =
-						valueState[paramKey]?.value ||
+						queryState[paramKey]?.value ||
 						param.schema.default_value;
 					const isRequired = !param.schema.is_optional;
 					const isSearchParam = !(url.indexOf(paramKey) > -1);
@@ -117,7 +124,7 @@ export function FetchTableData({
 					// Update URL to remove any required parameters
 					if (value) {
 						if (!isSearchParam) {
-							setUrl(url.replace(`{${paramKey}}`, value));
+							setUrl(url.replace(`{query.${paramKey}}`, value));
 						}
 					}
 
@@ -128,7 +135,7 @@ export function FetchTableData({
 				setMakeRequest(allGood);
 			}
 		}
-	}, [valueState]);
+	}, [queryState]);
 
 	// Whenever our parameters or URL changes, we check to see if we can make our request
 	useEffect(() => {
@@ -144,8 +151,9 @@ export function FetchTableData({
 				setError(DEFAULT_ERROR);
 				setLoading(true);
 				const fullUrl = new URL(url);
-				const query = getUrlQueryParamaters(valueState);
+				const query = getUrlQueryParamaters(queryState);
 				fullUrl.search = query.toString().replaceAll("%2C", ",");
+				setUrl(fullUrl.href);
 				const { data, error, duration } = makeRequest
 					? await getTableData({ interfaceId, url: fullUrl.href })
 					: notReadyReturn;
@@ -164,7 +172,7 @@ export function FetchTableData({
 				console.error(err);
 			}
 		})();
-	}, [valueState, makeRequest, triggerReload]);
+	}, [queryState, makeRequest, triggerReload]);
 
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
@@ -178,6 +186,14 @@ export function FetchTableData({
 		};
 		setError(badConfigError.error);
 	}
+
+	const preparedDeleteRequest = deleteRequest
+		? prepareDeleteRequest({
+				interfaceId,
+				request: deleteRequest,
+				parameters: queryState,
+		  })
+		: deleteRequest;
 
 	return (
 		<div>
@@ -200,6 +216,8 @@ export function FetchTableData({
 					uri={url}
 					requestDuration={requestDuration}
 					reload={() => setTriggerReload(!triggerReload)}
+					deleteRequest={preparedDeleteRequest}
+					updateRequest={updateRequest}
 				/>
 			) : null}
 		</div>
@@ -218,3 +236,34 @@ async function getTableData({
 		requestBody: { method: "get", uri: url, return_array: true },
 	});
 }
+
+const prepareDeleteRequest =
+	({
+		interfaceId,
+		request,
+		parameters,
+	}: {
+		interfaceId: string;
+		request: Request;
+		parameters?: Record<string, any>;
+	}) =>
+	async ({ row }: { row?: Record<string, any> }): Promise<RequestReturn> => {
+		const { data, error } = parseUrl(request.uri, {
+			parameters,
+			row: { ...row?.original },
+		});
+		if (error) {
+			return {
+				data: null,
+				error: {
+					userError: "Parsing URL with variables failed.",
+					technicalError: error,
+				},
+				status: 400,
+			};
+		}
+		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
+			method: "POST",
+			requestBody: { method: "delete", uri: data },
+		});
+	};

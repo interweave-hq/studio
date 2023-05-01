@@ -28,6 +28,9 @@ export default async function Home({
 	const config = interfacer.schema_config;
 	const keys = config.keys;
 
+	// If there's no access, I think we assume they have permission
+	// we only create an Access object if they're invited
+	// otherwise it's public and accessible?
 	const accessPermissions = access?.permissions;
 	const canRead =
 		!access ||
@@ -37,8 +40,20 @@ export default async function Home({
 		!access ||
 		accessPermissions.includes("Create") ||
 		accessPermissions.includes("All");
+	const canDelete =
+		!access ||
+		accessPermissions.includes("Delete") ||
+		accessPermissions.includes("All");
+	const canUpdate =
+		!access ||
+		accessPermissions.includes("Update") ||
+		accessPermissions.includes("All");
 	const fetchData = canRead && interfacer.schema_config.requests?.get;
 	const createData = canCreate && interfacer.schema_config.requests?.create;
+	const deleteRequest =
+		canDelete && interfacer.schema_config.requests?.delete;
+	const updateRequest =
+		canDelete && interfacer.schema_config.requests?.update;
 
 	const hasAuthKeys =
 		Object.keys(interfacer.schema_config.authentication || {}).length > 0;
@@ -77,7 +92,9 @@ export default async function Home({
 							<FetchTableData
 								interfaceId={interfacer.id}
 								keys={keys}
-								request={fetchData}
+								getRequest={fetchData}
+								updateRequest={updateRequest}
+								deleteRequest={deleteRequest}
 							/>
 						</div>
 					) : null}

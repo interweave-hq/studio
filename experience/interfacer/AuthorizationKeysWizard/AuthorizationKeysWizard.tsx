@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import { Button, Error, Input, LoadingDots } from "@/components";
+import { Button, Error, Input, LoadingDots, Modal } from "@/components";
 import { useState } from "react";
 import { clientRequest } from "@/lib/api/clientRequest";
 
@@ -18,18 +18,13 @@ export function AuthorizationKeysWizard({
 	schemes: object[];
 }) {
 	return (
-		<div>
-			<div className={styles.overlay}></div>
-			<div className={styles["center-container"]}>
-				<div className={styles.dialog}>
-					<WizardPanel
-						scheme={schemes[0]}
-						projectId={projectId}
-						interfaceId={interfaceId}
-					/>
-				</div>
-			</div>
-		</div>
+		<Modal isDismissible={false} isOpen>
+			<WizardPanel
+				scheme={schemes[0]}
+				projectId={projectId}
+				interfaceId={interfaceId}
+			/>
+		</Modal>
 	);
 }
 

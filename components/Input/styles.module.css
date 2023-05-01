@@ -27,8 +27,8 @@
 }
 
 .input-error {
-	border: solid 1px var(--color-red-light);
 	background-color: rgba(186, 31, 31, 0.05);
+	border: solid 1px var(--color-red-light);
 }
 
 .top-container {

@@ -8,6 +8,7 @@ import {
 	type PrivacyValue,
 	type PrivacyBadgeOverrides,
 } from "../PrivacyBadge";
+import { useMemo } from "react";
 
 const Overrides = {
 	root: "root",
@@ -60,11 +61,13 @@ export const InterfaceCard = ({
 		lastBuild: lastBuildStyles,
 		description: descriptionStyles,
 		PrivacyBadge: privacyBadgeStyles,
-	} = shapeCss<OverridesKeys, InterfaceCardOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	} = useMemo(() => {
+		return shapeCss<OverridesKeys, InterfaceCardOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	const buildTime = timeAgo(new Date(lastBuild!));
 
 	return (

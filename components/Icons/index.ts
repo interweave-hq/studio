@@ -9,6 +9,7 @@ import HandRaised from "./HandRaised";
 import LockClosed from "./LockClosed";
 import Reload from "./Reload";
 import UserGroup from "./UserGroup";
+import XMark from "./XMark";
 
 // Icons
 export {
@@ -23,4 +24,5 @@ export {
 	LockClosed,
 	Reload,
 	UserGroup,
+	XMark as XMarkSVG,
 };

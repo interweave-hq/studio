@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useId } from "react";
+import { useState, useEffect, useRef, useId, useMemo } from "react";
 import { useController } from "react-hook-form";
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
@@ -69,10 +69,13 @@ const MultiSelect = ({
 	);
 	const { field } = useController(form);
 	const ref = useRef(form.control);
-	const { root: rootStyles, container: containerStyles } = shapeCss<
-		OverridesKeys,
-		MultiSelectOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles, container: containerStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, MultiSelectOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 
 	// Holy fucking fuck this shit
 	// Makes activeChildren work as expected for fucks sake

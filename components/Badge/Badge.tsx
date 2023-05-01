@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import styles from "./style.module.css";
 
 import { shapeCss } from "@/lib/helpers";
@@ -34,11 +34,13 @@ export const Badge = ({
 		root: rootStyles,
 		icon: iconStyles,
 		text: textStyles,
-	} = shapeCss<OverridesKeys, BadgeOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	} = useMemo(() => {
+		return shapeCss<OverridesKeys, BadgeOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 
 	return (
 		<div className={rootStyles}>

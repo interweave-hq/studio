@@ -1,5 +1,6 @@
 import styles from "./logo.module.css";
 import { shapeCss } from "@/lib/helpers";
+import { useMemo } from "react";
 
 const Overrides = {
 	root: "root",
@@ -16,11 +17,13 @@ export interface LogoProps {
 }
 
 export default function Logo({ __cssFor }: LogoProps) {
-	const { root: rootStyles } = shapeCss<OverridesKeys, LogoOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	const { root: rootStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, LogoOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return (
 		<svg
 			fill="none"

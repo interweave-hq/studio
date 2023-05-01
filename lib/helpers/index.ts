@@ -1,4 +1,7 @@
-import { KeyConfiguration, Schema } from "@interweave/interweave";
+import { KeyConfiguration } from "@interweave/interweave";
+import isEmpty from "is-empty";
+
+export { isEmpty };
 
 export function get(object: object, path?: string, defaultValue = null): any {
 	if (!path) {

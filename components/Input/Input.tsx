@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import { shapeCss, combineCss } from "@/lib/helpers";
 import {
@@ -67,11 +67,13 @@ const Input = ({
 		root: rootStyles,
 		input: inputStyles,
 		description: descriptionStyles,
-	} = shapeCss<OverridesKeys, InputOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	} = useMemo(() => {
+		return shapeCss<OverridesKeys, InputOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	const invalidLength = maxLength ? inputLength > maxLength : false;
 	const inputElementClass =
 		error || invalidLength

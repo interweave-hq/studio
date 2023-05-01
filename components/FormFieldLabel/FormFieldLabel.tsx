@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
+import { useMemo } from "react";
 
 const Overrides = {
 	root: "root",
@@ -27,10 +28,13 @@ export function FormFieldLabel({
 	htmlFor,
 	__cssFor,
 }: Props) {
-	const { root: rootStyles, helperText: helperTextStyles } = shapeCss<
-		OverridesKeys,
-		FormFieldLabelOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles, helperText: helperTextStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, FormFieldLabelOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return (
 		<label className={rootStyles} htmlFor={htmlFor}>
 			{children}

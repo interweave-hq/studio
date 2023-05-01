@@ -18,6 +18,18 @@
 	width: 100%;
 }
 
+/* .table__row {
+
+} */
+
+.table__row[data-selectable="true"] {
+	cursor: pointer;
+}
+
+.table__row--selected {
+	background-color: var(--color-brand-300);
+}
+
 .table__cell {
 	border-top: 1px solid var(--grey-3);
 	border-bottom: 1px solid var(--grey-3);
@@ -180,6 +192,10 @@
 
 .table__reload-button-svg {
 	stroke: var(--grey-5);
+}
+
+.table__actions-container {
+	margin-left: 16px;
 }
 
 .filter-button {

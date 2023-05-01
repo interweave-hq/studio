@@ -1,5 +1,6 @@
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
+import { useMemo } from "react";
 
 const Overrides = {
 	root: "root",
@@ -14,24 +15,26 @@ export type ErrorOverrides<T> = {
 	[K in OverridesKeys]?: T;
 };
 
-interface Props {
+export interface ErrorProps {
 	text: string;
 	details?: string;
 	title: string;
 	__cssFor?: ErrorOverrides<string>;
 }
 
-export default function Error({ text, details, title, __cssFor }: Props) {
+export default function Error({ text, details, title, __cssFor }: ErrorProps) {
 	const {
 		root: rootStyles,
 		text: textStyles,
 		details: detailsStyles,
 		title: titleStyles,
-	} = shapeCss<OverridesKeys, ErrorOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	} = useMemo(() => {
+		return shapeCss<OverridesKeys, ErrorOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return (
 		<div className={rootStyles}>
 			<h2 className={titleStyles}>{title}</h2>

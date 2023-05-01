@@ -22,7 +22,7 @@
 }
 
 .button--danger {
-	--primary-color: red;
+	--primary-color: var(--color-red-light);
 	--hover-background: darkred;
 }
 
@@ -40,10 +40,14 @@
 
 .button--small {
 	font-size: 12px;
-	padding: 8px 16px;
+	padding: 6px 14px;
 }
 
 .root:disabled {
 	cursor: not-allowed;
 	opacity: 0.75;
+}
+
+.root.button--hollow:disabled {
+	opacity: 0.25;
 }

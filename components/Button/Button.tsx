@@ -1,6 +1,11 @@
 "use client";
 
-import { useRef, type ReactNode, type ButtonHTMLAttributes } from "react";
+import {
+	useRef,
+	type ReactNode,
+	type ButtonHTMLAttributes,
+	useMemo,
+} from "react";
 import styles from "./button.module.css";
 import { combineCss, shapeCss } from "@/lib/helpers";
 
@@ -44,6 +49,16 @@ const KindStyles = {
 	[Kinds.hollow]: styles["button--hollow"],
 };
 
+export interface ButtonProps {
+	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+	children: ReactNode;
+	domProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
+	flavor?: keyof typeof Flavors;
+	size?: keyof typeof Sizes;
+	kind?: keyof typeof Kinds;
+	__cssFor?: ButtonOverrides<string>;
+}
+
 export function Button({
 	onClick = () => {},
 	children,
@@ -52,20 +67,15 @@ export function Button({
 	size = Sizes.md,
 	kind = Kinds.solid,
 	__cssFor,
-}: {
-	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
-	children: ReactNode;
-	domProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
-	flavor?: keyof typeof Flavors;
-	size?: keyof typeof Sizes;
-	kind?: keyof typeof Kinds;
-	__cssFor?: ButtonOverrides<string>;
-}) {
+}: ButtonProps) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
-	const { root: rootStyles } = shapeCss<
-		OverridesKeys,
-		ButtonOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, ButtonOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	const move = (e: React.MouseEvent<HTMLButtonElement>) => {
 		buttonRef.current?.animate(
 			[

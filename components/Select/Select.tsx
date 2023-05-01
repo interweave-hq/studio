@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ChangeEvent } from "react";
+import { useId, useMemo, type ChangeEvent } from "react";
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
 import {
@@ -65,10 +65,13 @@ const Select = ({
 	__cssFor,
 }: Props) => {
 	const id = useId();
-	const { root: rootStyles, container: containerStyles } = shapeCss<
-		OverridesKeys,
-		SelectOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles, container: containerStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, SelectOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 
 	return (
 		<div className={rootStyles} data-component="select">

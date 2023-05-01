@@ -9,9 +9,10 @@ import {
 	getPaginationRowModel,
 	flexRender,
 } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./table.module.css";
 import { Input } from "@/components/Input";
+import { Checkbox } from "@/components/Checkbox";
 import {
 	Beaker,
 	ChevronDoubleLeft,
@@ -22,57 +23,46 @@ import {
 } from "@/components/Icons";
 import { combineCss } from "@/lib/helpers";
 
-function FilterButton({
-	hidden,
-	setHidden,
-}: {
-	hidden: boolean;
-	setHidden: (value: boolean) => void;
-}) {
-	// temporarily disabling until we have bandwidth to make it better looking
-	return null;
-	return (
-		<button
-			onClick={() => setHidden(!hidden)}
-			className={styles["filter-button"]}
-		>
-			<Beaker className={styles["filter-button__icon"]} />
-		</button>
-	);
-}
-
 export default function Table({
 	data,
 	columns,
 	supplementalInfo = [],
 	reload,
+	actions,
+	setSelectedRow,
+	selectable,
 }: {
 	data: any;
 	columns: any[];
 	supplementalInfo?: string[];
 	reload?: () => void;
+	actions?: React.ReactNode[];
+	selectable?: boolean;
+	setSelectedRow?: (row: any) => void;
 }) {
-	const [rowSelection, setRowSelection] = useState({});
+	const [rowSelection, setRowSelection] = useState<any>(undefined);
+
 	useEffect(() => {
-		console.log(rowSelection);
+		if (setSelectedRow) {
+			setSelectedRow(rowSelection);
+		}
 	}, [rowSelection]);
+
 	const table = useReactTable({
 		data,
 		columns,
 		enableRowSelection: true,
+		enableMultiRowSelection: false,
 		state: {
 			rowSelection,
 		},
-		onRowSelectionChange: (e) => {
-			console.log(e);
-			setRowSelection(e);
-		},
+		onRowSelectionChange: (e) => setRowSelection(e),
 		// Pipeline
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		//
-		debugTable: true,
+		debugTable: process.env.NODE_ENV === "development",
 	});
 
 	return (
@@ -120,8 +110,27 @@ export default function Table({
 					</thead>
 					<tbody>
 						{table.getRowModel().rows.map((row) => {
+							const selectedRow = rowSelection?.id == row.id;
+							const className = selectedRow
+								? combineCss([
+										styles.table__row,
+										styles["table__row--selected"],
+								  ])
+								: styles.table__row;
 							return (
-								<tr key={row.id} className={styles.table__row}>
+								<tr
+									key={row.id}
+									className={className}
+									onClick={() => {
+										if (selectable) {
+											if (selectedRow) {
+												return setRowSelection(null);
+											}
+											setRowSelection(row);
+										}
+									}}
+									data-selectable={!!selectable}
+								>
 									{row.getVisibleCells().map((cell) => {
 										return (
 											<td
@@ -248,6 +257,11 @@ export default function Table({
 							/>
 						</button>
 					) : null}
+					{actions ? (
+						<div className={styles["table__actions-container"]}>
+							{actions.map((el) => el)}
+						</div>
+					) : null}
 				</div>
 				<div>
 					{supplementalInfo.map((s, i) => (
@@ -261,6 +275,25 @@ export default function Table({
 				</div>
 			</div>
 		</div>
+	);
+}
+
+function FilterButton({
+	hidden,
+	setHidden,
+}: {
+	hidden: boolean;
+	setHidden: (value: boolean) => void;
+}) {
+	// temporarily disabling until we have bandwidth to make it better looking
+	return null;
+	return (
+		<button
+			onClick={() => setHidden(!hidden)}
+			className={styles["filter-button"]}
+		>
+			<Beaker className={styles["filter-button__icon"]} />
+		</button>
 	);
 }
 

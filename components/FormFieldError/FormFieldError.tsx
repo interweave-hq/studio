@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
+import { useMemo } from "react";
 
 const Overrides = {
 	root: "root",
@@ -19,9 +20,12 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export function FormFieldError({ children, __cssFor }: Props) {
-	const { root: rootStyles } = shapeCss<
-		OverridesKeys,
-		FormFieldErrorOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, FormFieldErrorOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return <p className={rootStyles}>{children}</p>;
 }

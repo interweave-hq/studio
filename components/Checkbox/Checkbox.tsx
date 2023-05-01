@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useId } from "react";
+import { forwardRef, useId, useMemo } from "react";
 import styles from "./checkbox.module.css";
 import { shapeCss } from "@/lib/helpers";
 import {
@@ -57,11 +57,13 @@ const Checkbox = forwardRef<ChildRef, Props>((props, ref) => {
 		container: containerStyles,
 		input: inputStyles,
 		description: descriptionStyles,
-	} = shapeCss<OverridesKeys, CheckboxOverrides<string>>(
-		Overrides,
-		styles,
-		__cssFor
-	);
+	} = useMemo(() => {
+		return shapeCss<OverridesKeys, CheckboxOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return (
 		<div className={rootStyles}>
 			<div className={containerStyles}>

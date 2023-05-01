@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
 
@@ -16,10 +17,13 @@ export interface LoadingDotsProps {
 }
 
 export function LoadingDots({ __cssFor }: LoadingDotsProps) {
-	const { root: rootStyles } = shapeCss<
-		OverridesKeys,
-		LoadingDotsOverrides<string>
-	>(Overrides, styles, __cssFor);
+	const { root: rootStyles } = useMemo(() => {
+		return shapeCss<OverridesKeys, LoadingDotsOverrides<string>>(
+			Overrides,
+			styles,
+			__cssFor
+		);
+	}, [__cssFor]);
 	return (
 		<svg viewBox="0 0 100 100" className={rootStyles}>
 			<circle cx="25" cy="50" r="10" fill="#777">

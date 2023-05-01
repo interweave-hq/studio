@@ -39,10 +39,6 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 	const hasSubmissionError =
 		submissionError?.technicalError || submissionError?.userError;
 
-	useEffect(() => {
-		console.log(errors);
-	}, [errors]);
-
 	const config = interfacer.schema_config;
 	const schema = config.keys;
 

@@ -12,7 +12,7 @@
 
 	--grey-1: #454545;
 	--grey-2: #afafaf;
-	--grey-3: #f7f7f7;
+	--grey-3: #e9e9e9;
 	--grey-4: #d6d6d6;
 	/* brightest grey that passes contrast on white */
 	--grey-5: #757575;
@@ -21,6 +21,7 @@
 	--color-red-light: #ba1f1f;
 
 	--color-brand-primary: #bcefce;
+	--color-brand-300: rgba(188, 239, 206, 0.4);
 }
 
 .tremor-base input {

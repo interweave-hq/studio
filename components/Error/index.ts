@@ -1,3 +1,3 @@
-import Error from "./Error";
+import Error, { type ErrorProps } from "./Error";
 
-export { Error };
+export { Error, type ErrorProps };
