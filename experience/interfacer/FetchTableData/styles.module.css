@@ -12,5 +12,19 @@
 	max-width: 600px;
 	word-wrap: break-word;
 	white-space: pre;
-	overflow: scroll;
+}
+
+.loading {
+	display: flex;
+	justify-content: center;
+	margin: 16px auto;
+}
+
+.updateButton {
+	margin-right: 8px;
+}
+
+.shared-styles {
+	margin: 16px 0;
+	width: 100%;
 }

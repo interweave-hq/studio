@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Request } from "@interweave/interweave";
+import {
+	type SchemaKeys,
+	type Schema,
+	type Request,
+} from "@interweave/interweave";
 import { clientRequest, type RequestReturn } from "@/lib/api/clientRequest";
 import { Error, LoadingDots } from "@/components";
 import { type Error as ErrorType } from "@/interfaces/Error";
 import Table from "./table";
 import { ParameterInputs } from "../ParameterInputs";
-import { parseUrl } from "@/lib/parsers";
+import { parseRequest } from "@/lib/parsers";
+
+import styles from "./styles.module.css";
 
 const notReadyReturn: RequestReturn = {
 	data: [],
@@ -50,12 +56,14 @@ export function FetchTableData({
 	updateRequest,
 	deleteRequest,
 	interfaceId,
+	schema,
 }: {
-	keys: any;
+	keys: SchemaKeys;
 	getRequest: Request;
 	updateRequest: Request;
 	deleteRequest: Request;
 	interfaceId: string;
+	schema: Schema;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
@@ -196,6 +204,14 @@ export function FetchTableData({
 		  })
 		: deleteRequest;
 
+	const preparedUpdateRequest = updateRequest
+		? prepareUpdateRequest({
+				interfaceId,
+				request: updateRequest,
+				parameters: queryState,
+		  })
+		: updateRequest;
+
 	return (
 		<div>
 			<ParameterInputs
@@ -209,7 +225,11 @@ export function FetchTableData({
 					details={error.technicalError}
 				/>
 			) : null}
-			{isLoading ? <LoadingDots /> : null}
+			{isLoading ? (
+				<div className={styles.loading}>
+					<LoadingDots />
+				</div>
+			) : null}
 			{data ? (
 				<Table
 					data={data}
@@ -218,7 +238,8 @@ export function FetchTableData({
 					requestDuration={requestDuration}
 					reload={() => setTriggerReload(!triggerReload)}
 					deleteRequest={preparedDeleteRequest}
-					updateRequest={updateRequest}
+					updateRequest={preparedUpdateRequest}
+					schema={schema}
 				/>
 			) : null}
 		</div>
@@ -248,23 +269,51 @@ const prepareDeleteRequest =
 		request: Request;
 		parameters?: Record<string, any>;
 	}) =>
-	async ({ row }: { row?: Record<string, any> }): Promise<RequestReturn> => {
-		const { data, error } = parseUrl(request.uri, {
-			parameters,
-			row: { ...row?.original },
-		});
-		if (error) {
-			return {
-				data: null,
-				error: {
-					userError: "Parsing URL with variables failed.",
-					technicalError: error,
-				},
-				status: 400,
-			};
-		}
+	async ({ row }: { row: Record<string, any> }): Promise<RequestReturn> => {
+		// const { data, error } = parse(request, {
+		// 	parameters,
+		// 	row: { ...row?.original },
+		// });
+		// if (error) {
+		// 	return {
+		// 		data: null,
+		// 		error: {
+		// 			userError: "Parsing URL with variables failed.",
+		// 			technicalError: error,
+		// 		},
+		// 		status: 400,
+		// 	};
+		// }
 		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
 			method: "POST",
-			requestBody: { method: "delete", uri: data },
+			requestBody: { method: "delete", row: row.original, parameters },
+		});
+	};
+
+const prepareUpdateRequest =
+	({
+		interfaceId,
+		request,
+		parameters,
+	}: {
+		interfaceId: string;
+		request: Request;
+		parameters?: Record<string, any>;
+	}) =>
+	async ({
+		row,
+		form,
+	}: {
+		row?: Record<string, any>;
+		form?: Record<string, any>;
+	}): Promise<RequestReturn> => {
+		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
+			method: "POST",
+			requestBody: {
+				method: "update",
+				row,
+				parameters,
+				form,
+			},
 		});
 	};

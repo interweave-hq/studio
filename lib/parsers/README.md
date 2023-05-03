@@ -10,6 +10,11 @@ Users will be able to add dynamic values in the URL. For example: `https://domai
     -   Note: using `row` as a value in a `get` `Request.uri` will not work, because there is no data available yet.
 -   `row`
     -   The data from the currently selected row. If the data is not visisble, it won't be accessible.
+-   `formData`
+    -   The data collected from the form. Only available after a `create` or `update` operation.
+    -   Only keys accessible in your form are reachable here. So if you try to access `{formData.id}` and id is not specified in the form, the request will fail.
+    -   To use the entire object, just address the object withoout a key
+        -   `request_body: {formData}`
 
 ## Usage
 

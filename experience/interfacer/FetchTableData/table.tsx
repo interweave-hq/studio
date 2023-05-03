@@ -1,26 +1,35 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, cloneElement, useId } from "react";
+import { type Schema, type KeyConfiguration } from "@interweave/interweave";
+import { useForm } from "react-hook-form";
 
 import { Button, Sizes, Flavors, Kinds } from "@/components/Button";
 import { Error, InfoModal, Table } from "@/components";
 
-import { Request, type KeyConfiguration } from "@interweave/interweave";
 import { RequestReturn } from "@/lib/api/request";
 import { type Error as ErrorType } from "@/interfaces";
+import { isEmpty } from "@/lib/helpers";
+import { getComponent } from "../getComponent";
 
 import styles from "./styles.module.css";
+import { NoData } from "../NoData";
+import { formatFormObject } from "@/lib/formatters";
 
 const getActions = ({
 	activeRow,
 	renderUpdate,
 	renderDelete,
 	openDeleteModal,
+	openUpdateModal,
 }: {
 	activeRow?: any;
 	renderUpdate: boolean;
 	renderDelete: boolean;
 	openDeleteModal: (
+		e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => void;
+	openUpdateModal: (
 		e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
 	) => void;
 }) => {
@@ -36,11 +45,12 @@ const getActions = ({
 			<Button
 				key={"update"}
 				domProps={{ disabled: noActiveRow }}
-				onClick={() => console.log("heello")}
+				onClick={(e) => openUpdateModal(e)}
 				size={Sizes.sm}
 				kind={Kinds.hollow}
+				__cssFor={{ root: styles.updateButton }}
 			>
-				Update {rowData?.slug}
+				Update
 			</Button>
 		) : null,
 		renderDelete ? (
@@ -66,10 +76,14 @@ const getActions = ({
 const getColumnsFromKeys = (columnData: {
 	[key: string]: KeyConfiguration;
 }) => {
+	const initialColumnVisibility: Record<string, any> = {};
 	const keysArr = Object.keys(columnData);
 	const cols: any[] = keysArr.map((k) => {
 		const typeConfig = columnData[k];
-		// const tableOptions = typeConfig?.interface?.table;
+		const tableOptions = typeConfig?.interface?.table;
+		if (tableOptions?.hidden) {
+			initialColumnVisibility[k] = false;
+		}
 		return {
 			header: typeConfig?.interface?.form?.label || k,
 			// footer: (props) => props.column.id,
@@ -88,18 +102,24 @@ const getColumnsFromKeys = (columnData: {
 			// 	},
 			// ],
 			accessorKey: k,
-			// hide: tableOptions?.hidden,
+			isVisible: tableOptions?.hidden,
 		};
 	});
 	// Having a bunch of empty columns makes the table look and function better
 	// The accessibility of this may not be great...
-	const MIN_COLUMNS = 8;
+	const MIN_COLUMNS = 10;
 	const diff = MIN_COLUMNS - cols.length;
-	const emptyCols = new Array(diff)
+	// No negative numbers here
+	const numEmptyColumns = diff >= 0 ? diff : 0;
+	const emptyCols = new Array(numEmptyColumns)
 		.fill({ header: "", key: null })
 		.map((e, i) => ({ ...e, id: `empty-col-${i}` }));
 	const fullCols = cols.concat(emptyCols);
-	return { data: fullCols, error: null };
+	return {
+		data: fullCols,
+		initialState: { columnVisibility: initialColumnVisibility },
+		error: null,
+	};
 };
 
 export default function DynamicTable({
@@ -110,27 +130,42 @@ export default function DynamicTable({
 	reload,
 	deleteRequest,
 	updateRequest,
+	schema,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
 	uri: string;
 	requestDuration?: number;
 	reload?: () => void;
+	schema: Schema;
 	deleteRequest?: ({
 		row,
 	}: {
-		row?: Record<string, any>;
+		row: Record<string, any>;
 	}) => Promise<RequestReturn>;
-	updateRequest?: Request;
+	updateRequest?: ({
+		row,
+		form,
+	}: {
+		row: Record<string, any>;
+		form: Record<string, any>;
+	}) => Promise<RequestReturn>;
 }) {
-	const { data: cols, error } = useMemo(
-		() => getColumnsFromKeys(columnData),
-		[]
-	);
+	const {
+		data: cols,
+		error,
+		initialState,
+	} = useMemo(() => getColumnsFromKeys(columnData), []);
 	const [selectedRow, setSelectedRow] = useState<any>(undefined);
+	// Delete state
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [isDeleteRequestLoading, setDeleteRequestLoading] = useState(false);
 	const [deleteRequestError, setDeleteRequestError] = useState<ErrorType>();
+	// Update state
+	const [updateModalOpen, setUpdateModalOpen] = useState(false);
+	const [isUpdateRequestLoading, setUpdateRequestLoading] = useState(false);
+	const [updateRequestError, setUpdateRequestError] = useState<ErrorType>();
+	const updateFormId = useId();
 
 	const getDurationNumber = (num: number) => {
 		const seconds = num / 1000;
@@ -162,7 +197,12 @@ export default function DynamicTable({
 		renderDelete: !!deleteRequest,
 		renderUpdate: !!updateRequest,
 		openDeleteModal: () => {
+			setDeleteRequestError(undefined);
 			setDeleteModalOpen(true);
+		},
+		openUpdateModal: () => {
+			setUpdateRequestError(undefined);
+			setUpdateModalOpen(true);
 		},
 	});
 
@@ -173,7 +213,6 @@ export default function DynamicTable({
 
 		if (deleteRequest) {
 			const { data, error } = await deleteRequest({ row: selectedRow });
-			console.log(data, error);
 			if (error) {
 				setDeleteRequestLoading(false);
 				setDeleteRequestError(error);
@@ -183,9 +222,39 @@ export default function DynamicTable({
 		if (reload) {
 			reload();
 		}
+		setSelectedRow(undefined);
 		setDeleteModalOpen(false);
 		setDeleteRequestLoading(false);
 	};
+
+	// Handle update request
+	const handleUpdateRequest = async (formData: any) => {
+		setUpdateRequestLoading(true);
+		setUpdateRequestError(undefined);
+
+		formData = formatFormObject(formData, schema.keys);
+
+		if (updateRequest) {
+			const { data, error } = await updateRequest({
+				row: selectedRow.original,
+				form: formData,
+			});
+			if (error) {
+				setUpdateRequestLoading(false);
+				setUpdateRequestError(error);
+				return;
+			}
+		}
+		if (reload) {
+			reload();
+		}
+		setUpdateModalOpen(false);
+		setUpdateRequestLoading(false);
+	};
+
+	if (isEmpty(data)) {
+		return <NoData uri={uri} />;
+	}
 
 	return (
 		<>
@@ -209,6 +278,9 @@ export default function DynamicTable({
 					kind: "solid",
 					flavor: "danger",
 					onClick: () => handleDeleteRequest(),
+					domProps: {
+						disabled: isDeleteRequestLoading,
+					},
 				}}
 				cancelCtaProps={{
 					children: "Cancel",
@@ -225,6 +297,45 @@ export default function DynamicTable({
 					</code>
 				</div>
 			</InfoModal>
+			<InfoModal
+				modalProps={{
+					isOpen: updateModalOpen,
+					setClosed: () => setUpdateModalOpen(false),
+				}}
+				isLoading={isUpdateRequestLoading}
+				errorProps={
+					updateRequestError && {
+						title: "Update Operation Failed",
+						text:
+							updateRequestError?.userError ||
+							"This error is unexpected. Please check your configuration for this request.",
+						details: updateRequestError?.technicalError,
+					}
+				}
+				confirmCtaProps={{
+					children: "Save",
+					kind: "solid",
+					flavor: "primary",
+					domProps: {
+						type: "submit",
+						form: updateFormId,
+						disabled: isUpdateRequestLoading,
+					},
+				}}
+				cancelCtaProps={{
+					children: "Cancel",
+					kind: "hollow",
+				}}
+				title={`Update Entry`}
+				body=""
+			>
+				<UpdateForm
+					schema={schema}
+					rowData={selectedRow?.original}
+					onSubmit={handleUpdateRequest}
+					formId={updateFormId}
+				/>
+			</InfoModal>
 			<Table
 				columns={cols}
 				data={data}
@@ -233,7 +344,49 @@ export default function DynamicTable({
 				actions={rowActions}
 				selectable={!!deleteRequest || !!updateRequest}
 				setSelectedRow={(row) => setSelectedRow(row)}
+				initialState={initialState}
 			/>
 		</>
+	);
+}
+
+function UpdateForm({
+	schema,
+	rowData,
+	formId,
+	onSubmit,
+}: {
+	schema: Schema;
+	rowData: any;
+	formId: string;
+	onSubmit: (data: any) => void;
+}) {
+	const { register, control, handleSubmit } = useForm();
+	const schemaKeys = schema.keys;
+	const components = Object.keys(schemaKeys).map((k) => {
+		const keyConfig = schemaKeys[k];
+		const optionalText = keyConfig?.schema?.is_optional ? "Optional" : "";
+
+		return getComponent(k, {
+			type: keyConfig.schema.type,
+			enum: keyConfig?.schema?.enum,
+			defaultValue: rowData[k] || keyConfig?.schema?.default_value,
+			isArray: keyConfig?.schema?.is_array,
+			label: keyConfig?.interface?.form?.label,
+			required: !keyConfig?.schema?.is_optional,
+			styles: styles["shared-styles"],
+			description:
+				keyConfig?.interface?.form?.description || optionalText,
+			disabled: keyConfig?.interface?.form?.disabled,
+			form: { register, control },
+			hidden: keyConfig?.interface?.form?.hidden,
+		});
+	});
+	return (
+		<form autoComplete="off" onSubmit={handleSubmit(onSubmit)} id={formId}>
+			{components.map(({ component, key }) =>
+				cloneElement(component, { key })
+			)}
+		</form>
 	);
 }

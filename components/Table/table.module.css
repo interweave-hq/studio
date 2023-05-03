@@ -40,7 +40,10 @@
 .table__cell-text {
 	color: var(--grey-5);
 	max-height: 30px;
+	max-width: 350px;
 	overflow-y: scroll;
+	text-overflow: ellipsis;
+	scrollbar-width: thin;
 	white-space: pre;
 }
 
@@ -71,7 +74,11 @@
 .table__supplemental-info {
 	color: var(--grey-4);
 	font-size: 10px;
-	margin: 0 24px;
+	margin: 0 0 0 24px;
+}
+
+.table__supplemental-info:first-child {
+	margin: 0 0 0 0;
 }
 
 .table-controls {

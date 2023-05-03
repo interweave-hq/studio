@@ -1,0 +1,6 @@
+.root {
+	color: var(--grey-5);
+	font-size: 14px;
+	margin: 32px auto;
+	text-align: center;
+}

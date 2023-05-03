@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, cloneElement } from "react";
+import { useState, cloneElement } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Error, LoadingDots } from "@/components";
-import styles from "./interfacer.module.css";
-import { validate, type SchemaKeys } from "@interweave/interweave";
+import styles from "./styles.module.css";
+import { type Schema, validate, type SchemaKeys } from "@interweave/interweave";
 import { type Interfacer, type Error as ErrorType } from "@/interfaces";
 import { get } from "@/lib/helpers";
 import {
@@ -12,6 +12,7 @@ import {
 	type ComponentSetup,
 } from "@/experience/interfacer/getComponent";
 import { clientRequest } from "@/lib/api/clientRequest";
+import { formatFormObject } from "@/lib/formatters";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -23,7 +24,13 @@ const getValueFromValidationOption = (x: any) => {
 };
 
 /** this will be the Client logic that gets rendered dynamically */
-export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
+export function Interfacer({
+	interfaceId,
+	schema,
+}: {
+	interfaceId: string;
+	schema: Schema;
+}) {
 	const [formLoading, setFormLoading] = useState(false);
 	const [formSuccess, setFormSuccess] = useState(false);
 	const [submissionError, setSubmissionError] = useState(DEFAULT_ERROR);
@@ -38,9 +45,6 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 	} = useForm();
 	const hasSubmissionError =
 		submissionError?.technicalError || submissionError?.userError;
-
-	const config = interfacer.schema_config;
-	const schema = config.keys;
 
 	const getComponentsFromKeys = (
 		keys: SchemaKeys,
@@ -69,7 +73,7 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 				type: typeConfig.schema.type,
 				enum: typeConfig?.schema?.enum,
 				defaultValue: typeConfig?.schema?.default_value,
-				isArray: typeConfig?.schema?.default_value,
+				isArray: typeConfig?.schema?.is_array,
 				label: typeConfig?.interface?.form?.label,
 				required: !typeConfig?.schema?.is_optional,
 				styles: styles["shared-styles"],
@@ -96,8 +100,10 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		// Clear errors from previous submissions
 		clearErrors();
 
+		data = formatFormObject(data, schema.keys);
+
 		// Handles new form errors
-		const validation = validate(data, interfacer.schema_config, {
+		const validation = validate(data, schema, {
 			returnErrors: true,
 		});
 		if (validation?.didError) {
@@ -124,10 +130,13 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		}
 
 		const { data: submitData, error } = await clientRequest(
-			`/api/v1/interfaces/${interfacer.id}`,
+			`/api/v1/interfaces/${interfaceId}`,
 			{
 				method: "POST",
-				requestBody: { method: "create", request_body: data },
+				requestBody: {
+					method: "create",
+					form: data,
+				},
 			}
 		);
 		if (error?.technicalError || error?.userError) {
@@ -140,7 +149,7 @@ export default function Interfacer({ interfacer }: { interfacer: Interfacer }) {
 		return;
 	};
 
-	const comps = getComponentsFromKeys(schema);
+	const comps = getComponentsFromKeys(schema.keys);
 
 	return (
 		<form

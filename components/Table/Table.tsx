@@ -9,10 +9,9 @@ import {
 	getPaginationRowModel,
 	flexRender,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import { Input } from "@/components/Input";
-import { Checkbox } from "@/components/Checkbox";
 import {
 	Beaker,
 	ChevronDoubleLeft,
@@ -31,6 +30,7 @@ export default function Table({
 	actions,
 	setSelectedRow,
 	selectable,
+	initialState,
 }: {
 	data: any;
 	columns: any[];
@@ -39,6 +39,7 @@ export default function Table({
 	actions?: React.ReactNode[];
 	selectable?: boolean;
 	setSelectedRow?: (row: any) => void;
+	initialState?: Record<string, any>;
 }) {
 	const [rowSelection, setRowSelection] = useState<any>(undefined);
 
@@ -47,7 +48,6 @@ export default function Table({
 			setSelectedRow(rowSelection);
 		}
 	}, [rowSelection]);
-
 	const table = useReactTable({
 		data,
 		columns,
@@ -56,6 +56,7 @@ export default function Table({
 		state: {
 			rowSelection,
 		},
+		initialState,
 		onRowSelectionChange: (e) => setRowSelection(e),
 		// Pipeline
 		getCoreRowModel: getCoreRowModel(),

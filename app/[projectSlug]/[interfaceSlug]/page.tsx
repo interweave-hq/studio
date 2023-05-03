@@ -2,7 +2,7 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
-import Interfacer from "./interfacer";
+import { Interfacer } from "@/experience/interfacer/Interfacer";
 import styles from "../../home.module.css";
 import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
@@ -95,13 +95,17 @@ export default async function Home({
 								getRequest={fetchData}
 								updateRequest={updateRequest}
 								deleteRequest={deleteRequest}
+								schema={interfacer.schema_config}
 							/>
 						</div>
 					) : null}
 					{!createData ? null : (
 						<div className={styles["form-container"]}>
 							<h1>Create new</h1>
-							<Interfacer interfacer={interfacer} />
+							<Interfacer
+								interfaceId={interfacer.id}
+								schema={interfacer.schema_config}
+							/>
 						</div>
 					)}
 				</div>

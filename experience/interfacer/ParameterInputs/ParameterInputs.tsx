@@ -32,7 +32,7 @@ export function ParameterInputs({
 			type: parameter.schema.type,
 			enum: parameter?.schema?.enum,
 			defaultValue: parameter?.schema?.default_value,
-			isArray: parameter?.schema?.default_value,
+			isArray: parameter?.schema?.is_array,
 			label: parameter?.interface?.form?.label,
 			required: !parameter?.schema?.is_optional,
 			styles: styles["input-styles"],

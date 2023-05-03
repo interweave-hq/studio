@@ -1,3 +1,4 @@
+import { Request } from "@interweave/interweave";
 import { get, isEmpty } from "../helpers";
 
 /**
@@ -11,7 +12,12 @@ import { get, isEmpty } from "../helpers";
 const ALLOWED_SOURCES = {
 	row: "row",
 	parameters: "parameters",
+	formData: "formData",
 } as const;
+
+type SourceValue = {
+	[K in keyof typeof ALLOWED_SOURCES]?: Record<string, any>;
+};
 
 /**
  * Pulls the variables out of a string
@@ -22,9 +28,9 @@ function extractVariables(str: string): string[] {
 	let i = 0;
 
 	while (i < str.length) {
-		if (str[i] === "{") {
+		if (str[i] === "<") {
 			const start = i + 1;
-			const end = str.indexOf("}", start);
+			const end = str.indexOf(">", start);
 			if (end !== -1) {
 				const variable = str.substring(start, end);
 				variables.push(variable);
@@ -38,24 +44,39 @@ function extractVariables(str: string): string[] {
 	return variables;
 }
 
-type ParseUrlReturnValue = {
+type ParseRequestReturnValue = {
 	data?: string;
 	error?: string;
 };
 
 /**
  * Used to replace templated URL strings with their needed values
+ *
+ * Let's say we have a data object with { formData: { title: "abc" } }
+ *
+ * What we want to support:
+ *
+ * String replacement:
+ * IN: { uri: "https://example.com/<formData.title>" }
+ * OUT: { uri: "https://example.com/abc" }
+ *
+ * Object setting:
+ * IN: { data: <formData> }
+ * OUT: { data: { title: "abc" } }
+ *
+ * Object spreading: (Not supported)
+ * IN: { data: { update: "static", <...formData> } }
+ * OUT: { data: { update: "static", title: "abc" } }
+ *
  */
-export function parseUrl(
-	urlString: string,
-	data: {
-		row?: Record<string, any>;
-		parameters?: Record<string, any>;
-	}
-): ParseUrlReturnValue {
-	const variables = extractVariables(urlString);
+export function parseRequest(
+	request: Request,
+	data: SourceValue
+): ParseRequestReturnValue {
+	let requestString = JSON.stringify(request);
+	const variables = extractVariables(requestString);
 	variables.forEach((v) => {
-		const [source, key] = v.split(".");
+		const [source, key] = v.includes(".") ? v.split(".") : [v];
 		// Can check for expected variables here like row, state, etc
 		if (!ALLOWED_SOURCES[source as keyof typeof ALLOWED_SOURCES]) {
 			return {
@@ -67,28 +88,44 @@ export function parseUrl(
 		}
 		if (!source) {
 			return {
-				error: `No source was specified in variable ${v}. A variable must include two parts: 'source.key'.`,
+				error: `No source was specified in variable ${v}. A variable must include parts: 'source.key'.`,
 				data: undefined,
 			};
 		}
-		if (!key) {
-			return {
-				error: `No key was specified in variable ${v}. A variable must include two parts: 'source.key'.`,
-				data: undefined,
-			};
-		}
-		const value = get(data, v);
-		if (isEmpty(value)) {
-			return {
-				error: `No data was returned from the variable target ${v}.`,
-				data: undefined,
-			};
-		}
-		urlString = urlString.replaceAll(`{${v}}`, value);
-	});
+		const hasKey = !!key;
 
+		if (hasKey) {
+			const value = get(data, v);
+			if (isEmpty(value)) {
+				return {
+					error: `No data was returned from the variable target ${v}.`,
+					data: undefined,
+				};
+			}
+			requestString = requestString.replaceAll(`<${v}>`, value);
+			return;
+		}
+
+		const sourceObj = get(data, v);
+		const sourceObjStr = JSON.stringify(
+			JSON.parse(JSON.stringify(sourceObj))
+		);
+		requestString = requestString.replaceAll(`<${v}>`, sourceObjStr);
+
+		// Now we have to remove some quotes so we get an actual object instead of a string of an object
+		// tried a million things and JSON.parse / JSON.stringify stuff doesnt work
+		const whereReplacementStarts = requestString.indexOf(sourceObjStr) - 1;
+		requestString =
+			requestString.slice(0, whereReplacementStarts) +
+			requestString.slice(whereReplacementStarts + 1);
+		const whereReplacementEnds =
+			whereReplacementStarts + sourceObjStr.length;
+		requestString =
+			requestString.slice(0, whereReplacementEnds) +
+			requestString.slice(whereReplacementEnds + 1);
+	});
 	return {
 		error: undefined,
-		data: urlString,
+		data: JSON.parse(requestString),
 	};
 }

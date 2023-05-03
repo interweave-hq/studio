@@ -7,6 +7,8 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
 
+import { parseRequest } from "@/lib/parsers";
+
 export default async function Home() {
 	const { user } = await authenticate({ optional: true });
 	const { data, error } = await getProjects();

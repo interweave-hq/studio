@@ -43,6 +43,8 @@ export const getComponent = (
 	const register = options?.form?.register;
 	const maxLength = options.maxLength;
 
+	if (hidden) return { component: <></>, key };
+
 	// If is_array, we can render a multiselect
 	if (enumValue && isArray) {
 		return {
@@ -123,6 +125,10 @@ export const getComponent = (
 							defaultValue,
 							readOnly: disabled,
 							hidden,
+							step: ".01",
+							inputMode: "numeric",
+							pattern: "[-+]?[0-9]*[.,]?[0-9]+",
+							noValidate: true,
 						}}
 						label={label}
 						register={register(key, { required })}
