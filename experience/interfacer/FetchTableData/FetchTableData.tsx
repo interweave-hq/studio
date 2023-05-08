@@ -13,6 +13,7 @@ import Table from "./table";
 import { ParameterInputs } from "../ParameterInputs";
 
 import styles from "./styles.module.css";
+import { VariableState } from "@/interfaces";
 
 const notReadyReturn: RequestReturn = {
 	data: [],
@@ -58,6 +59,7 @@ export function FetchTableData({
 	schema,
 	setParametersState,
 	setRowState,
+	variables,
 }: {
 	keys: SchemaKeys;
 	getRequest: Request;
@@ -67,6 +69,7 @@ export function FetchTableData({
 	schema: Schema;
 	setParametersState: (q: Record<string, unknown>) => void;
 	setRowState: (q: Record<string, unknown>) => void;
+	variables: VariableState;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
@@ -203,7 +206,7 @@ export function FetchTableData({
 		? prepareDeleteRequest({
 				interfaceId,
 				request: deleteRequest,
-				parameters: queryState,
+				variables,
 		  })
 		: deleteRequest;
 
@@ -211,7 +214,7 @@ export function FetchTableData({
 		? prepareUpdateRequest({
 				interfaceId,
 				request: updateRequest,
-				parameters: queryState,
+				variables,
 		  })
 		: updateRequest;
 
@@ -245,6 +248,7 @@ export function FetchTableData({
 					updateRequest={preparedUpdateRequest}
 					schema={schema}
 					setRowState={setRowState}
+					variables={variables}
 				/>
 			) : null}
 		</div>
@@ -275,16 +279,20 @@ const prepareDeleteRequest =
 	({
 		interfaceId,
 		request,
-		parameters,
+		variables,
 	}: {
 		interfaceId: string;
 		request: Request;
-		parameters?: Record<string, any>;
+		variables: VariableState;
 	}) =>
 	async ({ row }: { row: Record<string, any> }): Promise<RequestReturn> => {
 		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
 			method: "POST",
-			requestBody: { method: "delete", row: row.original, parameters },
+			requestBody: {
+				method: "delete",
+				...variables,
+				row: row.original,
+			},
 		});
 	};
 
@@ -292,11 +300,11 @@ const prepareUpdateRequest =
 	({
 		interfaceId,
 		request,
-		parameters,
+		variables,
 	}: {
 		interfaceId: string;
 		request: Request;
-		parameters?: Record<string, any>;
+		variables: VariableState;
 	}) =>
 	async ({
 		row,
@@ -309,8 +317,8 @@ const prepareUpdateRequest =
 			method: "POST",
 			requestBody: {
 				method: "update",
+				...variables,
 				row,
-				parameters,
 				form,
 			},
 		});

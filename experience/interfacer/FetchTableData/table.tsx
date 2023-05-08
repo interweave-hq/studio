@@ -8,7 +8,7 @@ import { Button, Sizes, Flavors, Kinds } from "@/components/Button";
 import { Error, InfoModal, Table } from "@/components";
 
 import { RequestReturn } from "@/lib/api/request";
-import { type Error as ErrorType } from "@/interfaces";
+import { VariableState, type Error as ErrorType } from "@/interfaces";
 import { isEmpty } from "@/lib/helpers";
 import { GetComponent } from "@/experience/interfacer/GetComponent";
 
@@ -132,6 +132,7 @@ export default function DynamicTable({
 	updateRequest,
 	schema,
 	setRowState,
+	variables,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
@@ -152,6 +153,7 @@ export default function DynamicTable({
 		form: Record<string, any>;
 	}) => Promise<RequestReturn>;
 	setRowState: (r: any) => void;
+	variables: VariableState;
 }) {
 	const {
 		data: cols,
@@ -338,7 +340,7 @@ export default function DynamicTable({
 			>
 				<UpdateForm
 					schema={schema}
-					rowData={selectedRow?.original}
+					variables={variables}
 					onSubmit={handleUpdateRequest}
 					formId={updateFormId}
 				/>
@@ -359,12 +361,12 @@ export default function DynamicTable({
 
 function UpdateForm({
 	schema,
-	rowData,
+	variables,
 	formId,
 	onSubmit,
 }: {
 	schema: Schema;
-	rowData: any;
+	variables: VariableState;
 	formId: string;
 	onSubmit: (data: any) => void;
 }) {
@@ -374,21 +376,26 @@ function UpdateForm({
 		const keyConfig = schemaKeys[k];
 		const optionalText = keyConfig?.schema?.is_optional ? "Optional" : "";
 
-		return GetComponent(k, {
-			type: keyConfig.schema.type,
-			enum: keyConfig?.schema?.enum,
-			dynamic_enum: keyConfig?.schema?.dynamic_enum,
-			defaultValue: rowData[k] || keyConfig?.schema?.default_value,
-			isArray: keyConfig?.schema?.is_array,
-			label: keyConfig?.interface?.label,
-			required: !keyConfig?.schema?.is_optional,
-			styles: styles["shared-styles"],
-			description:
-				keyConfig?.interface?.form?.description || optionalText,
-			disabled: keyConfig?.interface?.form?.disabled,
-			form: { register, control },
-			hidden: keyConfig?.interface?.form?.hidden,
-		});
+		return GetComponent(
+			k,
+			{
+				type: keyConfig.schema.type,
+				enum: keyConfig?.schema?.enum,
+				dynamic_enum: keyConfig?.schema?.dynamic_enum,
+				defaultValue:
+					variables.row[k] || keyConfig?.schema?.default_value,
+				isArray: keyConfig?.schema?.is_array,
+				label: keyConfig?.interface?.label,
+				required: !keyConfig?.schema?.is_optional,
+				styles: styles["shared-styles"],
+				description:
+					keyConfig?.interface?.form?.description || optionalText,
+				disabled: keyConfig?.interface?.form?.disabled,
+				form: { register, control },
+				hidden: keyConfig?.interface?.form?.hidden,
+			},
+			variables
+		);
 	});
 	return (
 		<form autoComplete="off" onSubmit={handleSubmit(onSubmit)} id={formId}>

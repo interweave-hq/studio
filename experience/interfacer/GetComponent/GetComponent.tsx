@@ -91,6 +91,11 @@ export function GetComponent(
 								`Check the configuration in schema.enum for key '${key}'.`
 						);
 					}
+					if (!data && !error) {
+						setEnumData([]);
+						setEnumDataLoading(false);
+						return;
+					}
 					setEnumData(data);
 					setEnumDataLoading(false);
 				})();

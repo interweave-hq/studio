@@ -49,6 +49,7 @@ export function TableAndForm({
 						schema={interfacer.schema_config}
 						setParametersState={(q) => setParametersState(q)}
 						setRowState={(r) => setRowState(r)}
+						variables={variables}
 					/>
 				</div>
 			) : null}
