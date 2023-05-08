@@ -10,7 +10,7 @@ import { Error, InfoModal, Table } from "@/components";
 import { RequestReturn } from "@/lib/api/request";
 import { type Error as ErrorType } from "@/interfaces";
 import { isEmpty } from "@/lib/helpers";
-import { GetComponent } from "../GetComponent";
+import { GetComponent } from "@/experience/interfacer/GetComponent";
 
 import styles from "./styles.module.css";
 import { NoData } from "../NoData";
