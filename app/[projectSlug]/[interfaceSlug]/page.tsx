@@ -10,6 +10,8 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { FetchTableData } from "@/experience/interfacer/FetchTableData";
 import { AuthorizationKeysWizard } from "@/experience/interfacer/AuthorizationKeysWizard";
 import { DeleteAPITokens } from "@/experience/interfacer/DeleteAPITokens";
+import { InterfaceContextProvider } from "../../../providers/InterfaceProvider";
+import { TableAndForm } from "@/experience/interfacer/TableAndForm";
 
 export default async function Home({
 	params,
@@ -78,49 +80,38 @@ export default async function Home({
 	return (
 		<>
 			<main className={styles["main-container"]}>
-				<Overview
-					title={interfacer.title}
-					description={interfacer.description}
-					interfaceId={interfacer.id}
-					hash={interfacer.hash}
-					buildTime={interfacer.build_time}
-					privacy={interfacer.privacy}
-				/>
-				<div className={styles.container}>
-					{fetchData ? (
-						<div className={styles["table-container"]}>
-							<FetchTableData
+				<InterfaceContextProvider interfaceId={interfacer.id}>
+					<Overview
+						title={interfacer.title}
+						description={interfacer.description}
+						interfaceId={interfacer.id}
+						hash={interfacer.hash}
+						buildTime={interfacer.build_time}
+						privacy={interfacer.privacy}
+					/>
+					<div className={styles.container}>
+						<TableAndForm
+							interfacer={interfacer}
+							fetchData={fetchData}
+							createData={createData}
+							deleteRequest={deleteRequest}
+							updateRequest={updateRequest}
+							keys={keys}
+						/>
+					</div>
+					{hasAuthKeys ? (
+						<div
+							className={
+								styles["delete-authentication-button-container"]
+							}
+						>
+							<DeleteAPITokens
 								interfaceId={interfacer.id}
-								keys={keys}
-								getRequest={fetchData}
-								updateRequest={updateRequest}
-								deleteRequest={deleteRequest}
-								schema={interfacer.schema_config}
+								projectId={project.id}
 							/>
 						</div>
 					) : null}
-					{!createData ? null : (
-						<div className={styles["form-container"]}>
-							<h1>Create new</h1>
-							<Interfacer
-								interfaceId={interfacer.id}
-								schema={interfacer.schema_config}
-							/>
-						</div>
-					)}
-				</div>
-				{hasAuthKeys ? (
-					<div
-						className={
-							styles["delete-authentication-button-container"]
-						}
-					>
-						<DeleteAPITokens
-							interfaceId={interfacer.id}
-							projectId={project.id}
-						/>
-					</div>
-				) : null}
+				</InterfaceContextProvider>
 			</main>
 		</>
 	);

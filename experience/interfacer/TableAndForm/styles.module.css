@@ -1,0 +1,12 @@
+.table-container {
+	padding: 0 16px;
+}
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	max-width: var(--max-width-lg);
+	margin: 16px auto;
+	padding: 48px 72px;
+	border: 1px solid var(--grey-4);
+}

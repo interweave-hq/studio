@@ -5,12 +5,16 @@ import { useForm } from "react-hook-form";
 import { Button, Error, LoadingDots } from "@/components";
 import styles from "./styles.module.css";
 import { type Schema, validate, type SchemaKeys } from "@interweave/interweave";
-import { type Interfacer, type Error as ErrorType } from "@/interfaces";
+import {
+	type Interfacer,
+	type Error as ErrorType,
+	type VariableState,
+} from "@/interfaces";
 import { get } from "@/lib/helpers";
 import {
-	getComponent,
+	GetComponent,
 	type ComponentSetup,
-} from "@/experience/interfacer/getComponent";
+} from "@/experience/interfacer/GetComponent";
 import { clientRequest } from "@/lib/api/clientRequest";
 import { formatFormObject } from "@/lib/formatters";
 
@@ -27,9 +31,11 @@ const getValueFromValidationOption = (x: any) => {
 export function Interfacer({
 	interfaceId,
 	schema,
+	variables,
 }: {
 	interfaceId: string;
 	schema: Schema;
+	variables: VariableState;
 }) {
 	const [formLoading, setFormLoading] = useState(false);
 	const [formSuccess, setFormSuccess] = useState(false);
@@ -52,8 +58,12 @@ export function Interfacer({
 	): ComponentSetup[] => {
 		const keysArr = Object.keys(keys);
 		const determinedComponents = keysArr.map((k) => {
-			const formKey = nestedPath ? `${nestedPath}.${k}` : k;
 			const typeConfig = keys[k];
+			const formKey = nestedPath
+				? `${nestedPath}.${k}`
+				: typeConfig.interface?.form?.out_key
+				? typeConfig.interface?.form?.out_key
+				: k;
 			const type = typeConfig.schema.type;
 			const hidden = typeConfig?.interface?.form?.hidden;
 			if (hidden) {
@@ -69,23 +79,28 @@ export function Interfacer({
 			}
 
 			// This is where we can pass any props
-			return getComponent(formKey, {
-				type: typeConfig.schema.type,
-				enum: typeConfig?.schema?.enum,
-				defaultValue: typeConfig?.schema?.default_value,
-				isArray: typeConfig?.schema?.is_array,
-				label: typeConfig?.interface?.form?.label,
-				required: !typeConfig?.schema?.is_optional,
-				styles: styles["shared-styles"],
-				description: typeConfig?.interface?.form?.description,
-				disabled: typeConfig?.interface?.form?.disabled,
-				// Errors object is post form-combine so we have to parse our key out for nested value errors
-				error: get(errors, `${formKey}.message`),
-				form: { register, control },
-				maxLength: getValueFromValidationOption(
-					typeConfig?.validation?.max_length
-				),
-			});
+			return GetComponent(
+				formKey,
+				{
+					type: typeConfig.schema.type,
+					enum: typeConfig?.schema?.enum,
+					dynamic_enum: typeConfig?.schema?.dynamic_enum,
+					defaultValue: typeConfig?.schema?.default_value,
+					isArray: typeConfig?.schema?.is_array,
+					label: typeConfig?.interface?.label,
+					required: !typeConfig?.schema?.is_optional,
+					styles: styles["shared-styles"],
+					description: typeConfig?.interface?.form?.description,
+					disabled: typeConfig?.interface?.form?.disabled,
+					// Errors object is post form-combine so we have to parse our key out for nested value errors
+					error: get(errors, `${formKey}.message`),
+					form: { register, control },
+					maxLength: getValueFromValidationOption(
+						typeConfig?.validation?.max_length
+					),
+				},
+				variables
+			);
 		});
 		return determinedComponents
 			.filter((v) => v !== null)

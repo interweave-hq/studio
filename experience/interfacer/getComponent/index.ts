@@ -1,3 +1,3 @@
-import { getComponent, type ComponentSetup } from "./getComponent";
+import { GetComponent, type ComponentSetup } from "./GetComponent";
 
-export { getComponent, type ComponentSetup };
+export { GetComponent, type ComponentSetup };

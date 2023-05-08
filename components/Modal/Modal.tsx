@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { shapeCss, combineCss } from "@/lib/helpers";
 
-import { Button, ButtonOverrides } from "../Button";
+import { ButtonOverrides } from "../Button";
 import { XMarkSVG } from "../Icons";
 
 import styles from "./styles.module.css";
@@ -128,13 +128,13 @@ export function Modal({
 					) : null}
 					{children}
 				</div>
-				{isDismissible ? (
-					<div
-						className={styles["dialog__overlay-click-target"]}
-						onClick={handleModalClose}
-					></div>
-				) : null}
 			</div>
+			{isDismissible ? (
+				<div
+					className={styles["dialog__overlay-click-target"]}
+					onClick={handleModalClose}
+				></div>
+			) : null}
 		</div>
 	);
 }

@@ -7,8 +7,6 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
 
-import { parseRequest } from "@/lib/parsers";
-
 export default async function Home() {
 	const { user } = await authenticate({ optional: true });
 	const { data, error } = await getProjects();
@@ -22,6 +20,14 @@ export default async function Home() {
 					<Link href="/create" className={getButtonStyle()}>
 						Create New Project
 					</Link>
+					<a
+						href="https://docs.interwv.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						className={getButtonStyle()}
+					>
+						Read The Docs
+					</a>
 				</div>
 			</section>
 			<main className={styles["main-container"]}>

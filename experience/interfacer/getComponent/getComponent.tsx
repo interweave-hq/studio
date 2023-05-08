@@ -1,6 +1,12 @@
-import { MultiSelect, Input, Button, Checkbox, Select } from "@/components";
+import { useState, useEffect, useContext } from "react";
+
+import { MultiSelect, Input, Checkbox, Select, Error } from "@/components";
 import { type Control, type RegisterOptions } from "react-hook-form";
-import { type KeyConfiguration } from "@interweave/interweave";
+import { Request, type StaticDataSource } from "@interweave/interweave";
+import { clientRequest } from "@/lib/api/clientRequest";
+import { get } from "@/lib/helpers";
+import { InterfaceContext } from "@/providers/InterfaceProvider";
+import { type VariableState } from "@/interfaces";
 
 export interface ComponentSetup {
 	component: JSX.Element;
@@ -9,7 +15,8 @@ export interface ComponentSetup {
 
 interface GetComponentOptions {
 	type: string;
-	enum?: number[] | string[];
+	enum?: StaticDataSource;
+	dynamic_enum?: Request;
 	defaultValue?: any;
 	isArray?: boolean;
 	label?: string;
@@ -26,13 +33,24 @@ interface GetComponentOptions {
 	};
 }
 
-export const getComponent = (
+export const GetComponent = (
 	key: string,
-	options: GetComponentOptions
+	options: GetComponentOptions,
+	variables?: VariableState
 ): ComponentSetup => {
+	const { interfaceId } = useContext(InterfaceContext);
+	const [enumData, setEnumData] = useState([]);
+	const [enumFetchHappened, setEnumFetchHappened] = useState(false);
+	const [enumDataLoading, setEnumDataLoading] = useState(
+		!!options.dynamic_enum
+	);
+	const [enumDataError, setEnumDataError] = useState<string | null>(null);
+
+	// Parse out options
 	const type = options.type;
 	const isArray = options.isArray;
 	const enumValue = options?.enum;
+	const dynamicEnum = options?.dynamic_enum;
 	const defaultValue = options?.defaultValue;
 	const label = options?.label || key;
 	const required = options.required;
@@ -43,17 +61,106 @@ export const getComponent = (
 	const register = options?.form?.register;
 	const maxLength = options.maxLength;
 
+	// Handle dynamic Select and MultiSelect values
+	useEffect(() => {
+		if (dynamicEnum) {
+			if (dynamicEnum.uri) {
+				// Definitely specifying a request
+				(async () => {
+					setEnumFetchHappened(true);
+					setEnumDataLoading(true);
+					setEnumDataError(null);
+
+					const { data, error } = await clientRequest(
+						`/api/v1/interfaces/${interfaceId}`,
+						{
+							method: "POST",
+							requestBody: {
+								method: "get", // this is necessary to pass the endpoint validation but not really used
+								return_array: true,
+								request_config: dynamicEnum,
+								...variables,
+							},
+						}
+					);
+					if (error) {
+						console.error(error);
+						setEnumDataLoading(false);
+						setEnumDataError(
+							error.userError ||
+								`Check the configuration in schema.enum for key '${key}'.`
+						);
+					}
+					setEnumData(data);
+					setEnumDataLoading(false);
+				})();
+			}
+		}
+	}, [options.dynamic_enum, variables]);
+
 	if (hidden) return { component: <></>, key };
+	if (enumDataLoading)
+		return {
+			component: (
+				<Select
+					label={label}
+					domProps={{ disabled: true }}
+					options={[
+						{ label: "Loading options...", value: "loading" },
+					]}
+					__cssFor={{ root: styles }}
+				/>
+			),
+			key,
+		};
+	if (enumDataError)
+		return {
+			component: (
+				<Error
+					title="Error Fetching Enum Data"
+					text="Could not successfully complete the fetch request for the enum data."
+					details={enumDataError}
+				/>
+			),
+			key,
+		};
+
+	const enumSource = enumFetchHappened ? enumData : enumValue;
 
 	// If is_array, we can render a multiselect
-	if (enumValue && isArray) {
+	if (enumSource && isArray) {
 		return {
 			component: (
 				<MultiSelect
-					options={enumValue.map((e: string | number) => ({
-						label: e.toString(),
-						value: e,
-					}))}
+					options={enumSource.map((e: any) => {
+						if (!enumFetchHappened) {
+							if (typeof e === "object") {
+								return {
+									label:
+										e?.label.toString() ||
+										e.value.toString(),
+									value: e.value,
+								};
+							}
+							return {
+								label: e.toString(),
+								value: e,
+							};
+						}
+						const value = get(
+							e,
+							dynamicEnum?.value_path,
+							typeof e === "object" ? e.toString() : e
+						);
+						return {
+							label: get(
+								e,
+								dynamicEnum?.label_path,
+								value
+							).toString(),
+							value,
+						};
+					})}
 					label={label}
 					selectedOptions={
 						defaultValue
@@ -74,21 +181,47 @@ export const getComponent = (
 			key,
 		};
 	}
-	if (enumValue && !isArray) {
+	if (enumSource && !isArray) {
 		return {
 			component: (
 				<Select
 					label={label}
-					options={enumValue.map((e: string | number) => ({
-						label: e.toString(),
-						value: e,
-					}))}
+					options={enumSource.map((e: any) => {
+						if (!enumFetchHappened) {
+							if (typeof e === "object") {
+								return {
+									label:
+										e?.label.toString() ||
+										e.value.toString(),
+									value: e.value,
+								};
+							}
+							return {
+								label: e.toString(),
+								value: e,
+							};
+						}
+						const value = get(
+							e,
+							dynamicEnum?.value_path,
+							typeof e === "object" ? e.toString() : e
+						);
+						return {
+							label: get(
+								e,
+								dynamicEnum?.label_path,
+								value
+							).toString(),
+							value,
+						};
+					})}
 					register={register(key, { required })}
 					domProps={{
 						defaultValue,
 						readOnly: disabled,
 					}}
 					error={options?.error}
+					__cssFor={{ root: styles }}
 				/>
 			),
 			key,

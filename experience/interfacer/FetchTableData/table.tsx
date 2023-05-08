@@ -10,7 +10,7 @@ import { Error, InfoModal, Table } from "@/components";
 import { RequestReturn } from "@/lib/api/request";
 import { type Error as ErrorType } from "@/interfaces";
 import { isEmpty } from "@/lib/helpers";
-import { getComponent } from "../getComponent";
+import { GetComponent } from "../GetComponent";
 
 import styles from "./styles.module.css";
 import { NoData } from "../NoData";
@@ -85,7 +85,7 @@ const getColumnsFromKeys = (columnData: {
 			initialColumnVisibility[k] = false;
 		}
 		return {
-			header: typeConfig?.interface?.form?.label || k,
+			header: typeConfig?.interface?.label || k,
 			// footer: (props) => props.column.id,
 			// columns: [
 			// 	{
@@ -131,6 +131,7 @@ export default function DynamicTable({
 	deleteRequest,
 	updateRequest,
 	schema,
+	setRowState,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
@@ -150,6 +151,7 @@ export default function DynamicTable({
 		row: Record<string, any>;
 		form: Record<string, any>;
 	}) => Promise<RequestReturn>;
+	setRowState: (r: any) => void;
 }) {
 	const {
 		data: cols,
@@ -166,6 +168,11 @@ export default function DynamicTable({
 	const [isUpdateRequestLoading, setUpdateRequestLoading] = useState(false);
 	const [updateRequestError, setUpdateRequestError] = useState<ErrorType>();
 	const updateFormId = useId();
+
+	const onRowSelection = (r: any) => {
+		setSelectedRow(r);
+		setRowState(r);
+	};
 
 	const getDurationNumber = (num: number) => {
 		const seconds = num / 1000;
@@ -343,7 +350,7 @@ export default function DynamicTable({
 				reload={reload}
 				actions={rowActions}
 				selectable={!!deleteRequest || !!updateRequest}
-				setSelectedRow={(row) => setSelectedRow(row)}
+				setSelectedRow={(row) => onRowSelection(row)}
 				initialState={initialState}
 			/>
 		</>
@@ -367,12 +374,13 @@ function UpdateForm({
 		const keyConfig = schemaKeys[k];
 		const optionalText = keyConfig?.schema?.is_optional ? "Optional" : "";
 
-		return getComponent(k, {
+		return GetComponent(k, {
 			type: keyConfig.schema.type,
 			enum: keyConfig?.schema?.enum,
+			dynamic_enum: keyConfig?.schema?.dynamic_enum,
 			defaultValue: rowData[k] || keyConfig?.schema?.default_value,
 			isArray: keyConfig?.schema?.is_array,
-			label: keyConfig?.interface?.form?.label,
+			label: keyConfig?.interface?.label,
 			required: !keyConfig?.schema?.is_optional,
 			styles: styles["shared-styles"],
 			description:

@@ -17,6 +17,9 @@
 	/* brightest grey that passes contrast on white */
 	--grey-5: #757575;
 
+	/* Hover on main white background */
+	--grey-6: #f5f5f5;
+
 	--color-red-dark: #5d2020;
 	--color-red-light: #ba1f1f;
 

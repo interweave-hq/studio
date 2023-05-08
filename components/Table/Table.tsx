@@ -145,11 +145,17 @@ export default function Table({
 														]
 													}
 												>
-													{flexRender(
-														cell.column.columnDef
-															.cell,
-														cell.getContext()
-													)}
+													{typeof cell.getValue() ===
+													"object"
+														? JSON.stringify(
+																cell.getValue()
+														  )
+														: flexRender(
+																cell.column
+																	.columnDef
+																	.cell,
+																cell.getContext()
+														  )}
 												</div>
 											</td>
 										);

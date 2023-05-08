@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import styles from "./styles.module.css";
 import { APP_URL } from "@/lib/constants";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { AddTokens, TokenDisplay } from "@/experience/project/tokens";
+import { InterfaceList } from "@/experience/project/InterfaceList";
 import { LoadingDots, InterfaceCard } from "@/components";
+import { Interfacer } from "@/interfaces";
 
 export default async function ProjectListing({
 	params,
@@ -17,6 +18,10 @@ export default async function ProjectListing({
 	const projectSlug = params["projectSlug"];
 	const { data: projectData } = await getProject({ projectSlug });
 	const hasInterfaces = projectData?.interfaces?.length > 0;
+
+	const getUrl = (i: Interfacer) => {
+		return `${APP_URL}/${projectSlug}/${i.slug}`;
+	};
 
 	return (
 		<>
@@ -30,23 +35,10 @@ export default async function ProjectListing({
 				<div className={styles.section}>
 					<h2 className={styles.section__header}>Interfaces</h2>
 					{hasInterfaces ? (
-						projectData.interfaces.map((i: any) => (
-							<Link
-								key={i.id}
-								href={`${APP_URL}/${projectSlug}/${i.slug}`}
-							>
-								<InterfaceCard
-									hash={i.hash}
-									lastBuild={i.build_time}
-									privacy={i.privacy}
-									description={i.description}
-									titleParts={{
-										one: projectData.slug,
-										two: i.slug,
-									}}
-								/>
-							</Link>
-						))
+						<InterfaceList
+							interfaces={projectData.interfaces}
+							getUrl={getUrl}
+						/>
 					) : (
 						<p>No interfaces yet. Create your first.</p>
 					)}

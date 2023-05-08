@@ -9,15 +9,6 @@
 	padding: 62px;
 }
 
-.form-container {
-	display: flex;
-	flex-direction: column;
-	max-width: var(--max-width-lg);
-	margin: 16px auto;
-	padding: 48px 72px;
-	border: 1px solid var(--grey-4);
-}
-
 .section-title-container {
 	align-items: baseline;
 	display: flex;
@@ -42,10 +33,6 @@
 	padding: 16px 0;
 }
 
-.table-container {
-	padding: 0 16px;
-}
-
 .interface-container {
 	display: flex;
 	padding: 24px 0;
@@ -58,6 +45,10 @@
 
 .main-links {
 	margin-top: 32px;
+}
+
+.main-links > a {
+	margin-right: 16px;
 }
 
 .delete-authentication-button-container {

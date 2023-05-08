@@ -2,15 +2,17 @@ import { cloneElement } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
 import { Button } from "@/components";
-import { getComponent } from "../getComponent";
+import { GetComponent } from "../GetComponent";
 import { type Parameter } from "@interweave/interweave";
 
 export function ParameterInputs({
 	parameters,
 	setFormState,
+	parameterState,
 }: {
 	parameters?: Record<string, unknown>;
 	setFormState: (props: any) => void;
+	parameterState: Record<string, unknown>;
 }) {
 	const { register, handleSubmit, control } = useForm();
 
@@ -28,19 +30,24 @@ export function ParameterInputs({
 		const parameter = parameters[p] as Parameter;
 		const optionalText = parameter?.schema?.is_optional ? "Optional" : "";
 
-		return getComponent(p, {
-			type: parameter.schema.type,
-			enum: parameter?.schema?.enum,
-			defaultValue: parameter?.schema?.default_value,
-			isArray: parameter?.schema?.is_array,
-			label: parameter?.interface?.form?.label,
-			required: !parameter?.schema?.is_optional,
-			styles: styles["input-styles"],
-			description:
-				parameter?.interface?.form?.description || optionalText,
-			disabled: parameter?.interface?.form?.disabled,
-			form: { register, control },
-		});
+		return GetComponent(
+			p,
+			{
+				type: parameter.schema.type,
+				enum: parameter?.schema?.enum,
+				dynamic_enum: parameter?.schema?.dynamic_enum,
+				defaultValue: parameter?.schema?.default_value,
+				isArray: parameter?.schema?.is_array,
+				label: parameter?.interface?.form?.label,
+				required: !parameter?.schema?.is_optional,
+				styles: styles["input-styles"],
+				description:
+					parameter?.interface?.form?.description || optionalText,
+				disabled: parameter?.interface?.form?.disabled,
+				form: { register, control },
+			},
+			{ parameters: parameterState, row: {}, form: {} }
+		);
 	});
 
 	return (
