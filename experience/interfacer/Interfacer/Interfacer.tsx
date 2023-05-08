@@ -11,7 +11,7 @@ import {
 	type VariableState,
 } from "@/interfaces";
 import { get } from "@/lib/helpers";
-import { GetComponent, type ComponentSetup } from "../GetComponent";
+import { GetComponent, type ComponentSetup } from "../../GetComponent";
 import { clientRequest } from "@/lib/api/clientRequest";
 import { formatFormObject } from "@/lib/formatters";
 

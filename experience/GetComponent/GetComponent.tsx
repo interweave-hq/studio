@@ -33,11 +33,11 @@ interface GetComponentOptions {
 	};
 }
 
-export const GetComponent = (
+export function GetComponent(
 	key: string,
 	options: GetComponentOptions,
 	variables?: VariableState
-): ComponentSetup => {
+): ComponentSetup {
 	const { interfaceId } = useContext(InterfaceContext);
 	const [enumData, setEnumData] = useState([]);
 	const [enumFetchHappened, setEnumFetchHappened] = useState(false);
@@ -300,4 +300,4 @@ export const GetComponent = (
 				key,
 			};
 	}
-};
+}

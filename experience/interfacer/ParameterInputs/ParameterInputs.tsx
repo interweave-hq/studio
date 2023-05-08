@@ -2,7 +2,7 @@ import { cloneElement } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.css";
 import { Button } from "@/components";
-import { GetComponent } from "@/experience/interfacer/GetComponent";
+import { GetComponent } from "@/experience/GetComponent";
 import { type Parameter } from "@interweave/interweave";
 
 export function ParameterInputs({
