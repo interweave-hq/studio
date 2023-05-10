@@ -151,14 +151,7 @@ async function getData({
 	// Fetch tokens that need inputting
 	const { data: requiredTokensData, error: requiredTokensError } =
 		await serverRequest(
-			`/api/v1/projects/${projectData.id}/third-party-tokens/require-auth`,
-			{
-				method: "POST",
-				requestBody: {
-					projectId: projectData.id,
-					interfaceId: interfacer.id,
-				},
-			}
+			`/api/v1/projects/${projectData.id}/interfaces/${interfacer.id}/third-party-tokens/require-auth`
 		);
 	if (requiredTokensError) {
 		console.error(requiredTokensError.technicalError);
@@ -166,7 +159,7 @@ async function getData({
 			"Failed to find required token data. Returning an error to protect user data."
 		);
 	}
-	const needsKeys = requiredTokensData.unsatisifed_auth_keys;
+	const needsKeys = requiredTokensData.unsatisfied_auth_keys;
 
 	return {
 		project: projectData,

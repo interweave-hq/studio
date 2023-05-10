@@ -7,6 +7,7 @@ export default function Loading() {
 				display: "flex",
 				justifyContent: "center",
 				margin: "50px auto",
+				minHeight: "80vh",
 				width: "100%",
 			}}
 		>

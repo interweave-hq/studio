@@ -33,10 +33,18 @@ interface GetComponentOptions {
 	};
 }
 
+// What do we want to happen...
+// dynamic ParameterInputs resolve their queries
+// THEN tableFetch happens (or not, if a parameter input is not static)
+// can parameter inputs receive other parameter inputs? no?
 export function GetComponent(
 	key: string,
 	options: GetComponentOptions,
-	variables?: VariableState
+	secondaryOptions?: {
+		variables?: VariableState;
+		isParameterFetch?: boolean;
+		setParameterLoadingState?: (key: string, status: boolean) => void;
+	}
 ): ComponentSetup {
 	const { interfaceId } = useContext(InterfaceContext);
 	const [enumData, setEnumData] = useState([]);
@@ -45,6 +53,7 @@ export function GetComponent(
 		!!options.dynamic_enum
 	);
 	const [enumDataError, setEnumDataError] = useState<string | null>(null);
+	const variables = secondaryOptions?.variables;
 
 	// Parse out options
 	const type = options.type;
@@ -63,8 +72,22 @@ export function GetComponent(
 
 	// Handle dynamic Select and MultiSelect values
 	useEffect(() => {
+		// Only fetch dynamic_enums in parameters once to avoid a rerender loop
+		if (!!secondaryOptions?.isParameterFetch) {
+			if (enumFetchHappened) return;
+		}
+
+		// setLastRefreshToggle(refreshToggle);
 		if (dynamicEnum) {
 			if (dynamicEnum.uri) {
+				// Control loading state for parameter enums
+				// Let other components know that we're waiting on these keys here
+				if (!enumFetchHappened) {
+					if (secondaryOptions?.setParameterLoadingState) {
+						secondaryOptions?.setParameterLoadingState(key, true);
+					}
+				}
+
 				// Definitely specifying a request
 				(async () => {
 					setEnumFetchHappened(true);
@@ -90,12 +113,35 @@ export function GetComponent(
 							error.userError ||
 								`Check the configuration in schema.enum for key '${key}'.`
 						);
+						// Control loading state for parameter enums
+						// Let parent state know that we finished loading
+						if (!enumFetchHappened) {
+							if (secondaryOptions?.setParameterLoadingState) {
+								secondaryOptions?.setParameterLoadingState(
+									key,
+									false
+								);
+							}
+						}
 					}
+
 					if (!data && !error) {
 						setEnumData([]);
 						setEnumDataLoading(false);
 						return;
 					}
+
+					// Control loading state for parameter enums
+					// Let parent state know that we finished loading
+					if (!enumFetchHappened) {
+						if (secondaryOptions?.setParameterLoadingState) {
+							secondaryOptions?.setParameterLoadingState(
+								key,
+								false
+							);
+						}
+					}
+
 					setEnumData(data);
 					setEnumDataLoading(false);
 				})();

@@ -29,6 +29,7 @@ export function TableAndForm({
 }) {
 	const [parametersState, setParametersState] = useState({});
 	const [rowState, setRowState] = useState({});
+	const [parametersLoading, setParametersLoading] = useState(true);
 
 	const variables: VariableState = {
 		parameters: parametersState,
@@ -47,9 +48,11 @@ export function TableAndForm({
 						updateRequest={updateRequest}
 						deleteRequest={deleteRequest}
 						schema={interfacer.schema_config}
-						setParametersState={(q) => setParametersState(q)}
+						setParametersState={setParametersState}
 						setRowState={(r) => setRowState(r)}
 						variables={variables}
+						parametersLoading={parametersLoading}
+						setParametersLoading={setParametersLoading}
 					/>
 				</div>
 			) : null}

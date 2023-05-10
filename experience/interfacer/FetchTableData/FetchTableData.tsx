@@ -15,34 +15,7 @@ import { ParameterInputs } from "../ParameterInputs";
 import styles from "./styles.module.css";
 import { VariableState } from "@/interfaces";
 
-const notReadyReturn: RequestReturn = {
-	data: [],
-	error: {
-		userError: "Please fill out the inputs above.",
-		technicalError: "A parameter is required.",
-	},
-	status: 400,
-};
-
-interface QueryState {
-	[key: string]: {
-		isOptional: boolean;
-		isSearchParam: boolean;
-		value: any;
-	};
-}
-
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
-
-const simplifyQueryState = (
-	queryState: QueryState
-): Record<string, unknown> => {
-	const obj: Record<string, unknown> = {};
-	Object.keys(queryState).forEach((k) => {
-		obj[k] = queryState[k].value;
-	});
-	return obj;
-};
 
 /**
  * We'll process this in two steps
@@ -60,6 +33,8 @@ export function FetchTableData({
 	setParametersState,
 	setRowState,
 	variables,
+	parametersLoading,
+	setParametersLoading,
 }: {
 	keys: SchemaKeys;
 	getRequest: Request;
@@ -70,13 +45,14 @@ export function FetchTableData({
 	setParametersState: (q: Record<string, unknown>) => void;
 	setRowState: (q: Record<string, unknown>) => void;
 	variables: VariableState;
+	parametersLoading: boolean;
+	setParametersLoading: (v: any) => void;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
-	const [queryState, setQueryState] = useState<QueryState>({});
-	const [makeRequest, setMakeRequest] = useState(false);
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
+
 	// Boolean switch, whenever value changes, we rerun the query
 	const [triggerReload, setTriggerReload] = useState(false);
 
@@ -85,93 +61,20 @@ export function FetchTableData({
 	// if theres URL parameters, wait until something has been submitted
 	// if theres required query parameters, wait until something has been submitted
 	const parameters = getRequest?.parameters;
-	const parameterKeys = parameters ? Object.keys(parameters) : [];
 	const hasUrlParameters = url.indexOf("<") > -1;
-
-	const setFormState = (data: any) => {
-		for (const [key, value] of Object.entries(data)) {
-			setQueryState((prev: QueryState) => ({
-				...prev,
-				[key]: {
-					...prev[key],
-					value,
-				},
-			}));
-		}
-	};
-
-	// Initialize value state store, keep it organized as simple objects
-	useEffect(() => {
-		if (parameters) {
-			if (parameterKeys.length > 0) {
-				parameterKeys.forEach((paramKey) => {
-					const param = parameters[paramKey];
-					const isSearchParam = !(url.indexOf(paramKey) > -1);
-					setQueryState((prev) => ({
-						...prev,
-						[paramKey]: {
-							isOptional: !!param.schema?.is_optional,
-							isSearchParam,
-							value: param.schema?.default_value,
-						},
-					}));
-				});
-			}
-		}
-		setParametersState(simplifyQueryState(queryState));
-	}, []);
-
-	// Whenever our values change, let's try to fill in the URL and replace the dynamic parts
-	// We also check to make sure the required parameters are entered
-	useEffect(() => {
-		if (parameters) {
-			if (parameterKeys.length > 0) {
-				let allGood = true;
-				parameterKeys.forEach((paramKey) => {
-					const param = parameters[paramKey];
-					const value =
-						queryState[paramKey]?.value ||
-						param.schema.default_value;
-					const isRequired = !param.schema.is_optional;
-					if (isRequired && !value) {
-						allGood = false;
-					}
-				});
-				setMakeRequest(allGood);
-			}
-		}
-		setParametersState(simplifyQueryState(queryState));
-	}, [queryState]);
-
-	// Whenever our parameters or URL changes, we check to see if we can make our request
-	useEffect(() => {
-		if (!parameters || !hasUrlParameters) {
-			setMakeRequest(true);
-		}
-	}, [parameters, hasUrlParameters]);
 
 	// Whenever value state is updated after button click, refetch the data
 	useEffect(() => {
 		(async () => {
 			try {
-				if (!makeRequest) return;
 				setError(DEFAULT_ERROR);
 				setLoading(true);
-				// const fullUrl = new URL(url);
-				// const query = getUrlQueryParamaters(queryState);
-				// fullUrl.search = query.toString().replaceAll("%2C", ",");
-				// setUrl(fullUrl.href);
-				// If we pass a URL override, the request config URL wont get used,
-				// So lets move the query parsing logic into our setVariable algorithm on the backend
-				// We can attach the variableData as an object but maybe attach another parameter that says to set it as the query state
-				//
-				const { data, error, duration } = makeRequest
-					? await getTableData({
-							interfaceId,
-							url: url,
-							parameters: simplifyQueryState(queryState),
-					  })
-					: notReadyReturn;
+				if (parametersLoading) return;
+				const { data, error, duration } = await getTableData({
+					interfaceId,
+					url: url,
+					...variables,
+				});
 
 				if (error) {
 					setError(error);
@@ -187,7 +90,7 @@ export function FetchTableData({
 				console.error(err);
 			}
 		})();
-	}, [queryState, makeRequest, triggerReload]);
+	}, [triggerReload, variables, parametersLoading]);
 
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
@@ -222,8 +125,9 @@ export function FetchTableData({
 		<div>
 			<ParameterInputs
 				parameters={parameters}
-				setFormState={setFormState}
-				parameterState={simplifyQueryState(queryState)}
+				setFormState={setParametersState}
+				parameterState={variables.parameters}
+				setParametersLoading={setParametersLoading}
 			/>
 			{error?.userError ? (
 				<Error

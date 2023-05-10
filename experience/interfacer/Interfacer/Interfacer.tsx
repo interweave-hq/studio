@@ -96,7 +96,7 @@ export function Interfacer({
 						typeConfig?.validation?.max_length
 					),
 				},
-				variables
+				{ variables }
 			);
 		});
 		return determinedComponents
