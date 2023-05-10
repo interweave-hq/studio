@@ -394,7 +394,7 @@ function UpdateForm({
 				form: { register, control },
 				hidden: keyConfig?.interface?.form?.hidden,
 			},
-			variables
+			{ variables }
 		);
 	});
 	return (
