@@ -1,27 +1,16 @@
 .container {
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    max-height: 100px;
-    max-width: 400px;
-    overflow-y: scroll;
-    padding: 8px;
-    position: relative;
-}
-
-.label {
-    display: block;
-    color: var(--grey-1);
-    font-size: 12px;
-    margin-right: 16px;
-    margin-bottom: 2px;
-    text-transform: capitalize;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	font-size: 14px;
+	margin-top: 4px;
+	max-height: 100px;
+	max-width: 250px;
+	overflow-y: scroll;
+	padding: 6px 8px;
+	position: relative;
 }
 
 .helper-text {
-    color: var(--grey-5);
-    font-size: 12px;
-}
-
-.checkbox {
-    margin-bottom: 8px;
+	color: var(--grey-5);
+	font-size: 12px;
 }

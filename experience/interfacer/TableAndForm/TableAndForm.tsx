@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useId, useMemo } from "react";
+import { useState, useId, useMemo, useEffect } from "react";
 import { type Request, type SchemaKeys } from "@interweave/interweave";
 
-import { InfoModal } from "@/components";
+import { InfoModal, LoadingDots } from "@/components";
 import { UpdateForm } from "@/experience/interfacer/UpdateForm";
 import { FetchTableData } from "@/experience/interfacer/FetchTableData";
 import { Interfacer } from "@/experience/interfacer/Interfacer";
@@ -36,7 +36,8 @@ export function TableAndForm({
 }) {
 	const [parametersState, setParametersState] = useState({});
 	const [rowState, setRowState] = useState({});
-	const [parametersLoading, setParametersLoading] = useState(true);
+	const [dynamicParametersLoading, setDynamicParametersLoading] =
+		useState(true);
 	const [reloadValue, setReload] = useState(false);
 
 	// Update state
@@ -162,8 +163,8 @@ export function TableAndForm({
 				setParametersState={setParametersState}
 				setRowState={(r) => updateRowState(r)}
 				variables={variables}
-				parametersLoading={parametersLoading}
-				setParametersLoading={setParametersLoading}
+				parametersLoading={dynamicParametersLoading}
+				setParametersLoading={setDynamicParametersLoading}
 				onDelete={onDelete}
 				onUpdate={onUpdate}
 				reload={reload}
@@ -182,12 +183,16 @@ export function TableAndForm({
 			{!createData ? null : (
 				<div className={styles["form-container"]}>
 					<h2>Create</h2>
-					<Interfacer
-						interfaceId={interfacer.id}
-						schema={interfacer.schema_config}
-						variables={variables}
-						reloadTable={reload}
-					/>
+					{dynamicParametersLoading ? (
+						<LoadingDots />
+					) : (
+						<Interfacer
+							interfaceId={interfacer.id}
+							schema={interfacer.schema_config}
+							variables={variables}
+							reloadTable={reload}
+						/>
+					)}
 				</div>
 			)}
 			<InfoModal

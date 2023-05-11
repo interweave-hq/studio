@@ -33,10 +33,8 @@ interface GetComponentOptions {
 	};
 }
 
-// What do we want to happen...
-// dynamic ParameterInputs resolve their queries
-// THEN tableFetch happens (or not, if a parameter input is not static)
-// can parameter inputs receive other parameter inputs? no?
+// Must be very careful with this component
+// If anything of these props are manipulated before calling, an infinite loop will occur
 export function GetComponent(
 	key: string,
 	options: GetComponentOptions,
@@ -44,6 +42,7 @@ export function GetComponent(
 		variables?: VariableState;
 		isParameterFetch?: boolean;
 		setParameterLoadingState?: (key: string, status: boolean) => void;
+		parameterLoadingState?: any;
 	}
 ): ComponentSetup {
 	const { interfaceId } = useContext(InterfaceContext);
@@ -72,6 +71,13 @@ export function GetComponent(
 
 	// Handle dynamic Select and MultiSelect values
 	useEffect(() => {
+		// Everything will get really slow and stuck in a loop without this
+		// Keep at the top
+		if (!dynamicEnum) {
+			setEnumDataLoading(false);
+			return;
+		}
+
 		// Only fetch dynamic_enums in parameters once to avoid a rerender loop
 		if (!!secondaryOptions?.isParameterFetch) {
 			if (enumFetchHappened) return;
@@ -106,6 +112,7 @@ export function GetComponent(
 							},
 						}
 					);
+
 					if (error) {
 						console.error(error);
 						setEnumDataLoading(false);
@@ -123,11 +130,6 @@ export function GetComponent(
 								);
 							}
 						}
-					}
-
-					if (!data && !error) {
-						setEnumData([]);
-						setEnumDataLoading(false);
 						return;
 					}
 
@@ -140,6 +142,12 @@ export function GetComponent(
 								false
 							);
 						}
+					}
+
+					if (!data && !error) {
+						setEnumData([]);
+						setEnumDataLoading(false);
+						return;
 					}
 
 					setEnumData(data);
@@ -233,44 +241,50 @@ export function GetComponent(
 		};
 	}
 	if (enumSource && !isArray) {
+		const nullOption = !required
+			? [{ label: "None", value: undefined }]
+			: [];
 		return {
 			component: (
 				<Select
 					label={label}
-					options={enumSource.map((e: any) => {
-						if (!enumFetchHappened) {
-							if (typeof e === "object") {
+					options={nullOption.concat(
+						enumSource.map((e: any) => {
+							if (!enumFetchHappened) {
+								if (typeof e === "object") {
+									return {
+										label:
+											e?.label.toString() ||
+											e.value.toString(),
+										value: e.value,
+									};
+								}
 								return {
-									label:
-										e?.label.toString() ||
-										e.value.toString(),
-									value: e.value,
+									label: e.toString(),
+									value: e,
 								};
 							}
-							return {
-								label: e.toString(),
-								value: e,
-							};
-						}
-						const value = get(
-							e,
-							dynamicEnum?.value_path,
-							typeof e === "object" ? e.toString() : e
-						);
-						return {
-							label: get(
+							const value = get(
 								e,
-								dynamicEnum?.label_path,
-								value
-							).toString(),
-							value,
-						};
-					})}
+								dynamicEnum?.value_path,
+								typeof e === "object" ? e.toString() : e
+							);
+							return {
+								label: get(
+									e,
+									dynamicEnum?.label_path,
+									value
+								).toString(),
+								value,
+							};
+						})
+					)}
 					register={register(key, { required })}
 					domProps={{
 						defaultValue,
 						readOnly: disabled,
 					}}
+					helperText={description}
 					error={options?.error}
 					__cssFor={{ root: styles }}
 				/>

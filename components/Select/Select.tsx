@@ -34,7 +34,7 @@ export type SelectOverrides<T> = InternalSelectOverrides<T> &
 	ExternalSelectOverrides<T>;
 
 type Option = {
-	value: string | number;
+	value: string | number | undefined;
 	label?: string;
 };
 

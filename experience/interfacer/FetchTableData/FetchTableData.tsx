@@ -14,6 +14,8 @@ import { ParameterInputs } from "../ParameterInputs";
 
 import styles from "./styles.module.css";
 import { VariableState } from "@/interfaces";
+import { extractVariables } from "@/lib/parsers";
+import { get } from "@/lib/helpers";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -57,13 +59,6 @@ export function FetchTableData({
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
 
-	const url = getRequest.uri;
-
-	// if theres URL parameters, wait until something has been submitted
-	// if theres required query parameters, wait until something has been submitted
-	const parameters = getRequest?.parameters;
-	const hasUrlParameters = url.indexOf("<") > -1;
-
 	// Whenever value state is updated after button click, refetch the data
 	useEffect(() => {
 		(async () => {
@@ -74,7 +69,6 @@ export function FetchTableData({
 
 				const { data, error, duration } = await getTableData({
 					interfaceId,
-					url: url,
 					...variables,
 				});
 
@@ -99,6 +93,13 @@ export function FetchTableData({
 		parametersLoading,
 	]);
 
+	const url = getRequest.uri;
+
+	// if theres URL parameters, wait until something has been submitted
+	// if theres required query parameters, wait until something has been submitted
+	const parameters = getRequest?.parameters;
+	const hasUrlParameters = url.indexOf("<") > -1;
+
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
 			data: [],
@@ -111,6 +112,14 @@ export function FetchTableData({
 		};
 		setError(badConfigError.error);
 	}
+
+	let displayUrl = url;
+	const possibleVariables = extractVariables(displayUrl);
+	possibleVariables.forEach((v) => {
+		const possibleValue = get(variables, v, null);
+		const newUrl = displayUrl.replaceAll(`<${v}>`, possibleValue);
+		displayUrl = newUrl;
+	});
 
 	return (
 		<div>
@@ -136,7 +145,7 @@ export function FetchTableData({
 				<Table
 					data={data}
 					columnData={keys}
-					uri={url}
+					uri={displayUrl}
 					requestDuration={requestDuration}
 					reload={reload}
 					onUpdate={onUpdate}
@@ -151,11 +160,9 @@ export function FetchTableData({
 
 async function getTableData({
 	interfaceId,
-	url,
 	parameters,
 }: {
 	interfaceId: string;
-	url: string;
 	parameters: Record<string, unknown>;
 }) {
 	return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
@@ -163,7 +170,6 @@ async function getTableData({
 		requestBody: {
 			parameters: parameters,
 			method: "get",
-			uri: url,
 			return_array: true,
 		},
 	});

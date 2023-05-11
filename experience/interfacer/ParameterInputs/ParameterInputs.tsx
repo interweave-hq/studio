@@ -7,8 +7,8 @@ import { type Parameter } from "@interweave/interweave";
 
 export function ParameterInputs({
 	parameters,
-	setFormState,
 	parameterState,
+	setFormState,
 	setParametersLoading,
 }: {
 	parameters?: Record<string, unknown>;
@@ -36,12 +36,12 @@ export function ParameterInputs({
 	// Once these parameters are all loaded, we can update our parameter state and fetch the table data
 	useEffect(() => {
 		const keys = Object.keys(loadingStates);
-		if (!keys || keys.length <= 0) {
+		const loadingKeys = keys.filter((k) => !!loadingStates[k]);
+		if (!loadingKeys || loadingKeys.length <= 0) {
 			setParametersLoading(false);
 			return setFormState(getValues());
 		}
-		const loadingKeys = keys.filter((k) => !!loadingStates[k]);
-		if (!loadingKeys || loadingKeys.length <= 0) {
+		if (!keys || keys.length <= 0) {
 			setParametersLoading(false);
 			return setFormState(getValues());
 		}
@@ -90,6 +90,7 @@ export function ParameterInputs({
 				variables: { parameters: parameterState, row: {}, form: {} },
 				isParameterFetch: true,
 				setParameterLoadingState: controlLoadingState,
+				parameterLoadingState: loadingStates,
 			}
 		);
 	});
