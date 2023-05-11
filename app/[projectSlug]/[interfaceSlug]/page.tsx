@@ -57,8 +57,20 @@ export default async function Home({
 	const updateRequest =
 		canDelete && interfacer.schema_config.requests?.update;
 
-	const hasAuthKeys =
-		Object.keys(interfacer.schema_config.authentication || {}).length > 0;
+	// This is where we decide whether to show the "Reset Authentication" button
+	// we look through each request and see if it has an authentication_key
+	// If so, we can unset it
+	const possibleRequests = interfacer.schema_config.requests;
+	let hasAuthKeys;
+	if (possibleRequests) {
+		hasAuthKeys =
+			Object.keys(possibleRequests).filter((r) => {
+				if (r in possibleRequests) {
+					return possibleRequests[r as keyof typeof possibleRequests]
+						?.authentication_key;
+				}
+			}).length > 0;
+	}
 
 	// Figure out if more API keys are needed
 	// We want to return the scheme, but the scheme may live on another interface in the project
