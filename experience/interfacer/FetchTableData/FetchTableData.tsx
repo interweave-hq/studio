@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	type SchemaKeys,
 	type Schema,
@@ -26,8 +26,8 @@ const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 export function FetchTableData({
 	keys,
 	getRequest,
-	updateRequest,
-	deleteRequest,
+	onUpdate,
+	onDelete,
 	interfaceId,
 	schema,
 	setParametersState,
@@ -35,26 +35,27 @@ export function FetchTableData({
 	variables,
 	parametersLoading,
 	setParametersLoading,
+	reload,
+	triggerReload,
 }: {
 	keys: SchemaKeys;
 	getRequest: Request;
-	updateRequest: Request;
-	deleteRequest: Request;
+	onUpdate?: () => void;
+	onDelete?: () => void;
 	interfaceId: string;
 	schema: Schema;
 	setParametersState: (q: Record<string, unknown>) => void;
 	setRowState: (q: Record<string, unknown>) => void;
-	variables: VariableState;
+	variables: VariableState & { row?: Record<string, unknown> };
 	parametersLoading: boolean;
 	setParametersLoading: (v: any) => void;
+	reload?: () => void;
+	triggerReload?: boolean;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
-
-	// Boolean switch, whenever value changes, we rerun the query
-	const [triggerReload, setTriggerReload] = useState(false);
 
 	const url = getRequest.uri;
 
@@ -70,6 +71,7 @@ export function FetchTableData({
 				setError(DEFAULT_ERROR);
 				setLoading(true);
 				if (parametersLoading) return;
+
 				const { data, error, duration } = await getTableData({
 					interfaceId,
 					url: url,
@@ -90,7 +92,12 @@ export function FetchTableData({
 				console.error(err);
 			}
 		})();
-	}, [triggerReload, variables, parametersLoading]);
+	}, [
+		triggerReload,
+		variables.form,
+		variables.parameters,
+		parametersLoading,
+	]);
 
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
@@ -104,22 +111,6 @@ export function FetchTableData({
 		};
 		setError(badConfigError.error);
 	}
-
-	const preparedDeleteRequest = deleteRequest
-		? prepareDeleteRequest({
-				interfaceId,
-				request: deleteRequest,
-				variables,
-		  })
-		: deleteRequest;
-
-	const preparedUpdateRequest = updateRequest
-		? prepareUpdateRequest({
-				interfaceId,
-				request: updateRequest,
-				variables,
-		  })
-		: updateRequest;
 
 	return (
 		<div>
@@ -147,12 +138,11 @@ export function FetchTableData({
 					columnData={keys}
 					uri={url}
 					requestDuration={requestDuration}
-					reload={() => setTriggerReload(!triggerReload)}
-					deleteRequest={preparedDeleteRequest}
-					updateRequest={preparedUpdateRequest}
+					reload={reload}
+					onUpdate={onUpdate}
+					onDelete={onDelete}
 					schema={schema}
 					setRowState={setRowState}
-					variables={variables}
 				/>
 			) : null}
 		</div>
@@ -178,52 +168,3 @@ async function getTableData({
 		},
 	});
 }
-
-const prepareDeleteRequest =
-	({
-		interfaceId,
-		request,
-		variables,
-	}: {
-		interfaceId: string;
-		request: Request;
-		variables: VariableState;
-	}) =>
-	async ({ row }: { row: Record<string, any> }): Promise<RequestReturn> => {
-		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
-			method: "POST",
-			requestBody: {
-				method: "delete",
-				...variables,
-				row: row.original,
-			},
-		});
-	};
-
-const prepareUpdateRequest =
-	({
-		interfaceId,
-		request,
-		variables,
-	}: {
-		interfaceId: string;
-		request: Request;
-		variables: VariableState;
-	}) =>
-	async ({
-		row,
-		form,
-	}: {
-		row?: Record<string, any>;
-		form?: Record<string, any>;
-	}): Promise<RequestReturn> => {
-		return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
-			method: "POST",
-			requestBody: {
-				method: "update",
-				...variables,
-				row,
-				form,
-			},
-		});
-	};
