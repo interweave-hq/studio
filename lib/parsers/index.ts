@@ -23,7 +23,7 @@ type SourceValue = {
  * Pulls the variables out of a string
  * http://{row.domain}/api/{row.resource} -> ['row.domain', 'row.resource']
  */
-function extractVariables(str: string): string[] {
+export function extractVariables(str: string): string[] {
 	const variables: string[] = [];
 	let i = 0;
 

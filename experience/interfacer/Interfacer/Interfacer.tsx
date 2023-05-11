@@ -14,6 +14,7 @@ import { get } from "@/lib/helpers";
 import { GetComponent, type ComponentSetup } from "../GetComponent";
 import { clientRequest } from "@/lib/api/clientRequest";
 import { formatFormObject } from "@/lib/formatters";
+import { extractVariables } from "@/lib/parsers";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -57,7 +58,7 @@ export function Interfacer({
 	): ComponentSetup[] => {
 		const keysArr = Object.keys(keys);
 		const determinedComponents = keysArr.map((k) => {
-			const typeConfig = keys[k];
+			let typeConfig = keys[k];
 			const formKey = nestedPath
 				? `${nestedPath}.${k}`
 				: typeConfig.interface?.form?.out_key
@@ -76,6 +77,18 @@ export function Interfacer({
 					);
 				}
 			}
+
+			// Handle all variable parsing
+			const stringifedTypeConfig = JSON.stringify(typeConfig);
+			const possibleVariables = extractVariables(stringifedTypeConfig);
+			possibleVariables.forEach((v) => {
+				const possibleDefaultValue = get(variables, v, null);
+				const newTypeConfig = stringifedTypeConfig.replaceAll(
+					`<${v}>`,
+					possibleDefaultValue
+				);
+				typeConfig = JSON.parse(newTypeConfig);
+			});
 
 			// This is where we can pass any props
 			return GetComponent(
