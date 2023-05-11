@@ -29,10 +29,12 @@ export function Interfacer({
 	interfaceId,
 	schema,
 	variables,
+	reloadTable,
 }: {
 	interfaceId: string;
 	schema: Schema;
 	variables: VariableState;
+	reloadTable: () => void;
 }) {
 	const [formLoading, setFormLoading] = useState(false);
 	const [formSuccess, setFormSuccess] = useState(false);
@@ -155,6 +157,7 @@ export function Interfacer({
 			setFormLoading(false);
 			return setSubmissionError(error);
 		}
+		reloadTable();
 		setFormSuccess(true);
 		setFormLoading(false);
 		reset();

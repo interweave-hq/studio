@@ -186,6 +186,7 @@ export function TableAndForm({
 						interfaceId={interfacer.id}
 						schema={interfacer.schema_config}
 						variables={variables}
+						reloadTable={reload}
 					/>
 				</div>
 			)}
