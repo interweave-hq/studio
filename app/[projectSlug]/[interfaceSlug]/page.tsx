@@ -59,11 +59,31 @@ export default async function Home({
 
 	const hasAuthKeys =
 		Object.keys(interfacer.schema_config.authentication || {}).length > 0;
+
 	// Figure out if more API keys are needed
-	const authSchemesThatNeedUserInput = needsKeys.map((kString: string) => ({
-		...interfacer.schema_config.authentication![kString],
-		key: kString,
-	}));
+	// We want to return the scheme, but the scheme may live on another interface in the project
+	// This logic sucks. Ideally handled by the backend
+	const authSchemesThatNeedUserInput: object[] = [];
+	needsKeys.map((kString: string) => {
+		const target = interfacer?.schema_config?.authentication || {};
+		if (kString in target) {
+			authSchemesThatNeedUserInput.push({
+				...target[kString],
+				key: kString,
+			});
+		} else {
+			// Look through other interfaces
+			project.interfaces.map((int: any) => {
+				const deepTarget = int?.schema_config?.authentication || {};
+				if (kString in deepTarget) {
+					authSchemesThatNeedUserInput.push({
+						...target[kString],
+						key: kString,
+					});
+				}
+			});
+		}
+	});
 
 	if (authSchemesThatNeedUserInput.length > 0) {
 		return (
@@ -153,6 +173,7 @@ async function getData({
 		await serverRequest(
 			`/api/v1/projects/${projectData.id}/interfaces/${interfacer.id}/third-party-tokens/require-auth`
 		);
+	console.log(requiredTokensData);
 	if (requiredTokensError) {
 		console.error(requiredTokensError.technicalError);
 		throw new Error(
