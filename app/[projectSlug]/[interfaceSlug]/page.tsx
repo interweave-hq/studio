@@ -163,7 +163,12 @@ async function getData({
 		status,
 	} = await serverRequest(`/api/v1/projects/${projectSlug}`);
 
-	const { project: projectData, access } = fetchProjectData;
+	// Access is an array of InterfaceAccess objects
+	const {
+		project: projectData,
+		access,
+		is_owner: isOwner,
+	} = fetchProjectData;
 
 	if (!projectData || status === 401) {
 		notFound();
@@ -178,6 +183,15 @@ async function getData({
 		(i: { [key: string]: string }) => i.slug === interfaceSlug
 	);
 
+	// If they don't have an access object, get out of here
+	const appliedAccess = isOwner
+		? undefined
+		: access.find((a: any) => a.interface_id === interfacer.id);
+
+	if (!appliedAccess && !isOwner) {
+		notFound();
+	}
+
 	// Check if the token is present and valid on the backend
 	// The token doesnt ever have to come to the frontend
 	// Fetch tokens that need inputting
@@ -185,7 +199,7 @@ async function getData({
 		await serverRequest(
 			`/api/v1/projects/${projectData.id}/interfaces/${interfacer.id}/third-party-tokens/require-auth`
 		);
-	console.log(requiredTokensData);
+
 	if (requiredTokensError) {
 		console.error(requiredTokensError.technicalError);
 		throw new Error(
@@ -197,7 +211,7 @@ async function getData({
 	return {
 		project: projectData,
 		interfacer,
-		access,
+		access: appliedAccess,
 		needsKeys,
 	};
 }

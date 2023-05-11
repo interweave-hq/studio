@@ -72,15 +72,17 @@ export default async function Home() {
 											<Link
 												key={p.id}
 												href={`/${p.slug}`}
+												style={{
+													marginRight: "16px",
+													marginBottom: "16px",
+												}}
+												className={
+													styles[
+														"interface-card-link"
+													]
+												}
 											>
-												<InterfaceCard
-													title={p.slug}
-													__cssFor={{
-														root: styles[
-															"interface-card"
-														],
-													}}
-												/>
+												<InterfaceCard title={p.slug} />
 											</Link>
 										))}
 									</div>
@@ -122,6 +124,11 @@ export default async function Home() {
 													<Link
 														key={access.id}
 														href={`/${access.interface.project.slug}/${access.interface.slug}`}
+														className={
+															styles[
+																"interface-card-link"
+															]
+														}
 													>
 														<InterfaceCard
 															description={
@@ -148,11 +155,6 @@ export default async function Home() {
 																two: access
 																	.interface
 																	.slug,
-															}}
-															__cssFor={{
-																root: styles[
-																	"interface-card"
-																],
 															}}
 														/>
 													</Link>
