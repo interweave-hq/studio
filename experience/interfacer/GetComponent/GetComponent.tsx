@@ -1,12 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 
-import { MultiSelect, Input, Checkbox, Select, Error } from "@/components";
+import { MultiSelect, Input, Checkbox, Error } from "@/components";
 import { type Control, type RegisterOptions } from "react-hook-form";
 import { Request, type StaticDataSource } from "@interweave/interweave";
 import { clientRequest } from "@/lib/api/clientRequest";
 import { get } from "@/lib/helpers";
 import { InterfaceContext } from "@/providers/InterfaceProvider";
 import { type VariableState } from "@/interfaces";
+import { Select, type SelectOption } from "@/components/Select";
 
 export interface ComponentSetup {
 	component: JSX.Element;
@@ -241,44 +242,44 @@ export function GetComponent(
 		};
 	}
 	if (enumSource && !isArray) {
-		const nullOption = !required
-			? [{ label: "None", value: undefined }]
+		const nullOption: SelectOption[] = !required
+			? [
+					{
+						label: "None",
+						value: undefined,
+						keyOverride: `empty-option-${key}`,
+					},
+			  ]
 			: [];
+		const enumSourceOpts: SelectOption[] = enumSource.map((e: any) => {
+			if (!enumFetchHappened) {
+				if (typeof e === "object") {
+					return {
+						label: e?.label.toString() || e.value.toString(),
+						value: e.value,
+					};
+				}
+				return {
+					label: e.toString(),
+					value: e,
+				};
+			}
+			const value = get(
+				e,
+				dynamicEnum?.value_path,
+				typeof e === "object" ? e.toString() : e
+			);
+			return {
+				label: get(e, dynamicEnum?.label_path, value).toString(),
+				value,
+			};
+		});
+		const combinedDataSource = nullOption.concat(enumSourceOpts);
 		return {
 			component: (
 				<Select
 					label={label}
-					options={nullOption.concat(
-						enumSource.map((e: any) => {
-							if (!enumFetchHappened) {
-								if (typeof e === "object") {
-									return {
-										label:
-											e?.label.toString() ||
-											e.value.toString(),
-										value: e.value,
-									};
-								}
-								return {
-									label: e.toString(),
-									value: e,
-								};
-							}
-							const value = get(
-								e,
-								dynamicEnum?.value_path,
-								typeof e === "object" ? e.toString() : e
-							);
-							return {
-								label: get(
-									e,
-									dynamicEnum?.label_path,
-									value
-								).toString(),
-								value,
-							};
-						})
-					)}
+					options={combinedDataSource}
 					register={register(key, { required })}
 					domProps={{
 						defaultValue,
@@ -344,6 +345,9 @@ export function GetComponent(
 				component: (
 					<Checkbox
 						label={label}
+						domProps={{
+							defaultChecked: defaultValue,
+						}}
 						register={register(key, { required })}
 						__cssFor={{ root: styles }}
 						description={description}
@@ -351,13 +355,6 @@ export function GetComponent(
 				),
 				key,
 			};
-
-		// case "object":
-		// 	return Checkbox;
-		// case "object":
-		// 	return <Checkbox label={"test"} />;
-		// case "object":
-		// 	return <p>other</p>;
 
 		default:
 			return {

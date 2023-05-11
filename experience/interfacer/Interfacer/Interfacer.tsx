@@ -152,6 +152,7 @@ export function Interfacer({
 				method: "POST",
 				requestBody: {
 					method: "create",
+					...variables,
 					form: data,
 				},
 			}

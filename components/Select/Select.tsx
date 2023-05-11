@@ -33,9 +33,10 @@ type ExternalSelectOverrides<T> = {
 export type SelectOverrides<T> = InternalSelectOverrides<T> &
 	ExternalSelectOverrides<T>;
 
-type Option = {
+export type SelectOption = {
 	value: string | number | undefined;
 	label?: string;
+	keyOverride?: any;
 };
 
 type Props = {
@@ -48,7 +49,7 @@ type Props = {
 	helperText?: string;
 	label: string;
 	onChange?: (e: ChangeEvent<HTMLSelectElement>, value: string) => void;
-	options: Option[];
+	options: SelectOption[];
 	register?: object;
 	__cssFor?: SelectOverrides<string>;
 };
@@ -90,7 +91,10 @@ const Select = ({
 				onChange={(e) => onChange(e, e.target.value)}
 			>
 				{options.map((opt) => (
-					<option key={opt.value} value={opt.value}>
+					<option
+						key={opt.keyOverride || opt.value}
+						value={opt.value}
+					>
 						{opt.label || opt.value}
 					</option>
 				))}

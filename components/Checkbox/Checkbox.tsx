@@ -70,10 +70,11 @@ const Checkbox = forwardRef<ChildRef, Props>((props, ref) => {
 				<input
 					type="checkbox"
 					{...domProps}
-					{...register}
 					id={id}
 					className={inputStyles}
 					ref={ref}
+					// register must be below the ref or values will return undefined
+					{...register}
 				/>
 				{label ? (
 					<FormFieldLabel

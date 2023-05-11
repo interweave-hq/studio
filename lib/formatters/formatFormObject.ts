@@ -1,5 +1,7 @@
 import { type SchemaKeys } from "@interweave/interweave";
 
+import { isEmpty } from "../helpers";
+
 export function formatFormObject(
 	data: Record<string, unknown>,
 	keys: SchemaKeys
@@ -22,6 +24,13 @@ export function formatFormObject(
 		const type = keyConfig.schema.type;
 		if (type === "number" && typeof value === "string") {
 			data[d] = parseFloat(value);
+		}
+		if (
+			(isEmpty(value) || value === "None") &&
+			type !== "boolean" &&
+			!keyConfig.schema.is_array
+		) {
+			data[d] = null;
 		}
 	});
 	return data;
