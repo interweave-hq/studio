@@ -1,6 +1,9 @@
 import LogIn from "./login";
 import { Logo } from "@/components";
 import styles from "./styles.module.css";
+import { getMetadata } from "@/lib/metadata";
+
+export const metadata = getMetadata({ title: "Log In" });
 
 export default async function Login({
 	searchParams,

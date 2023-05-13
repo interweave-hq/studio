@@ -6,11 +6,13 @@ import { getButtonStyle } from "@/components/Button";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
+import { getMetadata } from "@/lib/metadata";
+
+export const metadata = getMetadata({ title: "Welcome" });
 
 export default async function Home() {
 	const { user } = await authenticate({ optional: true });
 	const { data, error } = await getProjects();
-
 	return (
 		<>
 			<Header user={user} />
@@ -49,9 +51,9 @@ export default async function Home() {
 													styles["section-title"]
 												}
 											>
-												Projects
+												My Projects
 											</h2>
-											<Link
+											{/* <Link
 												className={
 													styles[
 														"section-title__link"
@@ -60,7 +62,7 @@ export default async function Home() {
 												href="#"
 											>
 												view all
-											</Link>
+											</Link> */}
 										</div>
 									)}
 									<div
@@ -82,7 +84,10 @@ export default async function Home() {
 													]
 												}
 											>
-												<InterfaceCard title={p.slug} />
+												<InterfaceCard
+													title={p.slug}
+													description={`ID: ${p.id}`}
+												/>
 											</Link>
 										))}
 									</div>
@@ -103,7 +108,7 @@ export default async function Home() {
 											>
 												Interfaces
 											</h2>
-											<Link
+											{/* <Link
 												className={
 													styles[
 														"section-title__link"
@@ -112,7 +117,7 @@ export default async function Home() {
 												href="#"
 											>
 												view all
-											</Link>
+											</Link> */}
 										</div>
 										<div
 											className={

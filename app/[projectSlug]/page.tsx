@@ -7,14 +7,18 @@ import { AddTokens, TokenDisplay } from "@/experience/project/tokens";
 import { InterfaceList } from "@/experience/project/InterfaceList";
 import { LoadingDots, InterfaceCard } from "@/components";
 import { Interfacer } from "@/interfaces";
+import { getMetadata } from "@/lib/metadata";
 
-export default async function ProjectListing({
-	params,
-}: {
-	params: {
-		projectSlug: string;
-	};
-}) {
+type Params = {
+	projectSlug: string;
+};
+
+export async function generateMetadata({ params }: { params: Params }) {
+	const { data } = await getProject({ projectSlug: params.projectSlug });
+	return getMetadata({ title: data.title });
+}
+
+export default async function ProjectListing({ params }: { params: Params }) {
 	const projectSlug = params["projectSlug"];
 	const { data: projectData } = await getProject({ projectSlug });
 	const hasInterfaces = projectData?.interfaces?.length > 0;

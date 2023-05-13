@@ -2,25 +2,30 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
-import { Interfacer } from "@/experience/interfacer/Interfacer";
 import styles from "../../home.module.css";
 import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { serverRequest } from "@/lib/api/serverRequest";
-import { FetchTableData } from "@/experience/interfacer/FetchTableData";
 import { AuthorizationKeysWizard } from "@/experience/interfacer/AuthorizationKeysWizard";
 import { DeleteAPITokens } from "@/experience/interfacer/DeleteAPITokens";
 import { InterfaceContextProvider } from "../../../providers/InterfaceProvider";
 import { TableAndForm } from "@/experience/interfacer/TableAndForm";
+import { getMetadata } from "@/lib/metadata";
 
-export default async function Home({
-	params,
-}: {
-	params: {
-		projectSlug: string;
-		interfaceSlug: string;
-	};
-}) {
+type Params = {
+	projectSlug: string;
+	interfaceSlug: string;
+};
+
+export async function generateMetadata({ params }: { params: Params }) {
+	const { project, interfacer } = await getData({
+		projectSlug: params.projectSlug,
+		interfaceSlug: params.interfaceSlug,
+	});
+	return getMetadata({ title: `${interfacer.title} - ${project.title}` });
+}
+
+export default async function Home({ params }: { params: Params }) {
 	const projectSlug = params["projectSlug"];
 	const interfaceSlug = params["interfaceSlug"];
 	const { project, interfacer, access, needsKeys } = await getData({
