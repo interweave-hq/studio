@@ -14,6 +14,70 @@ export interface ComponentSetup {
 	key: string;
 }
 
+/**
+ * Need this to show the time in your current timezones on the frontend
+ */
+function getDefaultValueFromDate(date: Date) {
+	const year = date.getFullYear().toString().padStart(4, "0");
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+	const day = date.getDate().toString().padStart(2, "0");
+	const hours = date.getHours().toString().padStart(2, "0");
+	const minutes = date.getMinutes().toString().padStart(2, "0");
+	const defaultValue = `${year}-${month}-${day}T${hours}:${minutes}`;
+	return defaultValue;
+}
+
+/**
+ * Get the default value for `<input type="date" />`
+ */
+function getDateDefaultValue(value: any, renderNulls = false) {
+	if (!value && renderNulls) {
+		return "";
+	}
+	if (!value) {
+		return getDefaultValueFromDate(new Date()).slice(0, 10);
+	}
+	try {
+		return getDefaultValueFromDate(new Date(value)).slice(0, 10);
+	} catch (err) {
+		return getDefaultValueFromDate(new Date()).slice(0, 10);
+	}
+}
+
+/**
+ * Get the default value for `<input type="datetime-local" />`
+ */
+function getDateTimeDefaultValue(value: any, renderNulls = false) {
+	if (!value && renderNulls) {
+		return "";
+	}
+	if (!value) {
+		return getDefaultValueFromDate(new Date());
+	}
+	try {
+		return getDefaultValueFromDate(new Date(value));
+	} catch (err) {
+		return getDefaultValueFromDate(new Date());
+	}
+}
+
+/**
+ * Get the default value for `<input type="time" />`
+ */
+function getTimeDefaultValue(value: any, renderNulls = false) {
+	if (!value && renderNulls) {
+		return "";
+	}
+	if (!value) {
+		return "12:00:00";
+	}
+	try {
+		return new Date(value).toLocaleTimeString("en-US", { hour12: false });
+	} catch (err) {
+		return "12:00:00";
+	}
+}
+
 interface GetComponentOptions {
 	type: string;
 	enum?: StaticDataSource;
@@ -44,6 +108,7 @@ export function GetComponent(
 		isParameterFetch?: boolean;
 		setParameterLoadingState?: (key: string, status: boolean) => void;
 		parameterLoadingState?: any;
+		renderEmptyDefaultDates?: boolean;
 	}
 ): ComponentSetup {
 	const { interfaceId } = useContext(InterfaceContext);
@@ -351,6 +416,75 @@ export function GetComponent(
 						register={register(key, { required })}
 						__cssFor={{ root: styles }}
 						description={description}
+					/>
+				),
+				key,
+			};
+
+		case "datetime":
+			return {
+				component: (
+					<Input
+						label={label}
+						register={register(key, { required })}
+						__cssFor={{ root: styles }}
+						domProps={{
+							type: "datetime-local",
+							defaultValue: getDateTimeDefaultValue(
+								defaultValue,
+								secondaryOptions?.renderEmptyDefaultDates
+							),
+							readOnly: disabled,
+							hidden,
+						}}
+						error={options?.error}
+						helperText={description}
+					/>
+				),
+				key,
+			};
+
+		case "date":
+			return {
+				component: (
+					<Input
+						label={label}
+						register={register(key, { required })}
+						__cssFor={{ root: styles }}
+						domProps={{
+							type: "date",
+							defaultValue: getDateDefaultValue(
+								defaultValue,
+								secondaryOptions?.renderEmptyDefaultDates
+							),
+							readOnly: disabled,
+							hidden,
+						}}
+						error={options?.error}
+						helperText={description}
+					/>
+				),
+				key,
+			};
+
+		case "time":
+			return {
+				component: (
+					<Input
+						label={label}
+						register={register(key, { required })}
+						__cssFor={{ root: styles }}
+						domProps={{
+							type: "time",
+							defaultValue: getTimeDefaultValue(
+								defaultValue,
+								secondaryOptions?.renderEmptyDefaultDates
+							),
+							readOnly: disabled,
+							hidden,
+						}}
+						error={options?.error}
+						helperText={description}
 					/>
 				),
 				key,
