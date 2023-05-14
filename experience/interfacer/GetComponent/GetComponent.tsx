@@ -432,7 +432,8 @@ export function GetComponent(
 							type: "datetime-local",
 							defaultValue: getDateTimeDefaultValue(
 								defaultValue,
-								secondaryOptions?.renderEmptyDefaultDates
+								secondaryOptions?.renderEmptyDefaultDates ||
+									!required
 							),
 							readOnly: disabled,
 							hidden,
@@ -455,7 +456,8 @@ export function GetComponent(
 							type: "date",
 							defaultValue: getDateDefaultValue(
 								defaultValue,
-								secondaryOptions?.renderEmptyDefaultDates
+								secondaryOptions?.renderEmptyDefaultDates ||
+									!required
 							),
 							readOnly: disabled,
 							hidden,
@@ -478,7 +480,8 @@ export function GetComponent(
 							type: "time",
 							defaultValue: getTimeDefaultValue(
 								defaultValue,
-								secondaryOptions?.renderEmptyDefaultDates
+								secondaryOptions?.renderEmptyDefaultDates ||
+									!required
 							),
 							readOnly: disabled,
 							hidden,
