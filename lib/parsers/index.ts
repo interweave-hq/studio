@@ -1,5 +1,7 @@
-import { Request } from "@interweave/interweave";
+import { type Request } from "@interweave/interweave";
 import { get, isEmpty } from "../helpers";
+
+export { getLabelFromKey } from "./getLabelFromKey";
 
 /**
  * A Source is where data can come from, aka the first part of a key in a string

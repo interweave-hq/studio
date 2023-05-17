@@ -10,6 +10,7 @@ import { isEmpty } from "@/lib/helpers";
 
 import styles from "./styles.module.css";
 import { NoData } from "../NoData";
+import { getLabelFromKey } from "@/lib/parsers";
 
 const getActions = ({
 	activeRow,
@@ -71,7 +72,7 @@ const getColumnsFromKeys = (columnData: {
 			initialColumnVisibility[k] = false;
 		}
 		return {
-			header: typeConfig?.interface?.label || k,
+			header: typeConfig?.interface?.label || getLabelFromKey(k),
 			// footer: (props) => props.column.id,
 			// columns: [
 			// 	{

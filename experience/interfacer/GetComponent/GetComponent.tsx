@@ -8,6 +8,7 @@ import { get } from "@/lib/helpers";
 import { InterfaceContext } from "@/providers/InterfaceProvider";
 import { type VariableState } from "@/interfaces";
 import { Select, type SelectOption } from "@/components/Select";
+import { getLabelFromKey } from "@/lib/parsers";
 
 export interface ComponentSetup {
 	component: JSX.Element;
@@ -126,7 +127,7 @@ export function GetComponent(
 	const enumValue = options?.enum;
 	const dynamicEnum = options?.dynamic_enum;
 	const defaultValue = options?.defaultValue;
-	const label = options?.label || key;
+	const label = options?.label || getLabelFromKey(key);
 	const required = options.required;
 	const disabled = options?.disabled;
 	const hidden = options?.hidden;
