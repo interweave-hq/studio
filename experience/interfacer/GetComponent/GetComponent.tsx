@@ -373,7 +373,7 @@ export function GetComponent(
 							hidden,
 							readOnly: disabled,
 						}}
-						helperText={description}
+						description={description}
 						maxLength={maxLength}
 					/>
 				),
@@ -398,7 +398,7 @@ export function GetComponent(
 						register={register(key, { required })}
 						error={options?.error}
 						__cssFor={{ root: styles }}
-						helperText={description}
+						description={description}
 						maxLength={maxLength}
 					/>
 				),
@@ -439,7 +439,7 @@ export function GetComponent(
 							hidden,
 						}}
 						error={options?.error}
-						helperText={description}
+						description={description}
 					/>
 				),
 				key,
@@ -463,7 +463,7 @@ export function GetComponent(
 							hidden,
 						}}
 						error={options?.error}
-						helperText={description}
+						description={description}
 					/>
 				),
 				key,
