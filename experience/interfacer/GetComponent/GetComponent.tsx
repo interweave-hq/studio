@@ -346,7 +346,7 @@ export function GetComponent(
 				<Select
 					label={label}
 					options={combinedDataSource}
-					register={register(key, { required })}
+					register={register(key)}
 					domProps={{
 						defaultValue,
 						readOnly: disabled,
@@ -366,7 +366,7 @@ export function GetComponent(
 				component: (
 					<Input
 						label={label}
-						register={register(key, { required })}
+						register={register(key)}
 						__cssFor={{ root: styles }}
 						error={options?.error}
 						domProps={{
@@ -396,7 +396,7 @@ export function GetComponent(
 							noValidate: true,
 						}}
 						label={label}
-						register={register(key, { required })}
+						register={register(key)}
 						error={options?.error}
 						__cssFor={{ root: styles }}
 						description={description}
@@ -414,7 +414,7 @@ export function GetComponent(
 						domProps={{
 							defaultChecked: defaultValue,
 						}}
-						register={register(key, { required })}
+						register={register(key)}
 						__cssFor={{ root: styles }}
 						description={description}
 					/>
@@ -427,7 +427,7 @@ export function GetComponent(
 				component: (
 					<Input
 						label={label}
-						register={register(key, { required })}
+						register={register(key)}
 						__cssFor={{ root: styles }}
 						domProps={{
 							type: "datetime-local",
@@ -451,7 +451,7 @@ export function GetComponent(
 				component: (
 					<Input
 						label={label}
-						register={register(key, { required })}
+						register={register(key)}
 						__cssFor={{ root: styles }}
 						domProps={{
 							type: "date",
@@ -475,7 +475,7 @@ export function GetComponent(
 				component: (
 					<Input
 						label={label}
-						register={register(key, { required })}
+						register={register(key)}
 						__cssFor={{ root: styles }}
 						domProps={{
 							type: "time",
