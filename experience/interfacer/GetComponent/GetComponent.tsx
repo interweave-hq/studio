@@ -9,6 +9,7 @@ import { InterfaceContext } from "@/providers/InterfaceProvider";
 import { type VariableState } from "@/interfaces";
 import { Select, type SelectOption } from "@/components/Select";
 import { getLabelFromKey } from "@/lib/parsers";
+import { logMakeRequestResults } from "@/lib/loggers";
 
 export interface ComponentSetup {
 	component: JSX.Element;
@@ -180,6 +181,8 @@ export function GetComponent(
 						}
 					);
 
+					logMakeRequestResults({ key, data, error });
+
 					if (error) {
 						console.error(error);
 						setEnumDataLoading(false);
@@ -217,7 +220,7 @@ export function GetComponent(
 						return;
 					}
 
-					setEnumData(data);
+					setEnumData(data.parsed);
 					setEnumDataLoading(false);
 				})();
 			}

@@ -14,6 +14,7 @@ import { get } from "@/lib/helpers";
 import { GetComponent, type ComponentSetup } from "../GetComponent";
 import { clientRequest } from "@/lib/api/clientRequest";
 import { formatFormObject } from "@/lib/formatters";
+import { logMakeRequestResults } from "@/lib/loggers";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -157,6 +158,9 @@ export function Interfacer({
 				},
 			}
 		);
+
+		logMakeRequestResults({ key: "create", data: submitData, error });
+
 		if (error?.technicalError || error?.userError) {
 			setFormLoading(false);
 			return setSubmissionError(error);

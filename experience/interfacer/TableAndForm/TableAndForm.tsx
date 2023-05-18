@@ -18,6 +18,7 @@ import { formatFormObject } from "@/lib/formatters";
 import { clientRequest } from "@/lib/api/clientRequest";
 
 import styles from "./styles.module.css";
+import { logMakeRequestResults } from "@/lib/loggers";
 
 export function TableAndForm({
 	interfacer,
@@ -85,6 +86,7 @@ export function TableAndForm({
 					},
 				}
 			);
+			logMakeRequestResults({ key: "update", data, error });
 			if (error) {
 				setUpdateRequestLoading(false);
 				setUpdateRequestError(error);
@@ -125,6 +127,9 @@ export function TableAndForm({
 					},
 				}
 			);
+
+			logMakeRequestResults({ key: "delete", data, error });
+
 			if (error) {
 				setDeleteRequestLoading(false);
 				setDeleteRequestError(error);

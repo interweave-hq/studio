@@ -16,6 +16,7 @@ import styles from "./styles.module.css";
 import { VariableState } from "@/interfaces";
 import { extractVariables } from "@/lib/parsers";
 import { get } from "@/lib/helpers";
+import { logMakeRequestResults } from "@/lib/loggers";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -67,10 +68,16 @@ export function FetchTableData({
 				setLoading(true);
 				if (parametersLoading) return;
 
-				const { data, error, duration } = await getTableData({
+				const {
+					data: tableData,
+					error,
+					duration,
+				} = await getTableData({
 					interfaceId,
 					...variables,
 				});
+
+				logMakeRequestResults({ key: "get", data: tableData, error });
 
 				if (error) {
 					setError(error);
@@ -79,10 +86,11 @@ export function FetchTableData({
 					return;
 				}
 				setRequestDuration(duration || 0);
-				setData(data);
+				setData(tableData.parsed);
 				setLoading(false);
 			} catch (err) {
 				setLoading(false);
+				logMakeRequestResults({ key: "get", data, error: err });
 				console.error(err);
 			}
 		})();
