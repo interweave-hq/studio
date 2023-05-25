@@ -38,9 +38,11 @@ export function formatFormObject(
 		}
 
 		// Format date values to include timezone
-		if (type === "date" || type === "datetime" || type === "time") {
-			if (typeof value === "string" || typeof value === "number") {
-				data[d] = new Date(value).toISOString();
+		if (value) {
+			if (type === "date" || type === "datetime" || type === "time") {
+				if (typeof value === "string" || typeof value === "number") {
+					data[d] = new Date(value).toISOString();
+				}
 			}
 		}
 	});
