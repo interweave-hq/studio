@@ -21,16 +21,27 @@ export function formatFormObject(
 			}
 			keyConfig = keys[correctKey];
 		}
+
+		// Format input numbers
 		const type = keyConfig.schema.type;
 		if (type === "number" && typeof value === "string") {
 			data[d] = parseFloat(value);
 		}
+
+		// Format null values
 		if (
 			(isEmpty(value) || value === "None") &&
 			type !== "boolean" &&
 			!keyConfig.schema.is_array
 		) {
 			data[d] = null;
+		}
+
+		// Format date values to include timezone
+		if (type === "date" || type === "datetime" || type === "time") {
+			if (typeof value === "string" || typeof value === "number") {
+				data[d] = new Date(value).toISOString();
+			}
 		}
 	});
 	return data;
