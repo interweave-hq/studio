@@ -53,6 +53,7 @@ export function TableAndForm({
 	const [deleteRequestError, setDeleteRequestError] = useState<ErrorType>();
 
 	const reload = () => {
+		setRowState({});
 		setReload(!reloadValue);
 	};
 

@@ -79,6 +79,14 @@ export function FetchTableData({
 
 				logMakeRequestResults({ key: "get", data: tableData, error });
 
+				// When the table is reloaded with a different query parameter
+				// if (
+				// 	Array.isArray(tableData.parsed) &&
+				// 	tableData.parsed?.length > 0
+				// ) {
+				// 	setRowState({ original: tableData.parsed[0] });
+				// }
+
 				if (error) {
 					setError(error);
 					setLoading(false);
