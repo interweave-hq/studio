@@ -7,7 +7,7 @@ import styles from "./styles.module.css";
 export async function Profile() {
 	const { data: user } = await getProfile();
 	const { data } = await getReceipts();
-	const entries = data.bucket.store.entries;
+	const entries = data.bucket?.store?.entries || [];
 	return (
 		<main className={styles.wrapper}>
 			<section className={styles.section}>
