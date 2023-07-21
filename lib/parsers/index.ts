@@ -23,15 +23,15 @@ type SourceValue = {
 
 /**
  * Pulls the variables out of a string
- * http://{row.domain}/api/{row.resource} -> ['row.domain', 'row.resource']
+ * http://<<row.domain>>/api/<<row.resource>> -> ['row.domain', 'row.resource']
  */
 export function extractVariables(str: string): string[] {
 	const variables: string[] = [];
 	let i = 0;
 
 	while (i < str.length) {
-		if (str[i] === "<") {
-			const start = i + 1;
+		if (str[i] === "<" && str[i + 1] === "<") {
+			const start = i + 2;
 			const end = str.indexOf(">", start);
 			if (end !== -1) {
 				const variable = str.substring(start, end);
@@ -104,7 +104,7 @@ export function parseRequest(
 					data: undefined,
 				};
 			}
-			requestString = requestString.replaceAll(`<${v}>`, value);
+			requestString = requestString.replaceAll(`<<${v}>>`, value);
 			return;
 		}
 
@@ -112,7 +112,7 @@ export function parseRequest(
 		const sourceObjStr = JSON.stringify(
 			JSON.parse(JSON.stringify(sourceObj))
 		);
-		requestString = requestString.replaceAll(`<${v}>`, sourceObjStr);
+		requestString = requestString.replaceAll(`<<${v}>>`, sourceObjStr);
 
 		// Now we have to remove some quotes so we get an actual object instead of a string of an object
 		// tried a million things and JSON.parse / JSON.stringify stuff doesnt work

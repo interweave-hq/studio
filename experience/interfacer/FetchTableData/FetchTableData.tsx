@@ -114,7 +114,7 @@ export function FetchTableData({
 	// if theres URL parameters, wait until something has been submitted
 	// if theres required query parameters, wait until something has been submitted
 	const parameters = getRequest?.parameters;
-	const hasUrlParameters = url.indexOf("<") > -1;
+	const hasUrlParameters = url.indexOf("<<") > -1;
 
 	if (hasUrlParameters && !parameters) {
 		const badConfigError: RequestReturn = {
@@ -133,7 +133,7 @@ export function FetchTableData({
 	const possibleVariables = extractVariables(displayUrl);
 	possibleVariables.forEach((v) => {
 		const possibleValue = get(variables, v, null);
-		const newUrl = displayUrl.replaceAll(`<${v}>`, possibleValue);
+		const newUrl = displayUrl.replaceAll(`<<${v}>>`, possibleValue);
 		displayUrl = newUrl;
 	});
 
