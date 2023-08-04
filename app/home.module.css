@@ -57,3 +57,9 @@
 	max-width: var(--max-width-md);
 	justify-content: flex-end;
 }
+
+@media screen and (max-width: 750px) {
+	.main-container {
+		padding: 64px 10px;
+	}
+}

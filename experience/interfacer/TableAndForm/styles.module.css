@@ -26,3 +26,12 @@
 	word-wrap: break-word;
 	white-space: pre;
 }
+
+@media screen and (max-width: 750px) {
+	.form-container {
+		padding: 24px 16px;
+	}
+	.table-container {
+		padding: 0;
+	}
+}

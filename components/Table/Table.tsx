@@ -168,107 +168,113 @@ export default function Table({
 			</div>
 			<div className={styles["table__bottom-container"]}>
 				<div className={styles["table-controls"]}>
-					<button
-						onClick={() => table.setPageIndex(0)}
-						disabled={!table.getCanPreviousPage()}
-						className={styles["table-controls__button"]}
-					>
-						<ChevronDoubleLeft
-							className={styles["table-controls__button-svg"]}
-						/>
-					</button>
-					<button
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-						className={styles["table-controls__button"]}
-					>
-						<ChevronLeft
-							className={styles["table-controls__button-svg"]}
-						/>
-					</button>
-					<button
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-						className={styles["table-controls__button"]}
-					>
-						<ChevronRight
-							className={styles["table-controls__button-svg"]}
-						/>
-					</button>
-					<button
-						onClick={() =>
-							table.setPageIndex(table.getPageCount() - 1)
-						}
-						disabled={!table.getCanNextPage()}
-						className={styles["table-controls__button"]}
-					>
-						<ChevronDoubleRight
-							className={styles["table-controls__button-svg"]}
-						/>
-					</button>
-					<span>
-						<p className={styles["table-controls__page-text"]}>
-							Page
-						</p>
-						<strong
-							className={
-								styles["table-controls__page-range-number"]
-							}
-						>
-							{table.getState().pagination.pageIndex + 1} of{" "}
-							{table.getPageCount()}
-						</strong>
-					</span>
-					<span className={styles["table-controls__go-to-text"]}>
-						Go to page:
-						<input
-							className={styles["table-controls__input"]}
-							type="number"
-							defaultValue={
-								table.getState().pagination.pageIndex + 1
-							}
-							onChange={(e) => {
-								const page = e.target.value
-									? Number(e.target.value) - 1
-									: 0;
-								table.setPageIndex(page);
-							}}
-						/>
-					</span>
-					<select
-						className={styles["table-controls__select"]}
-						value={table.getState().pagination.pageSize}
-						onChange={(e) => {
-							table.setPageSize(Number(e.target.value));
-						}}
-					>
-						{[10, 20, 30, 40, 50].map((pageSize) => (
-							<option key={pageSize} value={pageSize}>
-								Show {pageSize}
-							</option>
-						))}
-					</select>
-					{reload ? (
+					<div className={styles["control-group"]}>
 						<button
-							onClick={() => reload()}
-							className={combineCss([
-								styles["table-controls__button"],
-								styles["table__reload-button"],
-							])}
+							onClick={() => table.setPageIndex(0)}
+							disabled={!table.getCanPreviousPage()}
+							className={styles["table-controls__button"]}
 						>
-							<Reload
-								className={combineCss([
-									styles["table-controls__button-svg"],
-									styles["table__reload-button-svg"],
-								])}
+							<ChevronDoubleLeft
+								className={styles["table-controls__button-svg"]}
 							/>
 						</button>
-					) : null}
-					{actions ? (
-						<div className={styles["table__actions-container"]}>
-							{actions.map((el) => el)}
-						</div>
-					) : null}
+						<button
+							onClick={() => table.previousPage()}
+							disabled={!table.getCanPreviousPage()}
+							className={styles["table-controls__button"]}
+						>
+							<ChevronLeft
+								className={styles["table-controls__button-svg"]}
+							/>
+						</button>
+						<button
+							onClick={() => table.nextPage()}
+							disabled={!table.getCanNextPage()}
+							className={styles["table-controls__button"]}
+						>
+							<ChevronRight
+								className={styles["table-controls__button-svg"]}
+							/>
+						</button>
+						<button
+							onClick={() =>
+								table.setPageIndex(table.getPageCount() - 1)
+							}
+							disabled={!table.getCanNextPage()}
+							className={styles["table-controls__button"]}
+						>
+							<ChevronDoubleRight
+								className={styles["table-controls__button-svg"]}
+							/>
+						</button>
+					</div>
+					<div className={styles["control-group"]}>
+						<span>
+							<p className={styles["table-controls__page-text"]}>
+								Page
+							</p>
+							<strong
+								className={
+									styles["table-controls__page-range-number"]
+								}
+							>
+								{table.getState().pagination.pageIndex + 1} of{" "}
+								{table.getPageCount()}
+							</strong>
+						</span>
+						<span className={styles["table-controls__go-to-text"]}>
+							Go to page:
+							<input
+								className={styles["table-controls__input"]}
+								type="number"
+								defaultValue={
+									table.getState().pagination.pageIndex + 1
+								}
+								onChange={(e) => {
+									const page = e.target.value
+										? Number(e.target.value) - 1
+										: 0;
+									table.setPageIndex(page);
+								}}
+							/>
+						</span>
+						<select
+							className={styles["table-controls__select"]}
+							value={table.getState().pagination.pageSize}
+							onChange={(e) => {
+								table.setPageSize(Number(e.target.value));
+							}}
+						>
+							{[10, 20, 30, 40, 50].map((pageSize) => (
+								<option key={pageSize} value={pageSize}>
+									Show {pageSize}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className={styles["control-group"]}>
+						{reload ? (
+							<button
+								onClick={() => reload()}
+								className={combineCss([
+									styles["table-controls__button"],
+									styles["table__reload-button"],
+								])}
+							>
+								<Reload
+									className={combineCss([
+										styles["table-controls__button-svg"],
+										styles["table__reload-button-svg"],
+									])}
+								/>
+							</button>
+						) : null}
+						{actions ? (
+							<div className={styles["table__actions-container"]}>
+								{actions.map((el) => el)}
+							</div>
+						) : null}
+					</div>
 				</div>
 				<div>
 					{supplementalInfo.map((s, i) => (

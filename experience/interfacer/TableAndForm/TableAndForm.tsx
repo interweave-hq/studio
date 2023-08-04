@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useId, useMemo, useEffect } from "react";
+import { useState, useId, useMemo } from "react";
 import { type Request, type SchemaKeys } from "@interweave/interweave";
 
 import { InfoModal, LoadingDots } from "@/components";

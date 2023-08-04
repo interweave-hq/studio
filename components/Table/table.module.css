@@ -218,3 +218,29 @@
 	opacity: 0.2;
 	width: 10px;
 }
+
+.control-group {
+	align-items: center;
+	display: flex;
+}
+
+@media screen and (max-width: 1200px) {
+	.table-controls {
+		align-items: flex-start;
+		flex-direction: column;
+		margin-top: 16px;
+	}
+	.table__bottom-container {
+		align-items: flex-start;
+		flex-direction: column-reverse;
+	}
+	.table-controls__button {
+		margin: 4px;
+	}
+	.control-group {
+		margin: 8px 0;
+	}
+	.table-controls__page-text {
+		margin-left: 0;
+	}
+}
