@@ -39,9 +39,24 @@ export function formatFormObject(
 
 		// Format date values to include timezone
 		if (value) {
-			if (type === "date" || type === "datetime" || type === "time") {
+			if (type === "datetime" || type === "time") {
 				if (typeof value === "string" || typeof value === "number") {
 					data[d] = new Date(value).toISOString();
+				}
+			}
+			// Enable timezone tracking on date
+			if (type === "date") {
+				if (typeof value === "string") {
+					const newDate = new Date();
+					const [nYear, nMonth, nDay] = value.split("-");
+					newDate.setFullYear(parseInt(nYear));
+					newDate.setMonth(parseInt(nMonth) - 1);
+					newDate.setDate(parseInt(nDay));
+					newDate.setHours(0);
+					newDate.setMinutes(0);
+					newDate.setSeconds(0);
+					newDate.setMilliseconds(0);
+					data[d] = newDate.toISOString();
 				}
 			}
 		}
