@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type Schema, type KeyConfiguration } from "@interweave/interweave";
 
 import { Button, Sizes, Flavors, Kinds } from "@/components/Button";
@@ -118,6 +118,7 @@ export default function DynamicTable({
 	setRowState,
 	onDelete,
 	onUpdate,
+	purgeRowState = false,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
@@ -128,6 +129,7 @@ export default function DynamicTable({
 	onDelete?: () => void;
 	onUpdate?: () => void;
 	setRowState: (r: any) => void;
+	purgeRowState?: boolean;
 }) {
 	const {
 		data: cols,
@@ -187,6 +189,7 @@ export default function DynamicTable({
 				selectable={!!onDelete || !!onUpdate}
 				setSelectedRow={(row) => onRowSelection(row)}
 				initialState={initialState}
+				purgeRowState={purgeRowState}
 			/>
 		</>
 	);

@@ -100,3 +100,10 @@
 	z-index: 12;
 	pointer-events: visibleFill;
 }
+
+@media screen and (max-height: 700px) {
+	.dialog {
+		max-height: 80vh;
+		margin: 10vh 0;
+	}
+}

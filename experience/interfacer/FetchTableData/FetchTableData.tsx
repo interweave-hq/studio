@@ -168,6 +168,7 @@ export function FetchTableData({
 					onDelete={onDelete}
 					schema={schema}
 					setRowState={setRowState}
+					purgeRowState={triggerReload}
 				/>
 			) : null}
 		</div>

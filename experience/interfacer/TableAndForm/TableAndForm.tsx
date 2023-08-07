@@ -41,6 +41,8 @@ export function TableAndForm({
 		useState(true);
 	const [reloadValue, setReload] = useState(false);
 
+	const [paginationState, setPaginationState] = useState(1);
+
 	// Update state
 	const [updateModalOpen, setUpdateModalOpen] = useState(false);
 	const [isUpdateRequestLoading, setUpdateRequestLoading] = useState(false);
@@ -95,17 +97,20 @@ export function TableAndForm({
 			}
 		}
 
-		// Reload the table guarantees accurate rowData if they click off and on again
-		if (reload) {
-			reload();
-		}
-
 		// After an entry is updated, the rowData becomes outdated
 		// We cant say for certain what the new row looks like, but lets try our best by merging the form and existing row
 		setRowState({
 			...rowState,
 			...formData,
 		});
+
+		// Reload the table guarantees accurate rowData if they click off and on again
+		// We need to wait for the modal to close and finish its thing before resetting row state
+		if (reload) {
+			setTimeout(() => {
+				reload();
+			}, 500);
+		}
 
 		setUpdateModalOpen(false);
 		setUpdateRequestLoading(false);
@@ -159,6 +164,23 @@ export function TableAndForm({
 		  }
 		: undefined;
 
+	// const memoizedTableComponent = (
+	// 	<FetchTableData
+	// 		interfaceId={interfacer.id}
+	// 		keys={keys}
+	// 		getRequest={fetchData}
+	// 		schema={interfacer.schema_config}
+	// 		setParametersState={setParametersState}
+	// 		setRowState={(r) => updateRowState(r)}
+	// 		variables={variables}
+	// 		parametersLoading={dynamicParametersLoading}
+	// 		setParametersLoading={setDynamicParametersLoading}
+	// 		onDelete={onDelete}
+	// 		onUpdate={onUpdate}
+	// 		reload={reload}
+	// 		triggerReload={reloadValue}
+	// 	/>
+	// );
 	const memoizedTableComponent = useMemo(() => {
 		return (
 			<FetchTableData

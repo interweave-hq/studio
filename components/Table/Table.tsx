@@ -31,6 +31,7 @@ export default function Table({
 	setSelectedRow,
 	selectable,
 	initialState,
+	purgeRowState = false,
 }: {
 	data: any;
 	columns: any[];
@@ -40,18 +41,13 @@ export default function Table({
 	selectable?: boolean;
 	setSelectedRow?: (row: any) => void;
 	initialState?: Record<string, any>;
+	purgeRowState?: boolean;
 }) {
 	const [rowSelection, setRowSelection] = useState<any>(undefined);
-
-	useEffect(() => {
-		if (setSelectedRow) {
-			setSelectedRow(rowSelection);
-		}
-	}, [rowSelection]);
 	const table = useReactTable({
 		data,
 		columns,
-		enableRowSelection: true,
+		enableRowSelection: selectable,
 		enableMultiRowSelection: false,
 		state: {
 			rowSelection,
@@ -65,6 +61,35 @@ export default function Table({
 		//
 		debugTable: process.env.NODE_ENV === "development",
 	});
+	const [previousPurgeRowState, setPreviousPurgeRowState] =
+		useState(purgeRowState);
+
+	useEffect(() => {
+		if (setSelectedRow) {
+			setSelectedRow(rowSelection);
+		}
+	}, [rowSelection]);
+	useEffect(() => {
+		if (purgeRowState !== previousPurgeRowState) {
+			table.resetRowSelection(true);
+			setPreviousPurgeRowState(purgeRowState);
+
+			// This is kind poorly done and lazy, assumes this useEffect will only run on table reload
+			// Which isnt inaccurate right now
+			// This little code will set the table page to be the page it was on before
+			// This can and should be broken out into its own `restatePagination` prop or something
+			const pageIndex = table.getState().pagination.pageIndex;
+			const restateIndex = (num: number) =>
+				setTimeout(() => {
+					const pageCount = table.getPageCount();
+					// Make sure its a valid page
+					if (pageIndex <= pageCount - 1 && pageIndex >= 0) {
+						table.setPageIndex(num);
+					}
+				}, 250);
+			restateIndex(pageIndex);
+		}
+	}, [purgeRowState]);
 
 	return (
 		<div className={styles.root}>
