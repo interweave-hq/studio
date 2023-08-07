@@ -41,8 +41,6 @@ export function TableAndForm({
 		useState(true);
 	const [reloadValue, setReload] = useState(false);
 
-	const [paginationState, setPaginationState] = useState(1);
-
 	// Update state
 	const [updateModalOpen, setUpdateModalOpen] = useState(false);
 	const [isUpdateRequestLoading, setUpdateRequestLoading] = useState(false);
@@ -164,23 +162,6 @@ export function TableAndForm({
 		  }
 		: undefined;
 
-	// const memoizedTableComponent = (
-	// 	<FetchTableData
-	// 		interfaceId={interfacer.id}
-	// 		keys={keys}
-	// 		getRequest={fetchData}
-	// 		schema={interfacer.schema_config}
-	// 		setParametersState={setParametersState}
-	// 		setRowState={(r) => updateRowState(r)}
-	// 		variables={variables}
-	// 		parametersLoading={dynamicParametersLoading}
-	// 		setParametersLoading={setDynamicParametersLoading}
-	// 		onDelete={onDelete}
-	// 		onUpdate={onUpdate}
-	// 		reload={reload}
-	// 		triggerReload={reloadValue}
-	// 	/>
-	// );
 	const memoizedTableComponent = useMemo(() => {
 		return (
 			<FetchTableData

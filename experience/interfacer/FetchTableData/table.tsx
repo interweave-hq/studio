@@ -119,6 +119,7 @@ export default function DynamicTable({
 	onDelete,
 	onUpdate,
 	purgeRowState = false,
+	restatePagination = false,
 }: {
 	data: any[];
 	columnData: { [key: string]: KeyConfiguration };
@@ -130,6 +131,7 @@ export default function DynamicTable({
 	onUpdate?: () => void;
 	setRowState: (r: any) => void;
 	purgeRowState?: boolean;
+	restatePagination?: boolean;
 }) {
 	const {
 		data: cols,
@@ -190,6 +192,7 @@ export default function DynamicTable({
 				setSelectedRow={(row) => onRowSelection(row)}
 				initialState={initialState}
 				purgeRowState={purgeRowState}
+				restatePagination={restatePagination}
 			/>
 		</>
 	);

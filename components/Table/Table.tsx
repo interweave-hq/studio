@@ -32,6 +32,7 @@ export default function Table({
 	selectable,
 	initialState,
 	purgeRowState = false,
+	restatePagination = false,
 }: {
 	data: any;
 	columns: any[];
@@ -42,8 +43,12 @@ export default function Table({
 	setSelectedRow?: (row: any) => void;
 	initialState?: Record<string, any>;
 	purgeRowState?: boolean;
+	restatePagination?: boolean;
 }) {
 	const [rowSelection, setRowSelection] = useState<any>(undefined);
+	const [lastPaginationIndex, setLastPaginationIndex] = useState(0);
+	const [previousPaginationRestateValue, setPreviousPaginationRestateValue] =
+		useState(restatePagination);
 	const table = useReactTable({
 		data,
 		columns,
@@ -69,25 +74,30 @@ export default function Table({
 			setSelectedRow(rowSelection);
 		}
 	}, [rowSelection]);
+
+	// Keep track of pageIndex changes
+	useEffect(() => {
+		setLastPaginationIndex(table.getState().pagination.pageIndex);
+	}, [table.getState().pagination.pageIndex]);
+
+	// Controls pagination resets when data is refetched
+	// We'll go to the last page we were on if its there
+	useEffect(() => {
+		if (previousPaginationRestateValue !== restatePagination) {
+			const pageCount = table.getPageCount();
+			const pageIndex = table.getState().pagination.pageIndex;
+			// Make sure its a valid page
+			if (pageIndex <= pageCount - 1 && pageIndex >= 0) {
+				table.setPageIndex(lastPaginationIndex);
+			}
+			setPreviousPaginationRestateValue(restatePagination);
+		}
+	}, [restatePagination]);
+
 	useEffect(() => {
 		if (purgeRowState !== previousPurgeRowState) {
 			table.resetRowSelection(true);
 			setPreviousPurgeRowState(purgeRowState);
-
-			// This is kind poorly done and lazy, assumes this useEffect will only run on table reload
-			// Which isnt inaccurate right now
-			// This little code will set the table page to be the page it was on before
-			// This can and should be broken out into its own `restatePagination` prop or something
-			const pageIndex = table.getState().pagination.pageIndex;
-			const restateIndex = (num: number) =>
-				setTimeout(() => {
-					const pageCount = table.getPageCount();
-					// Make sure its a valid page
-					if (pageIndex <= pageCount - 1 && pageIndex >= 0) {
-						table.setPageIndex(num);
-					}
-				}, 250);
-			restateIndex(pageIndex);
 		}
 	}, [purgeRowState]);
 

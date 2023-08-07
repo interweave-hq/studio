@@ -40,7 +40,8 @@ export function FetchTableData({
 	setParametersLoading,
 	reload,
 	triggerReload,
-}: {
+}: // restatePagination,
+{
 	keys: SchemaKeys;
 	getRequest: Request;
 	onUpdate?: () => void;
@@ -54,11 +55,13 @@ export function FetchTableData({
 	setParametersLoading: (v: any) => void;
 	reload?: () => void;
 	triggerReload?: boolean;
+	// restatePagination?: boolean;
 }) {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
+	const [restatePagination, setRestatePagination] = useState(false);
 
 	// Whenever value state is updated after button click, refetch the data
 	useEffect(() => {
@@ -95,6 +98,7 @@ export function FetchTableData({
 				}
 				setRequestDuration(duration || 0);
 				setData(tableData.parsed);
+				setRestatePagination(!restatePagination);
 				setLoading(false);
 			} catch (err) {
 				setLoading(false);
@@ -169,6 +173,7 @@ export function FetchTableData({
 					schema={schema}
 					setRowState={setRowState}
 					purgeRowState={triggerReload}
+					restatePagination={restatePagination}
 				/>
 			) : null}
 		</div>
