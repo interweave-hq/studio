@@ -372,7 +372,7 @@ function Filter({
 						type: "number",
 						value:
 							(columnFilterValue as [number, number])?.[0] ?? "",
-						onChange: (e) => {
+						onChange: (e: any) => {
 							column.setFilterValue((old: [number, number]) => [
 								e.currentTarget.value,
 								old?.[1],
@@ -387,7 +387,7 @@ function Filter({
 						type: "number",
 						value:
 							(columnFilterValue as [number, number])?.[1] ?? "",
-						onChange: (e) => {
+						onChange: (e: any) => {
 							column.setFilterValue((old: [number, number]) => [
 								old?.[0],
 								e.currentTarget.value,

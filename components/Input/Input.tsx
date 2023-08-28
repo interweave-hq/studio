@@ -33,7 +33,7 @@ type ExternalInputOverrides<T> = {
 export type InputOverrides<T> = InternalInputOverrides<T> &
 	ExternalInputOverrides<T>;
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props {
 	description?: string;
 	domProps?: React.HTMLProps<HTMLInputElement>;
 	error?: string;
@@ -41,6 +41,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
 	maxLength?: number;
 	register?: object;
+	isTextArea?: boolean;
 	__cssFor?: InputOverrides<string>;
 }
 
@@ -49,6 +50,7 @@ const Input = ({
 	domProps,
 	error,
 	helperText = "",
+	isTextArea = false,
 	label = "Label",
 	maxLength,
 	register,
@@ -58,8 +60,11 @@ const Input = ({
 		domProps?.defaultValue?.toString().length || 0
 	);
 	const id = useId();
-	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleOnChange = (
+		e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		if (domProps?.onChange) {
+			// @ts-expect-error
 			domProps.onChange(e);
 		}
 		setInputValueLength(e.currentTarget.value.length);
@@ -99,14 +104,35 @@ const Input = ({
 					<p className={descriptionStyles}>{description}</p>
 				) : null}
 			</div>
-			<input
-				type="text"
-				{...domProps}
-				{...register}
-				id={id}
-				className={inputElementClass}
-				onChange={(e) => handleOnChange(e)}
-			/>
+			{isTextArea ? (
+				// @ts-expect-error
+				<textarea
+					{...domProps}
+					{...register}
+					id={id}
+					className={inputElementClass}
+					onChange={(e) => handleOnChange(e)}
+					style={{
+						height: Math.ceil(inputLength / 75) * 20 + "px",
+						padding: "12px",
+						lineHeight: 1.2,
+					}}
+					onInput={(e) => {
+						e.currentTarget.style.height = "";
+						e.currentTarget.style.height =
+							e.currentTarget.scrollHeight + 3 + "px";
+					}}
+				/>
+			) : (
+				<input
+					type="text"
+					{...domProps}
+					{...register}
+					id={id}
+					className={inputElementClass}
+					onChange={(e) => handleOnChange(e)}
+				/>
+			)}
 			{error || maxLength ? (
 				<div className={styles["bottom-container"]}>
 					{error ? (

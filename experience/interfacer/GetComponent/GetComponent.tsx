@@ -362,27 +362,48 @@ export function GetComponent(
 			key,
 		};
 	}
-
+	console.log(defaultValue, defaultValue?.length > 200, label);
 	switch (type) {
 		case "string":
-			return {
-				component: (
-					<Input
-						label={label}
-						register={register(key)}
-						__cssFor={{ root: styles }}
-						error={options?.error}
-						domProps={{
-							defaultValue,
-							hidden,
-							readOnly: disabled,
-						}}
-						description={description}
-						maxLength={maxLength}
-					/>
-				),
-				key,
-			};
+			return defaultValue && defaultValue.length > 200
+				? {
+						component: (
+							<Input
+								label={label}
+								register={register(key)}
+								__cssFor={{ root: styles }}
+								error={options?.error}
+								domProps={{
+									defaultValue,
+									hidden,
+									readOnly: disabled,
+								}}
+								description={description}
+								maxLength={maxLength}
+								isTextArea={true}
+							/>
+						),
+						key,
+				  }
+				: {
+						component: (
+							<Input
+								label={label}
+								register={register(key)}
+								__cssFor={{ root: styles }}
+								error={options?.error}
+								domProps={{
+									defaultValue,
+									hidden,
+									readOnly: disabled,
+								}}
+								description={description}
+								maxLength={maxLength}
+								isTextArea={false}
+							/>
+						),
+						key,
+				  };
 
 		case "number":
 			return {
