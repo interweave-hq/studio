@@ -33,7 +33,7 @@ export default async function Home({ params }: { params: Params }) {
 		interfaceSlug,
 	});
 	const config = interfacer.schema_config;
-	const keys = config.keys;
+	const keys = config.fields;
 
 	// If there's no access, I think we assume they have permission
 	// we only create an Access object if they're invited
