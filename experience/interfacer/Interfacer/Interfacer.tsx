@@ -74,7 +74,7 @@ export function Interfacer({
 				return null;
 			}
 			if (type === "object") {
-				if (typeConfig?.schema?.object_schema?.keys) {
+				if (typeConfig?.schema?.object_schema?.fields) {
 					return getComponentsFromKeys(
 						typeConfig.schema?.object_schema,
 						formKey
@@ -129,9 +129,9 @@ export function Interfacer({
 			returnErrors: true,
 		});
 		if (validation?.didError) {
-			const keysWithError = Object.keys(validation.keys);
+			const keysWithError = Object.keys(validation.fields);
 			keysWithError.forEach((key) => {
-				const err = validation.keys[key];
+				const err = validation.fields[key];
 				const isRequiredAndMissing = err.requiredAndMissing;
 				if (isRequiredAndMissing) {
 					return setError(key, {

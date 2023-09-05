@@ -56,7 +56,7 @@ export function getSchema(
 			result != null &&
 			Object.prototype.hasOwnProperty.call(result, key)
 		) {
-			const val = result[key]?.schema?.object_schema?.keys;
+			const val = result[key]?.schema?.object_schema;
 			if (typeof val === "undefined") {
 				return defaultValue;
 			}

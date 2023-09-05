@@ -72,7 +72,7 @@ export function TableAndForm({
 		setUpdateRequestLoading(true);
 		setUpdateRequestError(undefined);
 
-		formData = formatFormObject(formData, interfacer.schema_config.keys);
+		formData = formatFormObject(formData, interfacer.schema_config.fields);
 
 		if (updateRequest) {
 			const { data, error } = await clientRequest(
