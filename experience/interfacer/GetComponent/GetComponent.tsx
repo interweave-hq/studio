@@ -362,7 +362,6 @@ export function GetComponent(
 			key,
 		};
 	}
-	console.log(defaultValue, defaultValue?.length > 200, label);
 	switch (type) {
 		case "string":
 			return defaultValue && defaultValue.length > 200
