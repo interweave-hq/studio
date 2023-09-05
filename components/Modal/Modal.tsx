@@ -76,11 +76,11 @@ export function Modal({
 			// Handle consumer state as the last thing
 			// This will unmount this component
 			if (setClosed) {
-				// Re-enable scroll
-				if (htmlEl) {
-					htmlEl.style.overflow = "auto";
-				}
 				setClosed();
+			}
+			// Re-enable scroll
+			if (htmlEl) {
+				htmlEl.style.overflow = "auto";
 			}
 		}, 400);
 	};
