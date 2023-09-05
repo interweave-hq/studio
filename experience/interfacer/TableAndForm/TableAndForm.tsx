@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useId, useMemo } from "react";
-import { type Request, type SchemaKeys } from "@interweave/interweave";
+import { type Request, type Fields } from "@interweave/interweave";
 
 import { InfoModal, LoadingDots } from "@/components";
 import { UpdateForm } from "@/experience/interfacer/UpdateForm";
@@ -29,7 +29,7 @@ export function TableAndForm({
 	deleteRequest,
 }: {
 	interfacer: InterfacerType;
-	keys: SchemaKeys;
+	keys: Fields;
 	fetchData: Request;
 	createData: Request;
 	updateRequest: Request;

@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { type Schema, type KeyConfiguration } from "@interweave/interweave";
+import { useMemo, useState } from "react";
+import {
+	type InterfaceConfiguration,
+	type FieldConfiguration,
+} from "@interweave/interweave";
 
 import { Button, Sizes, Flavors, Kinds } from "@/components/Button";
 import { Error, Table } from "@/components";
@@ -61,7 +64,7 @@ const getActions = ({
 // So path "products"
 // Will return products.schema.object_keys
 const getColumnsFromKeys = (columnData: {
-	[key: string]: KeyConfiguration;
+	[key: string]: FieldConfiguration;
 }) => {
 	const initialColumnVisibility: Record<string, any> = {};
 	const keysArr = Object.keys(columnData);
@@ -122,11 +125,11 @@ export default function DynamicTable({
 	restatePagination = false,
 }: {
 	data: any[];
-	columnData: { [key: string]: KeyConfiguration };
+	columnData: { [key: string]: FieldConfiguration };
 	uri: string;
 	requestDuration?: number;
 	reload?: () => void;
-	schema: Schema;
+	schema: InterfaceConfiguration;
 	onDelete?: () => void;
 	onUpdate?: () => void;
 	setRowState: (r: any) => void;

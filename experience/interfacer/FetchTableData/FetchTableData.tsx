@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import {
-	type SchemaKeys,
-	type Schema,
+	type Fields,
+	type InterfaceConfiguration,
 	type Request,
 } from "@interweave/interweave";
 import { clientRequest, type RequestReturn } from "@/lib/api/clientRequest";
@@ -42,12 +42,12 @@ export function FetchTableData({
 	triggerReload,
 }: // restatePagination,
 {
-	keys: SchemaKeys;
+	keys: Fields;
 	getRequest: Request;
 	onUpdate?: () => void;
 	onDelete?: () => void;
 	interfaceId: string;
-	schema: Schema;
+	schema: InterfaceConfiguration;
 	setParametersState: (q: Record<string, unknown>) => void;
 	setRowState: (q: Record<string, unknown>) => void;
 	variables: VariableState & { row?: Record<string, unknown> };

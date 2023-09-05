@@ -4,7 +4,11 @@ import { useState, cloneElement } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Error, LoadingDots } from "@/components";
 import styles from "./styles.module.css";
-import { type Schema, validate, type SchemaKeys } from "@interweave/interweave";
+import {
+	type InterfaceConfiguration,
+	validate,
+	type Fields,
+} from "@interweave/interweave";
 import {
 	type Interfacer,
 	type Error as ErrorType,
@@ -33,7 +37,7 @@ export function Interfacer({
 	reloadTable,
 }: {
 	interfaceId: string;
-	schema: Schema;
+	schema: InterfaceConfiguration;
 	variables: VariableState;
 	reloadTable: () => void;
 }) {
@@ -53,7 +57,7 @@ export function Interfacer({
 		submissionError?.technicalError || submissionError?.userError;
 
 	const getComponentsFromKeys = (
-		keys: SchemaKeys,
+		keys: Fields,
 		nestedPath?: string
 	): ComponentSetup[] => {
 		const keysArr = Object.keys(keys);
@@ -72,7 +76,7 @@ export function Interfacer({
 			if (type === "object") {
 				if (typeConfig?.schema?.object_schema?.keys) {
 					return getComponentsFromKeys(
-						typeConfig.schema?.object_schema.keys,
+						typeConfig.schema?.object_schema,
 						formKey
 					);
 				}
@@ -115,7 +119,7 @@ export function Interfacer({
 		// Clear errors from previous submissions
 		clearErrors();
 
-		data = formatFormObject(data, schema.keys);
+		data = formatFormObject(data, schema.fields);
 
 		// Let's keep this here for user debugging
 		console.log("Submitted form data: ", data);
@@ -172,7 +176,7 @@ export function Interfacer({
 		return;
 	};
 
-	const comps = getComponentsFromKeys(schema.keys);
+	const comps = getComponentsFromKeys(schema.fields);
 
 	return (
 		<form

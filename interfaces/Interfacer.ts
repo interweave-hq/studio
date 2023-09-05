@@ -1,4 +1,4 @@
-import { type Schema } from "@interweave/interweave";
+import { type InterfaceConfiguration } from "@interweave/interweave";
 
 export interface Interfacer {
 	id: string;
@@ -8,7 +8,7 @@ export interface Interfacer {
 	slug: string;
 	title: string;
 	description?: string;
-	schema_config: Schema;
+	schema_config: InterfaceConfiguration;
 	key: string;
 	hash: string;
 	build_time: Date;

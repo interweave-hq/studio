@@ -1,6 +1,6 @@
 import { cloneElement } from "react";
 import { useForm } from "react-hook-form";
-import { type Schema } from "@interweave/interweave";
+import { type InterfaceConfiguration } from "@interweave/interweave";
 
 import { GetComponent } from "@/experience/interfacer/GetComponent";
 import { type VariableState } from "@/interfaces";
@@ -13,13 +13,13 @@ export function UpdateForm({
 	formId,
 	onSubmit,
 }: {
-	schema: Schema;
+	schema: InterfaceConfiguration;
 	variables: VariableState;
 	formId: string;
 	onSubmit: (data: any) => void;
 }) {
 	const { register, control, handleSubmit } = useForm();
-	const schemaKeys = schema.keys;
+	const schemaKeys = schema.fields;
 	const components = Object.keys(schemaKeys).map((k) => {
 		const keyConfig = schemaKeys[k];
 		const optionalText = keyConfig?.schema?.is_optional ? "Optional" : "";

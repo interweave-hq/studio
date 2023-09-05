@@ -1,4 +1,4 @@
-import { KeyConfiguration } from "@interweave/interweave";
+import { type FieldConfiguration } from "@interweave/interweave";
 import isEmpty from "is-empty";
 
 export { isEmpty };
@@ -38,10 +38,10 @@ export function get(object: object, path?: string, defaultValue = null): any {
 // columnData will be a KeyConfiguration
 // dataPath will be a string of where to look
 export function getSchema(
-	object: { [key: string]: KeyConfiguration },
+	object: { [key: string]: FieldConfiguration },
 	path: string,
 	defaultValue = null
-): { [key: string]: KeyConfiguration } | null {
+): { [key: string]: FieldConfiguration } | null {
 	// Convert dot notation to bracket notation
 	path = path.replace(/\[(\w+)\]/g, ".$1");
 	path = path.replace(/^\./, "");

@@ -1,11 +1,8 @@
-import { type SchemaKeys } from "@interweave/interweave";
+import { type Fields } from "@interweave/interweave";
 
 import { isEmpty } from "../helpers";
 
-export function formatFormObject(
-	data: Record<string, unknown>,
-	keys: SchemaKeys
-) {
+export function formatFormObject(data: Record<string, unknown>, keys: Fields) {
 	const dataKeys = Object.keys(data);
 	dataKeys.forEach((d) => {
 		const value = data[d];
