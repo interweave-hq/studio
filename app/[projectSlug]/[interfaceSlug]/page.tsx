@@ -3,7 +3,6 @@ import "server-only";
 import { notFound } from "next/navigation";
 
 import styles from "../../home.module.css";
-import { Overview } from "@/experience/interfacer/overview";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { AuthorizationKeysWizard } from "@/experience/interfacer/AuthorizationKeysWizard";
@@ -116,16 +115,8 @@ export default async function Home({ params }: { params: Params }) {
 
 	return (
 		<>
-			<main className={styles["main-container"]}>
+			<main>
 				<InterfaceContextProvider interfaceId={interfacer.id}>
-					<Overview
-						title={interfacer.title}
-						description={interfacer.description}
-						interfaceId={interfacer.id}
-						hash={interfacer.hash}
-						buildTime={interfacer.build_time}
-						privacy={interfacer.privacy}
-					/>
 					<div className={styles.container}>
 						<TableAndForm
 							interfacer={interfacer}
