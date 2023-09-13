@@ -1,10 +1,16 @@
 .outer-container {
-	max-width: var(--max-width-md);
 	margin: 0 auto 24px auto;
+	border-bottom: 1px solid var(--grey-3);
+	padding: 16px 0 16px 0;
 }
 
 .inner-container {
 	align-items: flex-start;
+	display: flex;
+	justify-content: space-between;
+}
+
+.parameter-container {
 	display: inline-flex;
 }
 
@@ -13,6 +19,30 @@
 }
 
 .button {
+	align-self: center;
 	display: block;
 	margin-top: 16px;
+}
+
+.left {
+	align-items: center;
+	display: flex;
+}
+
+.title {
+	margin-right: 16px;
+	font-size: 20px;
+}
+
+.description {
+	margin-right: 16px;
+	color: var(--grey-1);
+	font-size: 14px;
+}
+
+.build-time {
+	margin-right: 16px;
+	margin-left: 16px;
+	color: var(--grey-2);
+	font-size: 10px;
 }

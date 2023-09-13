@@ -4,6 +4,8 @@ import styles from "./styles.module.css";
 import { Button } from "@/components";
 import { GetComponent } from "@/experience/interfacer/GetComponent";
 import { type Parameter } from "@interweave/interweave";
+import { PrivacyBadge } from "@/components/PrivacyBadge";
+import { timeAgo } from "@/lib/dates/timeAgo";
 
 export function ParameterInputs({
 	parameters,
@@ -47,9 +49,9 @@ export function ParameterInputs({
 		}
 	}, [loadingStates]);
 
-	if (!parameters) {
-		return null;
-	}
+	// if (!parameters) {
+	// 	return null;
+	// }
 
 	const submitForm = (data: any) => {
 		setFormState(data);
@@ -64,52 +66,67 @@ export function ParameterInputs({
 			};
 		});
 	};
+	const hasParameters = !!parameters;
+	const parameterKeys = hasParameters ? Object.keys(parameters) : [];
 
-	const parameterKeys = Object.keys(parameters);
-
-	const components = parameterKeys.map((p) => {
-		const parameter = parameters[p] as Parameter;
-		const optionalText = parameter?.schema?.is_optional ? "Optional" : "";
-		return GetComponent(
-			p,
-			{
-				type: parameter.schema.type,
-				enum: parameter?.schema?.enum,
-				dynamic_enum: parameter?.schema?.dynamic_enum,
-				defaultValue: parameter?.schema?.default_value,
-				isArray: parameter?.schema?.is_array,
-				label: parameter?.interface?.form?.label,
-				required: !parameter?.schema?.is_optional,
-				styles: styles["input-styles"],
-				description:
-					parameter?.interface?.form?.description || optionalText,
-				disabled: parameter?.interface?.form?.disabled,
-				form: { register, control },
-			},
-			{
-				variables: { parameters: parameterState, row: {}, form: {} },
-				isParameterFetch: true,
-				setParameterLoadingState: controlLoadingState,
-				parameterLoadingState: loadingStates,
-			}
-		);
-	});
+	const components = !hasParameters
+		? null
+		: parameterKeys.map((p) => {
+				const parameter = parameters[p] as Parameter;
+				const optionalText = parameter?.schema?.is_optional
+					? "Optional"
+					: "";
+				return GetComponent(
+					p,
+					{
+						type: parameter.schema.type,
+						enum: parameter?.schema?.enum,
+						dynamic_enum: parameter?.schema?.dynamic_enum,
+						defaultValue: parameter?.schema?.default_value,
+						isArray: parameter?.schema?.is_array,
+						label: parameter?.interface?.form?.label,
+						required: !parameter?.schema?.is_optional,
+						styles: styles["input-styles"],
+						description:
+							parameter?.interface?.form?.description ||
+							optionalText,
+						disabled: parameter?.interface?.form?.disabled,
+						form: { register, control },
+					},
+					{
+						variables: {
+							parameters: parameterState,
+							row: {},
+							form: {},
+						},
+						isParameterFetch: true,
+						setParameterLoadingState: controlLoadingState,
+						parameterLoadingState: loadingStates,
+					}
+				);
+		  });
 
 	return (
 		<form onSubmit={handleSubmit(submitForm)} autoComplete="off">
 			<div className={styles["outer-container"]}>
 				<div className={styles["inner-container"]}>
-					{components.map(({ component, key }) =>
-						cloneElement(component, { key })
-					)}
+					<div className={styles["parameter-container"]}>
+						{components ? (
+							<>
+								{components.map(({ component, key }) =>
+									cloneElement(component, { key })
+								)}
+								<Button
+									kind="hollow"
+									size="sm"
+									__cssFor={{ root: styles.button }}
+								>
+									Refresh Data
+								</Button>
+							</>
+						) : null}
+					</div>
 				</div>
-				<Button
-					kind="hollow"
-					size="sm"
-					__cssFor={{ root: styles.button }}
-				>
-					Refresh Data
-				</Button>
 			</div>
 		</form>
 	);

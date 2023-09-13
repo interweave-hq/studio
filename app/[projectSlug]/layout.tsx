@@ -1,3 +1,3 @@
-import { AuthLayout } from "@/layouts/AuthLayout";
+import { ProjectLayout } from "@/layouts/ProjectLayout";
 
-export default AuthLayout;
+export default ProjectLayout;

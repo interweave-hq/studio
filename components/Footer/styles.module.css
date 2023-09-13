@@ -30,3 +30,7 @@
 .footer__link:first-child {
 	margin-left: 0;
 }
+
+.footer__logo {
+	width: 150px;
+}

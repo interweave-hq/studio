@@ -1,18 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import styles from "./header.module.css";
-import { Logo } from "@/components";
+import { LogoIcon } from "@/components";
 import { UserAuth } from "@/interfaces";
+import ProjectLinks from "./ProjectLinks";
+import styles from "./styles.module.css";
 
-export default function Header({ user }: { user?: UserAuth }) {
+export default function InnerProjectHeader({ user }: { user?: UserAuth }) {
 	return (
 		<header className={styles.header}>
 			<div className={styles.header__interior}>
-				<Link href="/">
-					<Logo __cssFor={{ root: styles.header__logo }} />
-				</Link>
+				<div className={styles.header__left}>
+					<Link href="/">
+						<LogoIcon __cssFor={{ root: styles.header__logo }} />
+					</Link>
+					<ProjectLinks />
+				</div>
 				<ul className={styles.header__list}>
-					<li className={styles["header__list-item"]}>
+					{/* <li className={styles["header__list-item"]}>
 						<Link className={styles.header__anchor} href="/">
 							Screens
 						</Link>
@@ -21,7 +25,7 @@ export default function Header({ user }: { user?: UserAuth }) {
 						<Link className={styles.header__anchor} href="/">
 							Projects
 						</Link>
-					</li>
+					</li> */}
 					{user?.picture ? (
 						<li className={styles["header__list-item"]}>
 							<Link

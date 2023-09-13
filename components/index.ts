@@ -9,7 +9,7 @@ import { InfoModal } from "./InfoModal";
 import { Input } from "./Input";
 import { InterfaceCard } from "./InterfaceCard";
 import { LoadingDots } from "./LoadingDots";
-import { Logo } from "./Logo";
+import { Logo, LogoIcon } from "./Logo";
 import { Modal } from "./Modal";
 import { MultiSelect } from "./MultiSelect";
 import { Select } from "./Select";
@@ -29,6 +29,7 @@ export {
 	InterfaceCard,
 	LoadingDots,
 	Logo,
+	LogoIcon,
 	Modal,
 	MultiSelect,
 	Select,

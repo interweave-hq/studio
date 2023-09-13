@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 export function Footer() {
 	return (
 		<footer className={styles.footer}>
-			<Logo />
+			<Logo __cssFor={{ root: styles.footer__logo }} />
 			<p className={styles.footer__copy}>
 				Carbonology Interactive LLC {new Date().getFullYear()} &copy;
 			</p>
