@@ -1,5 +1,10 @@
 .root {
+	--loading-dots-color: #777;
 	display: inline-block;
 	width: 36px;
 	vertical-align: middle;
+}
+
+.dot {
+	fill: var(--loading-dots-color, #777);
 }

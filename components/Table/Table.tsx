@@ -21,6 +21,7 @@ import {
 	Reload,
 } from "@/components/Icons";
 import { combineCss } from "@/lib/helpers";
+import { LoadingDots } from "@/components/LoadingDots";
 
 export default function Table({
 	data,
@@ -33,6 +34,7 @@ export default function Table({
 	initialState,
 	purgeRowState = false,
 	restatePagination = false,
+	isLoading = false,
 }: {
 	data: any;
 	columns: any[];
@@ -44,6 +46,7 @@ export default function Table({
 	initialState?: Record<string, any>;
 	purgeRowState?: boolean;
 	restatePagination?: boolean;
+	isLoading?: boolean;
 }) {
 	const [rowSelection, setRowSelection] = useState<any>(undefined);
 	const [lastPaginationIndex, setLastPaginationIndex] = useState(0);
@@ -103,6 +106,12 @@ export default function Table({
 
 	return (
 		<div className={styles.root}>
+			{isLoading ? (
+				<div className={styles.loading}>
+					<div className={styles.loading__overlay}></div>
+					<LoadingDots __cssFor={{ root: styles.loading__dots }} />
+				</div>
+			) : null}
 			<div className={styles.table__outer}>
 				<table className={styles.table}>
 					<thead>

@@ -13,10 +13,11 @@ export type LoadingDotsOverrides<T> = {
 };
 
 export interface LoadingDotsProps {
+	color?: string;
 	__cssFor?: LoadingDotsOverrides<string>;
 }
 
-export function LoadingDots({ __cssFor }: LoadingDotsProps) {
+export function LoadingDots({ color, __cssFor }: LoadingDotsProps) {
 	const { root: rootStyles } = useMemo(() => {
 		return shapeCss<OverridesKeys, LoadingDotsOverrides<string>>(
 			Overrides,
@@ -26,7 +27,7 @@ export function LoadingDots({ __cssFor }: LoadingDotsProps) {
 	}, [__cssFor]);
 	return (
 		<svg viewBox="0 0 100 100" className={rootStyles}>
-			<circle cx="25" cy="50" r="10" fill="#777">
+			<circle cx="25" cy="50" r="10" className={styles.dot}>
 				<animate
 					attributeName="opacity"
 					dur="1s"
@@ -35,7 +36,7 @@ export function LoadingDots({ __cssFor }: LoadingDotsProps) {
 					values="1;0"
 				></animate>
 			</circle>
-			<circle cx="50" cy="50" r="10" fill="#777">
+			<circle cx="50" cy="50" r="10" className={styles.dot}>
 				<animate
 					attributeName="opacity"
 					dur="1s"
@@ -44,7 +45,7 @@ export function LoadingDots({ __cssFor }: LoadingDotsProps) {
 					values="1;0"
 				></animate>
 			</circle>
-			<circle cx="75" cy="50" r="10" fill="#777">
+			<circle cx="75" cy="50" r="10" className={styles.dot}>
 				<animate
 					attributeName="opacity"
 					dur="1s"

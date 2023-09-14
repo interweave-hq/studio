@@ -110,7 +110,7 @@ export function ParameterInputs({
 		<form onSubmit={handleSubmit(submitForm)} autoComplete="off">
 			<div className={styles["outer-container"]}>
 				<div className={styles["inner-container"]}>
-					<div className={styles["parameter-container"]}>
+					<div className="flex items-center w-full">
 						{components ? (
 							<>
 								{components.map(({ component, key }) =>

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useId, useMemo } from "react";
+import {
+	MultiSelect as TMultiSelect,
+	MultiSelectItem as TMultiSelectItem,
+} from "@tremor/react";
+import { useState, useEffect, useId, useMemo } from "react";
 import { useController } from "react-hook-form";
 import styles from "./styles.module.css";
 import { shapeCss } from "@/lib/helpers";
-import { Checkbox } from "@/components/Checkbox";
 import {
 	FormFieldError,
 	type FormFieldErrorOverrides,
@@ -16,9 +19,6 @@ import {
 
 const Overrides = {
 	root: "root",
-	container: "container",
-	option: "option",
-	optionLabel: "optionLabel",
 } as const;
 
 type OverridesKeys = keyof typeof Overrides;
@@ -68,8 +68,7 @@ const MultiSelect = ({
 		selectedOptions.map((o) => o.value)
 	);
 	const { field } = useController(form);
-	const ref = useRef(form.control);
-	const { root: rootStyles, container: containerStyles } = useMemo(() => {
+	const { root: rootStyles } = useMemo(() => {
 		return shapeCss<OverridesKeys, MultiSelectOverrides<string>>(
 			Overrides,
 			styles,
@@ -89,15 +88,11 @@ const MultiSelect = ({
 		field.onChange(selected);
 	}, [selected]);
 
-	const handleOptionSelect = (option: string | number) => {
-		if (selected.includes(option)) {
-			setSelected(selected.filter((o) => o !== option));
-		} else {
-			setSelected([...selected, option]);
-		}
-	};
 	return (
-		<div className={rootStyles} data-component="multiselect">
+		<div
+			className={rootStyles + " flex flex-col max-w-xl"}
+			data-component="multiselect"
+		>
 			<FormFieldLabel
 				htmlFor={id}
 				helperText={helperText}
@@ -105,24 +100,18 @@ const MultiSelect = ({
 			>
 				{label}
 			</FormFieldLabel>
-			<div id={id} className={containerStyles}>
-				{options.map((opt) => (
-					<Checkbox
-						key={opt.value}
-						label={opt.label}
-						domProps={{
-							defaultChecked: !!selected.find(
-								(o) => o === opt.value
-							),
-							onChange: () => handleOptionSelect(opt.value),
-						}}
-						__cssFor={{
-							root: styles.checkbox,
-						}}
-						ref={ref}
-					/>
+			<TMultiSelect
+				onValueChange={setSelected}
+				// @ts-expect-error
+				defaultValue={selectedOptions.map((o) => o.value)}
+			>
+				{options.map((o) => (
+					// @ts-expect-error
+					<TMultiSelectItem key={o.value} value={o.value}>
+						{o.label}
+					</TMultiSelectItem>
 				))}
-			</div>
+			</TMultiSelect>
 			{error && (
 				<FormFieldError __cssFor={__cssFor?.FormFieldError}>
 					{error}

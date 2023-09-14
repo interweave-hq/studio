@@ -57,7 +57,7 @@ export function FetchTableData({
 	triggerReload?: boolean;
 	// restatePagination?: boolean;
 }) {
-	const [data, setData] = useState(null);
+	const [data, setData] = useState<any[] | null>(null);
 	const [error, setError] = useState(DEFAULT_ERROR);
 	const [isLoading, setLoading] = useState(true);
 	const [requestDuration, setRequestDuration] = useState(0);
@@ -156,7 +156,7 @@ export function FetchTableData({
 					details={error.technicalError}
 				/>
 			) : null}
-			{isLoading ? (
+			{isLoading && (data?.length === 0 || !data) ? (
 				<div className={styles.loading}>
 					<LoadingDots />
 				</div>
@@ -174,6 +174,7 @@ export function FetchTableData({
 					setRowState={setRowState}
 					purgeRowState={triggerReload}
 					restatePagination={restatePagination}
+					isLoading={isLoading}
 				/>
 			) : null}
 		</div>

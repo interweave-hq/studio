@@ -123,6 +123,7 @@ export default function DynamicTable({
 	onUpdate,
 	purgeRowState = false,
 	restatePagination = false,
+	isLoading = false,
 }: {
 	data: any[];
 	columnData: { [key: string]: FieldConfiguration };
@@ -135,6 +136,7 @@ export default function DynamicTable({
 	setRowState: (r: any) => void;
 	purgeRowState?: boolean;
 	restatePagination?: boolean;
+	isLoading?: boolean;
 }) {
 	const {
 		data: cols,
@@ -196,6 +198,7 @@ export default function DynamicTable({
 				initialState={initialState}
 				purgeRowState={purgeRowState}
 				restatePagination={restatePagination}
+				isLoading={isLoading}
 			/>
 		</>
 	);

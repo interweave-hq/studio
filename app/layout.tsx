@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "@tremor/react/dist/esm/tremor.css";
+// import "@tremor/react/dist/esm/tremor.css";
 import "./globals.css";
 
 export const metadata = {
@@ -18,7 +18,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" color-scheme="light">
 			<body className={font.className}>{children}</body>
 		</html>
 	);

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
 	--max-width: 2100px;
 	--max-width-lg: 1100px;
@@ -28,16 +32,16 @@
 	--color-brand-300: rgba(188, 239, 206, 0.4);
 }
 
-.tremor-base input {
+/* .tremor-base input {
 	border-color: #e5e7eb;
 	border-width: 1px;
-}
+} */
 
-[data-component="multiselect"] > div {
+/* [data-component="multiselect"] > div {
 	/* Styles */
-	border-color: #e5e7eb;
-	border-width: 1px;
-}
+/* border-color: #e5e7eb; */
+/* border-width: 1px; */
+/* } */
 
 * {
 	border: none;
