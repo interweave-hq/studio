@@ -32,17 +32,6 @@
 	--color-brand-300: rgba(188, 239, 206, 0.4);
 }
 
-/* .tremor-base input {
-	border-color: #e5e7eb;
-	border-width: 1px;
-} */
-
-/* [data-component="multiselect"] > div {
-	/* Styles */
-/* border-color: #e5e7eb; */
-/* border-width: 1px; */
-/* } */
-
 * {
 	border: none;
 	box-sizing: border-box;

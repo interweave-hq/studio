@@ -7,7 +7,7 @@ export async function ProjectLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const { user } = await authenticate();
+	const { user } = await authenticate({ optional: true });
 	return (
 		<>
 			<InnerProjectHeader user={user} />

@@ -58,6 +58,12 @@
 	justify-content: flex-end;
 }
 
+.create-account-modal {
+	width: 60% !important;
+	max-height: 80% !important;
+	margin: 10vh !important;
+}
+
 @media screen and (max-width: 750px) {
 	.main-container {
 		padding: 64px 10px;

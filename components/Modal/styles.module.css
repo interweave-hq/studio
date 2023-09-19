@@ -103,6 +103,7 @@
 
 @media screen and (max-height: 700px) {
 	.dialog {
+		--dialog-padding: 24px;
 		max-height: 80vh;
 		margin: 10vh 0;
 	}

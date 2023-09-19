@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./styles.module.css";
-import { Button, Input, Error } from "@/components";
+import { Button, Input, Error, LoadingDots } from "@/components";
 import { clientRequest } from "@/lib/api/clientRequest";
 
 export function CreateProject() {
@@ -16,8 +16,10 @@ export function CreateProject() {
 		formState: { errors },
 	} = useForm();
 	const [formError, setFormError] = useState("");
+	const [isLoading, setLoading] = useState(false);
 
 	const submit = async (formData: any) => {
+		setLoading(true);
 		const { data, error, status } = await clientRequest(
 			"/api/v1/projects",
 			{
@@ -33,6 +35,7 @@ export function CreateProject() {
 		if (status === 201) {
 			router.push(`/${data.slug}`);
 		}
+		setLoading(false);
 	};
 	const userErrors = {
 		title: {
@@ -79,7 +82,10 @@ export function CreateProject() {
 					// @ts-expect-error weird react-hooks thing idk
 					error={errors.slug && userErrors.slug[errors?.slug?.type]}
 				/>
-				<Button __cssFor={{ root: styles.button }}>
+				<Button
+					__cssFor={{ root: styles.button }}
+					domProps={{ disabled: isLoading }}
+				>
 					Create Project
 				</Button>
 				{formError ? (
@@ -89,6 +95,7 @@ export function CreateProject() {
 						__cssFor={{ root: styles.error }}
 					/>
 				) : null}
+				{isLoading ? <LoadingDots /> : null}
 			</form>
 		</main>
 	);
