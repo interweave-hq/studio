@@ -90,15 +90,19 @@
         width: 24px;
     }
     .header__crumbs {
-        margin-left: 8px;
+        margin-left: 0px;
     }
     .crumbs__separator {
         margin: 0 4px;
     }
     .crumbs__anchor {
+        line-height: 2;
         font-size: 0.75rem;
     }
     .crumbs__anchor:last-child {
         margin-right: 0;
+    }
+    .header__interior {
+        padding: 6px 8px;
     }
 }
