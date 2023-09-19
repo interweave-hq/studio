@@ -82,9 +82,9 @@ const MultiSelect = ({ error, form, label, helperText = "Select multiple", optio
                 defaultValue={selectedOptions.map(o => o.value)}
             >
                 {options.map(o => (
-                    // @ts-expect-error
                     <TMultiSelectItem
                         key={o.value}
+                        // @ts-expect-error
                         value={o.value}
                     >
                         {o.label}
