@@ -90,7 +90,8 @@
         width: 24px;
     }
     .header__crumbs {
-        margin-left: 0px;
+        margin-left: 4px;
+        margin-right: 4px;
     }
     .crumbs__separator {
         margin: 0 4px;
@@ -98,6 +99,7 @@
     .crumbs__anchor {
         line-height: 2;
         font-size: 0.75rem;
+        padding: 4px 4px;
     }
     .crumbs__anchor:last-child {
         margin-right: 0;
