@@ -28,10 +28,7 @@ export default function InnerProjectHeader({ user }: { user?: UserAuth }) {
 					</li> */}
                     {user?.picture ? (
                         <li className={styles["header__list-item"]}>
-                            <Link
-                                className={styles.header__anchor}
-                                href="/profile"
-                            >
+                            <Link href="/profile">
                                 <Image
                                     width={50}
                                     height={50}

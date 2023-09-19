@@ -28,7 +28,7 @@
     border-radius: 4px;
     height: 100%;
     font-weight: 300;
-    font-size: 14px;
+    font-size: 0.875rem;
     transition: all ease-in-out 0.15s;
     padding: 4px 8px;
 }
@@ -67,7 +67,7 @@
     display: block;
     height: 100%;
     font-weight: 300;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-left: 24px;
     transition: all ease-in-out 0.15s;
 }
@@ -83,4 +83,22 @@
     transition: all ease-in-out 0.15s;
     width: 28px;
     vertical-align: middle;
+}
+
+@media (max-width: 750px) {
+    .header__logo {
+        width: 24px;
+    }
+    .header__crumbs {
+        margin-left: 8px;
+    }
+    .crumbs__separator {
+        margin: 0 4px;
+    }
+    .crumbs__anchor {
+        font-size: 0.75rem;
+    }
+    .crumbs__anchor:last-child {
+        margin-right: 0;
+    }
 }
