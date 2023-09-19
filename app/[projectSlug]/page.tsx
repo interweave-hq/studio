@@ -10,70 +10,64 @@ import { Interfacer } from "@/interfaces";
 import { getMetadata } from "@/lib/metadata";
 
 type Params = {
-	projectSlug: string;
+    projectSlug: string;
 };
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const { data } = await getProject({ projectSlug: params.projectSlug });
-	return getMetadata({ title: data.title });
+    const { data } = await getProject({ projectSlug: params.projectSlug });
+    return getMetadata({ title: data.title });
 }
 
 export default async function ProjectListing({ params }: { params: Params }) {
-	const projectSlug = params["projectSlug"];
-	const { data: projectData } = await getProject({ projectSlug });
-	const hasInterfaces = projectData?.interfaces?.length > 0;
+    const projectSlug = params["projectSlug"];
+    const { data: projectData } = await getProject({ projectSlug });
+    const hasInterfaces = projectData?.interfaces?.length > 0;
 
-	const getUrl = (i: Interfacer) => {
-		return `${APP_URL}/${projectSlug}/${i.slug}`;
-	};
+    const getUrl = (i: Interfacer) => {
+        return `${APP_URL}/${projectSlug}/${i.slug}`;
+    };
 
-	return (
-		<>
-			<main className={styles.container}>
-				<div className={styles.section}>
-					<h2 className={styles.section__header}>
-						{projectData.title}
-					</h2>
-					<p>Project ID: {projectData.id}</p>
-				</div>
-				<div className={styles.section}>
-					<h2 className={styles.section__header}>Interfaces</h2>
-					{hasInterfaces ? (
-						<InterfaceList
-							interfaces={projectData.interfaces}
-							getUrl={getUrl}
-						/>
-					) : (
-						<p>No interfaces yet. Create your first.</p>
-					)}
-				</div>
-				<div className={styles.section}>
-					<h2 className={styles.section__header}>API Tokens</h2>
-					<AddTokens projectId={projectData.id} />
-					<Suspense fallback={<LoadingDots />}>
-						{/* @ts-expect-error server component */}
-						<TokenDisplay projectSlug={projectSlug} />
-					</Suspense>
-				</div>
-			</main>
-		</>
-	);
+    return (
+        <>
+            <main className={styles.container}>
+                <div className={styles.section}>
+                    <h2 className={styles.section__header}>{projectData.title}</h2>
+                    <p>Project ID: {projectData.id}</p>
+                </div>
+                <div className={styles.section}>
+                    <h2 className={styles.section__header}>Interfaces</h2>
+                    {hasInterfaces ? (
+                        <InterfaceList
+                            interfaces={projectData.interfaces}
+                            getUrl={getUrl}
+                        />
+                    ) : (
+                        <p>No interfaces yet. Create your first.</p>
+                    )}
+                </div>
+                <div className={styles.section}>
+                    <h2 className={styles.section__header}>API Tokens</h2>
+                    <AddTokens projectId={projectData.id} />
+                    <Suspense fallback={<LoadingDots />}>
+                        {/* @ts-expect-error server component */}
+                        <TokenDisplay projectSlug={projectSlug} />
+                    </Suspense>
+                </div>
+            </main>
+        </>
+    );
 }
 
 async function getProject({ projectSlug }: { projectSlug: string }) {
-	const {
-		data: fetchProjectData,
-		error: interfaceError,
-		status,
-	} = await serverRequest(`/api/v1/projects/${projectSlug}`);
+    const { data: fetchProjectData, error: interfaceError, status } = await serverRequest(`/api/v1/projects/${projectSlug}`);
 
-	const { project: projectData, access } = fetchProjectData;
+    const { project: projectData, access } = fetchProjectData;
 
-	if (!projectData || status === 401 || access) {
-		notFound();
-	}
+    if (!projectData || status === 401 || access) {
+        notFound();
+    }
 
-	return {
-		data: projectData,
-	};
+    return {
+        data: projectData,
+    };
 }

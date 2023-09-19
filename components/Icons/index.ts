@@ -13,16 +13,16 @@ import XMark from "./XMark";
 
 // Icons
 export {
-	Beaker,
-	ChevronDoubleLeft,
-	ChevronDoubleRight,
-	ChevronLeft,
-	ChevronRight,
-	EyeSlash,
-	Globe,
-	HandRaised,
-	LockClosed,
-	Reload,
-	UserGroup,
-	XMark as XMarkSVG,
+    Beaker,
+    ChevronDoubleLeft,
+    ChevronDoubleRight,
+    ChevronLeft,
+    ChevronRight,
+    EyeSlash,
+    Globe,
+    HandRaised,
+    LockClosed,
+    Reload,
+    UserGroup,
+    XMark as XMarkSVG,
 };

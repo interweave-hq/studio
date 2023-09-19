@@ -1,71 +1,71 @@
 .main-container {
-	margin: 0 auto;
-	max-width: var(--max-width);
-	padding: 64px 42px;
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 64px 42px;
 }
 
 .section {
-	background-color: #bcefce;
-	padding: 62px;
+    background-color: #bcefce;
+    padding: 62px;
 }
 
 .section-title-container {
-	align-items: baseline;
-	display: flex;
+    align-items: baseline;
+    display: flex;
 }
 
 .section-title {
-	color: var(--grey-1);
+    color: var(--grey-1);
 }
 
 .section-title__link {
-	color: var(--grey-5);
-	font-size: 12px;
-	margin-left: 16px;
-	text-decoration: underline;
+    color: var(--grey-5);
+    font-size: 12px;
+    margin-left: 16px;
+    text-decoration: underline;
 }
 
 .button-overrides {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .container {
-	padding: 16px 0;
+    padding: 16px 0;
 }
 
 .interface-container {
-	display: flex;
-	padding: 24px 0;
-	flex-wrap: wrap;
+    display: flex;
+    padding: 24px 0;
+    flex-wrap: wrap;
 }
 
 .interface-card-link {
-	margin: 0 16px 16px 0;
+    margin: 0 16px 16px 0;
 }
 
 .main-links {
-	margin-top: 32px;
+    margin-top: 32px;
 }
 
 .main-links > a {
-	margin-right: 16px;
+    margin-right: 16px;
 }
 
 .delete-authentication-button-container {
-	display: flex;
-	margin: 0 auto;
-	max-width: var(--max-width-md);
-	justify-content: flex-end;
+    display: flex;
+    margin: 0 auto;
+    max-width: var(--max-width-md);
+    justify-content: flex-end;
 }
 
 .create-account-modal {
-	width: 60% !important;
-	max-height: 80% !important;
-	margin: 10vh !important;
+    width: 60% !important;
+    max-height: 80% !important;
+    margin: 10vh !important;
 }
 
 @media screen and (max-width: 750px) {
-	.main-container {
-		padding: 64px 10px;
-	}
+    .main-container {
+        padding: 64px 10px;
+    }
 }

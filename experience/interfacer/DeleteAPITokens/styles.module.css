@@ -1,7 +1,7 @@
 .overrides {
-	border: none;
-	background-color: transparent;
-	color: var(--grey-2);
-	font-size: 12px;
-	text-decoration: underline;
+    border: none;
+    background-color: transparent;
+    color: var(--grey-2);
+    font-size: 12px;
+    text-decoration: underline;
 }

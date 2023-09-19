@@ -12,13 +12,13 @@ export { getLabelFromKey } from "./getLabelFromKey";
  * `parameters`: The parameters available on the page, either exposed via a get requests parameters key or whatever is specified in the URL bar
  */
 const ALLOWED_SOURCES = {
-	row: "row",
-	parameters: "parameters",
-	formData: "formData",
+    row: "row",
+    parameters: "parameters",
+    formData: "formData",
 } as const;
 
 type SourceValue = {
-	[K in keyof typeof ALLOWED_SOURCES]?: Record<string, any>;
+    [K in keyof typeof ALLOWED_SOURCES]?: Record<string, any>;
 };
 
 /**
@@ -26,29 +26,29 @@ type SourceValue = {
  * http://<<row.domain>>/api/<<row.resource>> -> ['row.domain', 'row.resource']
  */
 export function extractVariables(str: string): string[] {
-	const variables: string[] = [];
-	let i = 0;
+    const variables: string[] = [];
+    let i = 0;
 
-	while (i < str.length) {
-		if (str[i] === "<" && str[i + 1] === "<") {
-			const start = i + 2;
-			const end = str.indexOf(">", start);
-			if (end !== -1) {
-				const variable = str.substring(start, end);
-				variables.push(variable);
-				i = end + 1;
-				continue;
-			}
-		}
-		i++;
-	}
+    while (i < str.length) {
+        if (str[i] === "<" && str[i + 1] === "<") {
+            const start = i + 2;
+            const end = str.indexOf(">", start);
+            if (end !== -1) {
+                const variable = str.substring(start, end);
+                variables.push(variable);
+                i = end + 1;
+                continue;
+            }
+        }
+        i++;
+    }
 
-	return variables;
+    return variables;
 }
 
 type ParseRequestReturnValue = {
-	data?: string;
-	error?: string;
+    data?: string;
+    error?: string;
 };
 
 /**
@@ -71,63 +71,51 @@ type ParseRequestReturnValue = {
  * OUT: { data: { update: "static", title: "abc" } }
  *
  */
-export function parseRequest(
-	request: Request,
-	data: SourceValue
-): ParseRequestReturnValue {
-	let requestString = JSON.stringify(request);
-	const variables = extractVariables(requestString);
-	variables.forEach((v) => {
-		const [source, key] = v.includes(".") ? v.split(".") : [v];
-		// Can check for expected variables here like row, state, etc
-		if (!ALLOWED_SOURCES[source as keyof typeof ALLOWED_SOURCES]) {
-			return {
-				error: `An invalid source was specifed in variable ${v}. The only valid sources are: ${Object.keys(
-					ALLOWED_SOURCES
-				).join(" | ")}.`,
-				data: undefined,
-			};
-		}
-		if (!source) {
-			return {
-				error: `No source was specified in variable ${v}. A variable must include parts: 'source.key'.`,
-				data: undefined,
-			};
-		}
-		const hasKey = !!key;
+export function parseRequest(request: Request, data: SourceValue): ParseRequestReturnValue {
+    let requestString = JSON.stringify(request);
+    const variables = extractVariables(requestString);
+    variables.forEach(v => {
+        const [source, key] = v.includes(".") ? v.split(".") : [v];
+        // Can check for expected variables here like row, state, etc
+        if (!ALLOWED_SOURCES[source as keyof typeof ALLOWED_SOURCES]) {
+            return {
+                error: `An invalid source was specifed in variable ${v}. The only valid sources are: ${Object.keys(ALLOWED_SOURCES).join(" | ")}.`,
+                data: undefined,
+            };
+        }
+        if (!source) {
+            return {
+                error: `No source was specified in variable ${v}. A variable must include parts: 'source.key'.`,
+                data: undefined,
+            };
+        }
+        const hasKey = !!key;
 
-		if (hasKey) {
-			const value = get(data, v);
-			if (isEmpty(value)) {
-				return {
-					error: `No data was returned from the variable target ${v}.`,
-					data: undefined,
-				};
-			}
-			requestString = requestString.replaceAll(`<<${v}>>`, value);
-			return;
-		}
+        if (hasKey) {
+            const value = get(data, v);
+            if (isEmpty(value)) {
+                return {
+                    error: `No data was returned from the variable target ${v}.`,
+                    data: undefined,
+                };
+            }
+            requestString = requestString.replaceAll(`<<${v}>>`, value);
+            return;
+        }
 
-		const sourceObj = get(data, v);
-		const sourceObjStr = JSON.stringify(
-			JSON.parse(JSON.stringify(sourceObj))
-		);
-		requestString = requestString.replaceAll(`<<${v}>>`, sourceObjStr);
+        const sourceObj = get(data, v);
+        const sourceObjStr = JSON.stringify(JSON.parse(JSON.stringify(sourceObj)));
+        requestString = requestString.replaceAll(`<<${v}>>`, sourceObjStr);
 
-		// Now we have to remove some quotes so we get an actual object instead of a string of an object
-		// tried a million things and JSON.parse / JSON.stringify stuff doesnt work
-		const whereReplacementStarts = requestString.indexOf(sourceObjStr) - 1;
-		requestString =
-			requestString.slice(0, whereReplacementStarts) +
-			requestString.slice(whereReplacementStarts + 1);
-		const whereReplacementEnds =
-			whereReplacementStarts + sourceObjStr.length;
-		requestString =
-			requestString.slice(0, whereReplacementEnds) +
-			requestString.slice(whereReplacementEnds + 1);
-	});
-	return {
-		error: undefined,
-		data: JSON.parse(requestString),
-	};
+        // Now we have to remove some quotes so we get an actual object instead of a string of an object
+        // tried a million things and JSON.parse / JSON.stringify stuff doesnt work
+        const whereReplacementStarts = requestString.indexOf(sourceObjStr) - 1;
+        requestString = requestString.slice(0, whereReplacementStarts) + requestString.slice(whereReplacementStarts + 1);
+        const whereReplacementEnds = whereReplacementStarts + sourceObjStr.length;
+        requestString = requestString.slice(0, whereReplacementEnds) + requestString.slice(whereReplacementEnds + 1);
+    });
+    return {
+        error: undefined,
+        data: JSON.parse(requestString),
+    };
 }

@@ -1,23 +1,23 @@
 .container {
-	border: 1px solid #e5e7eb;
-	border-radius: 4px;
-	margin-top: 4px;
-	max-height: 100px;
-	max-width: 400px;
-	overflow-y: scroll;
-	padding: 8px;
-	position: relative;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-top: 4px;
+    max-height: 100px;
+    max-width: 400px;
+    overflow-y: scroll;
+    padding: 8px;
+    position: relative;
 }
 
 .label {
-	display: block;
-	color: var(--grey-1);
-	font-size: 12px;
-	margin-right: 16px;
-	margin-bottom: 2px;
-	text-transform: capitalize;
+    display: block;
+    color: var(--grey-1);
+    font-size: 12px;
+    margin-right: 16px;
+    margin-bottom: 2px;
+    text-transform: capitalize;
 }
 
 .checkbox {
-	margin-bottom: 8px;
+    margin-bottom: 8px;
 }

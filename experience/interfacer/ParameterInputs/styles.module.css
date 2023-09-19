@@ -1,29 +1,29 @@
 .outer-container {
-	border-bottom: 1px solid var(--grey-3);
-	padding: 0px 0 16px 0;
+    border-bottom: 1px solid var(--grey-3);
+    padding: 0px 0 16px 0;
 }
 
 .inner-container {
-	align-items: flex-start;
-	display: flex;
-	justify-content: space-between;
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
 }
 
 .parameter-container {
-	display: inline-flex;
+    display: inline-flex;
 }
 
 .input-styles {
-	margin-right: 16px;
+    margin-right: 16px;
 }
 
 .button {
-	align-self: center;
-	display: block;
-	margin-top: 16px;
+    align-self: center;
+    display: block;
+    margin-top: 16px;
 }
 
 .left {
-	align-items: center;
-	display: flex;
+    align-items: center;
+    display: flex;
 }

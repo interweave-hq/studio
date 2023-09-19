@@ -1,37 +1,37 @@
 .table-container {
-	padding: 0 16px;
+    padding: 0 16px;
 }
 
 .form-container {
-	display: flex;
-	flex-direction: column;
-	max-width: var(--max-width-lg);
-	margin: 16px auto;
-	padding: 48px 72px;
-	border: 1px solid var(--grey-4);
+    display: flex;
+    flex-direction: column;
+    max-width: var(--max-width-lg);
+    margin: 16px auto;
+    padding: 48px 72px;
+    border: 1px solid var(--grey-4);
 }
 
 .code-container {
-	margin: 16px 0;
-	max-width: 600px;
-	overflow-x: scroll;
+    margin: 16px 0;
+    max-width: 600px;
+    overflow-x: scroll;
 }
 
 .code {
-	display: inline-block;
-	color: var(--grey-5);
-	font-size: 12px;
-	line-height: 1.5;
-	max-width: 600px;
-	word-wrap: break-word;
-	white-space: pre;
+    display: inline-block;
+    color: var(--grey-5);
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 600px;
+    word-wrap: break-word;
+    white-space: pre;
 }
 
 @media screen and (max-width: 750px) {
-	.form-container {
-		padding: 24px 16px;
-	}
-	.table-container {
-		padding: 0;
-	}
+    .form-container {
+        padding: 24px 16px;
+    }
+    .table-container {
+        padding: 0;
+    }
 }

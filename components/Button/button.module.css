@@ -1,53 +1,53 @@
 .root {
-	--primary-color: #1f1d1d;
-	--secondary-color: #ffffff;
-	--hover-color: #ffffff;
-	--hover-background: #484242;
-	background-color: var(--primary-color);
-	border: none;
-	border-radius: 2px;
-	color: var(--secondary-color);
-	cursor: pointer;
-	display: inline-block;
-	font-size: 14px;
-	padding: 10px 20px;
-	text-align: center;
-	text-decoration: none;
-	transition: all 0.3s ease;
+    --primary-color: #1f1d1d;
+    --secondary-color: #ffffff;
+    --hover-color: #ffffff;
+    --hover-background: #484242;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 2px;
+    color: var(--secondary-color);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .root:hover {
-	background-color: var(--hover-background);
-	color: var(--hover-color);
+    background-color: var(--hover-background);
+    color: var(--hover-color);
 }
 
 .button--danger {
-	--primary-color: var(--color-red-light);
-	--hover-background: darkred;
+    --primary-color: var(--color-red-light);
+    --hover-background: darkred;
 }
 
 .button--hollow {
-	background-color: var(--secondary-color);
-	border: 1px solid var(--primary-color);
-	color: var(--primary-color);
-	--hover-color: var(--hover-background);
+    background-color: var(--secondary-color);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    --hover-color: var(--hover-background);
 }
 
 /* Hollow buttons will not have a background hover effect */
 .button--hollow:hover {
-	background-color: unset;
+    background-color: unset;
 }
 
 .button--small {
-	font-size: 12px;
-	padding: 6px 14px;
+    font-size: 12px;
+    padding: 6px 14px;
 }
 
 .root:disabled {
-	cursor: not-allowed;
-	opacity: 0.75;
+    cursor: not-allowed;
+    opacity: 0.75;
 }
 
 .root.button--hollow:disabled {
-	opacity: 0.25;
+    opacity: 0.25;
 }

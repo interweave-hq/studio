@@ -1,0 +1,52 @@
+# Ignore build and output directories
+node_modules/
+out/
+.build/
+
+# Ignore configuration files
+next.config.js
+babel.config.js
+
+package-lock.json
+package.json
+
+*.md
+
+# Ignore Git and version control files
+.git/
+.gitignore
+
+# Ignore test files if not using Jest
+# Change this if you're using a different testing framework
+test/
+tests/
+__tests__/
+*.test.js
+*.spec.js
+
+# Ignore TypeScript declaration files
+*.d.ts
+
+# Ignore asset and binary files
+*.jpg
+*.jpeg
+*.png
+
+.env
+.idea
+.DS_Store
+.netlify
+dev.db*
+dist
+dist-babel
+web/types/graphql.d.ts
+api/types/graphql.d.ts
+api/src/lib/generateGraphiQLHeader.*
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.husky

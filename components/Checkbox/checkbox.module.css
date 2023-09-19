@@ -1,14 +1,14 @@
 .container {
-	display: flex;
+    display: flex;
 }
 
 .input {
-	cursor: pointer;
-	margin-right: 8px;
+    cursor: pointer;
+    margin-right: 8px;
 }
 
 .description {
-	color: var(--grey-5);
-	font-size: 10px;
-	margin: 4px 0 0 0;
+    color: var(--grey-5);
+    font-size: 10px;
+    margin: 4px 0 0 0;
 }

@@ -1,13 +1,3 @@
-import {
-	PrivacyBadge,
-	type PrivacyBadgeProps,
-	type PrivacyValue,
-	type PrivacyBadgeOverrides,
-} from "./PrivacyBadge";
+import { PrivacyBadge, type PrivacyBadgeProps, type PrivacyValue, type PrivacyBadgeOverrides } from "./PrivacyBadge";
 
-export {
-	PrivacyBadge,
-	type PrivacyBadgeProps,
-	type PrivacyValue,
-	type PrivacyBadgeOverrides,
-};
+export { PrivacyBadge, type PrivacyBadgeProps, type PrivacyValue, type PrivacyBadgeOverrides };

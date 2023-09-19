@@ -4,5 +4,5 @@ import { getMetadata } from "@/lib/metadata";
 export const metadata = getMetadata({ title: "Create Project" });
 
 export default async function ProjectListing() {
-	return <CreateProject />;
+    return <CreateProject />;
 }

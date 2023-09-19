@@ -1,48 +1,48 @@
 .mainContent {
-	padding: var(--dialog-padding) var(--dialog-padding) 0 var(--dialog-padding);
+    padding: var(--dialog-padding) var(--dialog-padding) 0 var(--dialog-padding);
 }
 
 .title {
-	color: var(--grey-1);
-	font-size: 20px;
+    color: var(--grey-1);
+    font-size: 20px;
 }
 
 .body {
-	color: var(--grey-5);
-	font-size: 14px;
-	line-height: 1.5;
-	margin: 8px 0;
+    color: var(--grey-5);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0;
 }
 
 .ctaContainer {
-	align-items: center;
-	border-top: 1px solid var(--grey-3);
-	display: flex;
-	justify-content: space-between;
-	margin-top: 24px;
-	padding: 24px var(--dialog-padding);
-	position: sticky;
-	bottom: 0;
-	background-color: var(--dialog-background-color);
+    align-items: center;
+    border-top: 1px solid var(--grey-3);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding: 24px var(--dialog-padding);
+    position: sticky;
+    bottom: 0;
+    background-color: var(--dialog-background-color);
 }
 
 .ctaContainerRight {
-	align-items: center;
-	display: flex;
-	justify-content: flex-end;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .ctaContainerRight *:last-child {
-	margin-left: 16px;
+    margin-left: 16px;
 }
 
 .loading {
-	margin-right: 16px;
+    margin-right: 16px;
 }
 
 .contextLink {
-	color: var(--grey-5);
-	display: block;
-	font-size: 12px;
-	text-decoration: underline;
+    color: var(--grey-5);
+    display: block;
+    font-size: 12px;
+    text-decoration: underline;
 }

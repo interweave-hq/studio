@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-	type Fields,
-	type InterfaceConfiguration,
-	type Request,
-} from "@interweave/interweave";
+import { type Fields, type InterfaceConfiguration, type Request } from "@interweave/interweave";
 import { clientRequest, type RequestReturn } from "@/lib/api/clientRequest";
 import { Error, LoadingDots } from "@/components";
 import { type Error as ErrorType } from "@/interfaces/Error";
@@ -27,173 +23,161 @@ const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
  *
  */
 export function FetchTableData({
-	keys,
-	getRequest,
-	onUpdate,
-	onDelete,
-	interfaceId,
-	schema,
-	setParametersState,
-	setRowState,
-	variables,
-	parametersLoading,
-	setParametersLoading,
-	reload,
-	triggerReload,
+    keys,
+    getRequest,
+    onUpdate,
+    onDelete,
+    interfaceId,
+    schema,
+    setParametersState,
+    setRowState,
+    variables,
+    parametersLoading,
+    setParametersLoading,
+    reload,
+    triggerReload,
 }: // restatePagination,
 {
-	keys: Fields;
-	getRequest: Request;
-	onUpdate?: () => void;
-	onDelete?: () => void;
-	interfaceId: string;
-	schema: InterfaceConfiguration;
-	setParametersState: (q: Record<string, unknown>) => void;
-	setRowState: (q: Record<string, unknown>) => void;
-	variables: VariableState & { row?: Record<string, unknown> };
-	parametersLoading: boolean;
-	setParametersLoading: (v: any) => void;
-	reload?: () => void;
-	triggerReload?: boolean;
-	// restatePagination?: boolean;
+    keys: Fields;
+    getRequest: Request;
+    onUpdate?: () => void;
+    onDelete?: () => void;
+    interfaceId: string;
+    schema: InterfaceConfiguration;
+    setParametersState: (q: Record<string, unknown>) => void;
+    setRowState: (q: Record<string, unknown>) => void;
+    variables: VariableState & { row?: Record<string, unknown> };
+    parametersLoading: boolean;
+    setParametersLoading: (v: any) => void;
+    reload?: () => void;
+    triggerReload?: boolean;
+    // restatePagination?: boolean;
 }) {
-	const [data, setData] = useState<any[] | null>(null);
-	const [error, setError] = useState(DEFAULT_ERROR);
-	const [isLoading, setLoading] = useState(true);
-	const [requestDuration, setRequestDuration] = useState(0);
-	const [restatePagination, setRestatePagination] = useState(false);
+    const [data, setData] = useState<any[] | null>(null);
+    const [error, setError] = useState(DEFAULT_ERROR);
+    const [isLoading, setLoading] = useState(true);
+    const [requestDuration, setRequestDuration] = useState(0);
+    const [restatePagination, setRestatePagination] = useState(false);
 
-	// Whenever value state is updated after button click, refetch the data
-	useEffect(() => {
-		(async () => {
-			try {
-				setError(DEFAULT_ERROR);
-				setLoading(true);
-				if (parametersLoading) return;
+    // Whenever value state is updated after button click, refetch the data
+    useEffect(() => {
+        (async () => {
+            try {
+                setError(DEFAULT_ERROR);
+                setLoading(true);
+                if (parametersLoading) return;
 
-				const {
-					data: tableData,
-					error,
-					duration,
-				} = await getTableData({
-					interfaceId,
-					...variables,
-				});
+                const {
+                    data: tableData,
+                    error,
+                    duration,
+                } = await getTableData({
+                    interfaceId,
+                    ...variables,
+                });
 
-				logMakeRequestResults({ key: "get", data: tableData, error });
+                logMakeRequestResults({ key: "get", data: tableData, error });
 
-				// When the table is reloaded with a different query parameter
-				// if (
-				// 	Array.isArray(tableData.parsed) &&
-				// 	tableData.parsed?.length > 0
-				// ) {
-				// 	setRowState({ original: tableData.parsed[0] });
-				// }
+                // When the table is reloaded with a different query parameter
+                // if (
+                // 	Array.isArray(tableData.parsed) &&
+                // 	tableData.parsed?.length > 0
+                // ) {
+                // 	setRowState({ original: tableData.parsed[0] });
+                // }
 
-				if (error) {
-					setError(error);
-					setLoading(false);
-					console.error(error);
-					return;
-				}
-				setRequestDuration(duration || 0);
-				setData(tableData.parsed);
-				setRestatePagination(!restatePagination);
-				setLoading(false);
-			} catch (err) {
-				setLoading(false);
-				logMakeRequestResults({ key: "get", data, error: err });
-				console.error(err);
-			}
-		})();
-	}, [
-		triggerReload,
-		variables.form,
-		variables.parameters,
-		parametersLoading,
-	]);
+                if (error) {
+                    setError(error);
+                    setLoading(false);
+                    console.error(error);
+                    return;
+                }
+                setRequestDuration(duration || 0);
+                setData(tableData.parsed);
+                setRestatePagination(!restatePagination);
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+                logMakeRequestResults({ key: "get", data, error: err });
+                console.error(err);
+            }
+        })();
+    }, [triggerReload, variables.form, variables.parameters, parametersLoading]);
 
-	const url = getRequest.uri;
+    const url = getRequest.uri;
 
-	// if theres URL parameters, wait until something has been submitted
-	// if theres required query parameters, wait until something has been submitted
-	const parameters = getRequest?.parameters;
-	const hasUrlParameters = url.indexOf("<<") > -1;
+    // if theres URL parameters, wait until something has been submitted
+    // if theres required query parameters, wait until something has been submitted
+    const parameters = getRequest?.parameters;
+    const hasUrlParameters = url.indexOf("<<") > -1;
 
-	if (hasUrlParameters && !parameters) {
-		const badConfigError: RequestReturn = {
-			data: [],
-			error: {
-				userError: "Bad configuration. Please add a parameters key.",
-				technicalError:
-					"Your URL specifies a dynamic value but does not include a parameters key to define its shape.",
-			},
-			status: 400,
-		};
-		setError(badConfigError.error);
-	}
+    if (hasUrlParameters && !parameters) {
+        const badConfigError: RequestReturn = {
+            data: [],
+            error: {
+                userError: "Bad configuration. Please add a parameters key.",
+                technicalError: "Your URL specifies a dynamic value but does not include a parameters key to define its shape.",
+            },
+            status: 400,
+        };
+        setError(badConfigError.error);
+    }
 
-	let displayUrl = url;
-	const possibleVariables = extractVariables(displayUrl);
-	possibleVariables.forEach((v) => {
-		const possibleValue = get(variables, v, null);
-		const newUrl = displayUrl.replaceAll(`<<${v}>>`, possibleValue);
-		displayUrl = newUrl;
-	});
+    let displayUrl = url;
+    const possibleVariables = extractVariables(displayUrl);
+    possibleVariables.forEach(v => {
+        const possibleValue = get(variables, v, null);
+        const newUrl = displayUrl.replaceAll(`<<${v}>>`, possibleValue);
+        displayUrl = newUrl;
+    });
 
-	return (
-		<div>
-			<ParameterInputs
-				parameters={parameters}
-				setFormState={setParametersState}
-				parameterState={variables.parameters}
-				setParametersLoading={setParametersLoading}
-			/>
-			{error?.userError ? (
-				<Error
-					title="Data Table Failed To Load"
-					text={error.userError}
-					details={error.technicalError}
-				/>
-			) : null}
-			{isLoading && (data?.length === 0 || !data) ? (
-				<div className={styles.loading}>
-					<LoadingDots />
-				</div>
-			) : null}
-			{data ? (
-				<Table
-					data={data}
-					columnData={keys}
-					uri={displayUrl}
-					requestDuration={requestDuration}
-					reload={reload}
-					onUpdate={onUpdate}
-					onDelete={onDelete}
-					schema={schema}
-					setRowState={setRowState}
-					purgeRowState={triggerReload}
-					restatePagination={restatePagination}
-					isLoading={isLoading}
-				/>
-			) : null}
-		</div>
-	);
+    return (
+        <div>
+            <ParameterInputs
+                parameters={parameters}
+                setFormState={setParametersState}
+                parameterState={variables.parameters}
+                setParametersLoading={setParametersLoading}
+            />
+            {error?.userError ? (
+                <Error
+                    title="Data Table Failed To Load"
+                    text={error.userError}
+                    details={error.technicalError}
+                />
+            ) : null}
+            {isLoading && (data?.length === 0 || !data) ? (
+                <div className={styles.loading}>
+                    <LoadingDots />
+                </div>
+            ) : null}
+            {data ? (
+                <Table
+                    data={data}
+                    columnData={keys}
+                    uri={displayUrl}
+                    requestDuration={requestDuration}
+                    reload={reload}
+                    onUpdate={onUpdate}
+                    onDelete={onDelete}
+                    schema={schema}
+                    setRowState={setRowState}
+                    purgeRowState={triggerReload}
+                    restatePagination={restatePagination}
+                    isLoading={isLoading}
+                />
+            ) : null}
+        </div>
+    );
 }
 
-async function getTableData({
-	interfaceId,
-	parameters,
-}: {
-	interfaceId: string;
-	parameters: Record<string, unknown>;
-}) {
-	return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
-		method: "POST",
-		requestBody: {
-			parameters: parameters,
-			method: "get",
-			return_array: true,
-		},
-	});
+async function getTableData({ interfaceId, parameters }: { interfaceId: string; parameters: Record<string, unknown> }) {
+    return await clientRequest(`/api/v1/interfaces/${interfaceId}`, {
+        method: "POST",
+        requestBody: {
+            parameters: parameters,
+            method: "get",
+            return_array: true,
+        },
+    });
 }
