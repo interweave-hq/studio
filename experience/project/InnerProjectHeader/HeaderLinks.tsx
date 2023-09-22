@@ -39,7 +39,7 @@ export default function HeaderLinks() {
     ];
 
     if (project) {
-        navLinks = [{ href: `/${project.slug}`, display: project.slug }];
+        navLinks = [{ href: `/${project.slug}`, display: project.title }];
     }
 
     if (interfacer) {
