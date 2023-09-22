@@ -1,11 +1,10 @@
-.wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
 .section {
     border-bottom: 1px solid var(--grey-3);
     padding: 64px 0;
+}
+
+.section:first-child {
+    padding-top: 0;
 }
 
 .section__title {

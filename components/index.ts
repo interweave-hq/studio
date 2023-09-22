@@ -12,6 +12,7 @@ import { LoadingDots } from "./LoadingDots";
 import { Logo, LogoIcon } from "./Logo";
 import { Modal } from "./Modal";
 import { MultiSelect } from "./MultiSelect";
+import { PrivacyBadge } from "./PrivacyBadge";
 import { Select } from "./Select";
 import { Table } from "./Table";
 
@@ -32,6 +33,7 @@ export {
     LogoIcon,
     Modal,
     MultiSelect,
+    PrivacyBadge,
     Select,
     Table,
 };

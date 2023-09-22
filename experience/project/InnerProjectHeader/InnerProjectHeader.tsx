@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogoIcon } from "@/components";
 import { UserAuth } from "@/interfaces";
-import ProjectLinks from "./ProjectLinks";
+import HeaderLinks from "./HeaderLinks";
 import styles from "./styles.module.css";
 
 export default function InnerProjectHeader({ user }: { user?: UserAuth }) {
@@ -13,7 +13,7 @@ export default function InnerProjectHeader({ user }: { user?: UserAuth }) {
                     <Link href="/">
                         <LogoIcon __cssFor={{ root: styles.header__logo }} />
                     </Link>
-                    <ProjectLinks />
+                    <HeaderLinks />
                 </div>
                 <ul className={styles.header__list}>
                     {/* <li className={styles["header__list-item"]}>

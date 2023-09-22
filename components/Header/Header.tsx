@@ -12,7 +12,7 @@ export default function Header({ user }: { user?: UserAuth }) {
                     <Logo __cssFor={{ root: styles.header__logo }} />
                 </Link>
                 <ul className={styles.header__list}>
-                    <li className={styles["header__list-item"]}>
+                    {/* <li className={styles["header__list-item"]}>
                         <Link
                             className={styles.header__anchor}
                             href="/"
@@ -27,7 +27,7 @@ export default function Header({ user }: { user?: UserAuth }) {
                         >
                             Projects
                         </Link>
-                    </li>
+                    </li> */}
                     {user?.picture ? (
                         <li className={styles["header__list-item"]}>
                             <Link

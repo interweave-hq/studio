@@ -1,0 +1,11 @@
+.container {
+    margin: 64px auto;
+    max-width: var(--max-width-lg);
+    min-height: 75vh;
+}
+
+@media (max-width: 900px) {
+    .container {
+        padding: 0 12px;
+    }
+}

@@ -47,7 +47,7 @@ export function CreateProject() {
         },
     };
     return (
-        <main className={styles.container}>
+        <main>
             <h1 className={styles.header}>Create Project</h1>
             <form
                 onSubmit={handleSubmit(submit)}

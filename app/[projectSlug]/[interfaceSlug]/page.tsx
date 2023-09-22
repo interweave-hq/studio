@@ -13,6 +13,7 @@ import { getMetadata } from "@/lib/metadata";
 import { InfoModal } from "@/components";
 import { CreateAccount } from "@/experience/interfacer/CreateAccount";
 import { APP_URL } from "@/lib/constants";
+import { PageLayout } from "@/layouts/PageLayout";
 
 type Params = {
     projectSlug: string;
@@ -96,63 +97,65 @@ export default async function InterfaceView({ params }: { params: Params }) {
 
     if (noUser) {
         return (
-            <main>
-                <InfoModal
-                    title=""
-                    modalProps={{
-                        isOpen: true,
-                        isDismissible: false,
-                        __cssFor: {
-                            dialog: styles["create-account-modal"],
-                        },
-                    }}
-                >
-                    <CreateAccount
-                        projectTitle={project.title}
-                        url={`${APP_URL}/${projectSlug}/${interfaceSlug}`}
-                    />
-                </InfoModal>
-            </main>
+            <PageLayout>
+                <main>
+                    <InfoModal
+                        title=""
+                        modalProps={{
+                            isOpen: true,
+                            isDismissible: false,
+                            __cssFor: {
+                                dialog: styles["create-account-modal"],
+                            },
+                        }}
+                    >
+                        <CreateAccount
+                            projectTitle={project.title}
+                            url={`${APP_URL}/${projectSlug}/${interfaceSlug}`}
+                        />
+                    </InfoModal>
+                </main>
+            </PageLayout>
         );
     }
 
     if (authSchemesThatNeedUserInput.length > 0) {
         return (
-            <main>
-                <AuthorizationKeysWizard
-                    projectId={project.id}
-                    interfaceId={interfacer.id}
-                    schemes={authSchemesThatNeedUserInput}
-                />
-            </main>
+            <PageLayout>
+                <main>
+                    <AuthorizationKeysWizard
+                        projectId={project.id}
+                        interfaceId={interfacer.id}
+                        schemes={authSchemesThatNeedUserInput}
+                    />
+                </main>
+            </PageLayout>
         );
     }
 
     return (
-        <>
-            <main>
-                <InterfaceContextProvider interfaceId={interfacer.id}>
-                    <div className={styles.container}>
-                        <TableAndForm
-                            interfacer={interfacer}
-                            fetchData={fetchData}
-                            createData={createData}
-                            deleteRequest={deleteRequest}
-                            updateRequest={updateRequest}
-                            keys={keys}
+        <main>
+            <InterfaceContextProvider interfaceId={interfacer.id}>
+                <div className={styles.container}>
+                    <TableAndForm
+                        interfacer={interfacer}
+                        fetchData={fetchData}
+                        createData={createData}
+                        deleteRequest={deleteRequest}
+                        updateRequest={updateRequest}
+                        keys={keys}
+                    />
+                </div>
+                {hasAuthKeys ? (
+                    <div className={styles["delete-authentication-button-container"]}>
+                        <DeleteAPITokens
+                            interfaceId={interfacer.id}
+                            projectId={project.id}
                         />
                     </div>
-                    {hasAuthKeys ? (
-                        <div className={styles["delete-authentication-button-container"]}>
-                            <DeleteAPITokens
-                                interfaceId={interfacer.id}
-                                projectId={project.id}
-                            />
-                        </div>
-                    ) : null}
-                </InterfaceContextProvider>
-            </main>
-        </>
+                ) : null}
+            </InterfaceContextProvider>
+        </main>
     );
 }
 

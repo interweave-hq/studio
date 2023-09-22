@@ -34,6 +34,7 @@
 * {
     border: none;
     box-sizing: border-box;
+    font-family: var(--font-main);
     padding: 0;
     margin: 0;
 }

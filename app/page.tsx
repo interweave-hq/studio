@@ -7,6 +7,7 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
 import { getMetadata } from "@/lib/metadata";
+import { PageLayout } from "@/layouts/PageLayout";
 
 export const metadata = getMetadata({ title: "Welcome" });
 
@@ -44,16 +45,6 @@ export default async function Home() {
                                     {data.projects.length === 0 ? null : (
                                         <div className={styles["section-title-container"]}>
                                             <h2 className={styles["section-title"]}>My Projects</h2>
-                                            {/* <Link
-												className={
-													styles[
-														"section-title__link"
-													]
-												}
-												href="#"
-											>
-												view all
-											</Link> */}
                                         </div>
                                     )}
                                     <div className={styles["interface-container"]}>
@@ -79,16 +70,6 @@ export default async function Home() {
                                     <section>
                                         <div className={styles["section-title-container"]}>
                                             <h2 className={styles["section-title"]}>Interfaces</h2>
-                                            {/* <Link
-												className={
-													styles[
-														"section-title__link"
-													]
-												}
-												href="#"
-											>
-												view all
-											</Link> */}
                                         </div>
                                         <div className={styles["interface-container"]}>
                                             {data.interfaces.map((access: any) => (

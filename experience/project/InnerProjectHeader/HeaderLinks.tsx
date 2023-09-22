@@ -9,7 +9,7 @@ import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { type Interfacer } from "@/interfaces/Interfacer";
 import { type Project } from "@/interfaces/Project";
 
-export default function ProjectLinks() {
+export default function HeaderLinks() {
     const pathname = usePathname();
     const nav = pathname ? pathname.substring(1).split("/") : [""];
     const [projectSlug, interfaceSlug] = nav;
@@ -44,11 +44,6 @@ export default function ProjectLinks() {
 
     if (interfacer) {
         navLinks.push({ href: pathname.toString(), display: interfacer.title });
-    } else {
-        navLinks.push({
-            href: pathname.toString(),
-            display: pathname.substring(1).split("/")[1],
-        });
     }
 
     return (

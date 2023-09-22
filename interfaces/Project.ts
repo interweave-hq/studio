@@ -1,4 +1,5 @@
 import { type Interfacer } from "@/interfaces/Interfacer";
+import { type PublicUser } from "@/interfaces/PublicUser";
 
 export interface Project {
     id: string;
@@ -8,4 +9,5 @@ export interface Project {
     is_trial: boolean;
     created_by_user_id: string;
     interfaces: Interfacer[];
+    created_by_user: PublicUser;
 }

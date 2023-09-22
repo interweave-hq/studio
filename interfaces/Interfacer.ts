@@ -11,6 +11,6 @@ export interface Interfacer {
     schema_config: InterfaceConfiguration;
     key: string;
     hash: string;
-    build_time: Date;
+    build_time: string;
     privacy: "Public" | "Unlisted" | "Private" | "DomainRestricted" | "InviteRestricted";
 }
