@@ -4,10 +4,9 @@
 
 .table {
     --column-min-width: 150px;
-    --font-size: 12px;
+    --font-size: 0.8125rem;
     border-collapse: collapse;
     display: block;
-    font-family: Arial, sans-serif;
     font-size: var(--font-size);
     height: 100%;
     overflow: auto;
@@ -16,7 +15,7 @@
 }
 
 .table__outer {
-    border-bottom: 1px solid var(--grey-3);
+    /* border-bottom: 1px solid var(--grey-3); */
     margin-bottom: 16px;
     overflow: hidden;
     width: 100%;
@@ -38,11 +37,12 @@
     border-top: 1px solid var(--grey-3);
     border-bottom: 1px solid var(--grey-3);
     min-width: var(--column-min-width);
-    padding: 14px 24px;
+    padding: 20px 32px;
 }
 
 .table__cell-text {
     color: var(--grey-5);
+    font-weight: 400;
     max-height: 30px;
     max-width: 350px;
     overflow-y: scroll;
@@ -53,9 +53,9 @@
 
 .table__header {
     color: var(--grey-1);
-    font-size: 11px;
+    font-size: var(--font-size);
     font-weight: 400;
-    padding: 12px 24px;
+    padding: 16px 32px;
     position: sticky;
     text-align: center;
     text-transform: capitalize;

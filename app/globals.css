@@ -34,14 +34,13 @@
 * {
     border: none;
     box-sizing: border-box;
-    font-family: var(--font-main);
     padding: 0;
     margin: 0;
 }
 
 html,
 body {
-    background-color: #fafafa;
+    background-color: #fcfcfc;
     max-width: 100vw;
     overflow-x: hidden;
 }

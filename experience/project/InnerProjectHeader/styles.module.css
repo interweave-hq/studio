@@ -1,5 +1,5 @@
 .header {
-    border-bottom: 1px solid var(--grey-2);
+    border-bottom: 1px solid var(--grey-3);
 }
 
 .header__logo {
@@ -13,7 +13,7 @@
 
 .header__crumbs {
     align-items: center;
-    margin-left: 32px;
+    margin-left: 24px;
     display: flex;
 }
 
@@ -31,6 +31,7 @@
     font-size: 0.875rem;
     transition: all ease-in-out 0.15s;
     padding: 4px 8px;
+    vertical-align: baseline;
 }
 
 .crumbs__anchor--bold {
