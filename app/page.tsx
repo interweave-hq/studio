@@ -1,108 +1,71 @@
 import Link from "next/link";
+
+import { Header, Footer, Input } from "@/components";
+import { Button } from "@/components/Button";
+import { getMetadata } from "@/lib/metadata";
+
 import styles from "./home.module.css";
 
-import { Header, InterfaceCard, Footer } from "@/components";
-import { getButtonStyle } from "@/components/Button";
-import { serverRequest } from "@/lib/api/serverRequest";
-import { Suspense } from "react";
-import { authenticate } from "@/lib/auth";
-import { getMetadata } from "@/lib/metadata";
-import { PageLayout } from "@/layouts/PageLayout";
-
-export const metadata = getMetadata({ title: "Welcome" });
+export const metadata = getMetadata({ title: "Home" });
 
 export default async function Home() {
-    const { user } = await authenticate({ optional: true });
-    const { data, error } = await getProjects();
     return (
         <>
-            <Header user={user} />
-            <section className={styles.section}>
-                <h1>Welcome</h1>
-                <div className={styles["main-links"]}>
-                    <Link
-                        href="/create"
-                        className={getButtonStyle()}
-                    >
-                        Create New Project
-                    </Link>
-                    <a
-                        href="https://docs.interwv.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={getButtonStyle()}
-                    >
-                        Read The Docs
-                    </a>
-                </div>
-            </section>
-            <main className={styles["main-container"]}>
-                <Suspense>
-                    <>
-                        {error ? null : (
-                            <>
-                                <section>
-                                    {data.projects.length === 0 ? null : (
-                                        <div className={styles["section-title-container"]}>
-                                            <h2 className={styles["section-title"]}>My Projects</h2>
-                                        </div>
-                                    )}
-                                    <div className={styles["interface-container"]}>
-                                        {data.projects.map((p: any) => (
-                                            <Link
-                                                key={p.id}
-                                                href={`/${p.slug}`}
-                                                style={{
-                                                    marginRight: "16px",
-                                                    marginBottom: "16px",
-                                                }}
-                                                className={styles["interface-card-link"]}
-                                            >
-                                                <InterfaceCard
-                                                    title={p.slug}
-                                                    description={`ID: ${p.id}`}
-                                                />
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </section>
-                                {data.interfaces.length > 0 ? (
-                                    <section>
-                                        <div className={styles["section-title-container"]}>
-                                            <h2 className={styles["section-title"]}>Interfaces</h2>
-                                        </div>
-                                        <div className={styles["interface-container"]}>
-                                            {data.interfaces.map((access: any) => (
-                                                <Link
-                                                    key={access.id}
-                                                    href={`/${access.interface.project.slug}/${access.interface.slug}`}
-                                                    className={styles["interface-card-link"]}
-                                                >
-                                                    <InterfaceCard
-                                                        description={access.interface.description}
-                                                        hash={access.interface.hash}
-                                                        lastBuild={access.interface.build_time}
-                                                        privacy={access.interface.privacy}
-                                                        titleParts={{
-                                                            one: access.interface.project.slug,
-                                                            two: access.interface.slug,
-                                                        }}
-                                                    />
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </section>
-                                ) : null}
-                            </>
-                        )}
-                    </>
-                </Suspense>
+            <Header />
+            <main>
+                <section className={`${styles.main} ${styles.section}`}>
+                    <h1 className={styles.main__title}>Generate user-interfaces for your API</h1>
+                    <p className={styles.main__subtitle}>Live in seconds, functional immediately, and keeps your team moving fast.</p>
+                    <Input
+                        label="Enter API URL"
+                        domProps={{ defaultValue: "https://google.com/api/" }}
+                        __cssFor={{
+                            root: styles["main__input-container"],
+                            input: styles.main__input,
+                        }}
+                    />
+                    <div className={styles.main__actions}>
+                        <Button __cssFor={{ root: styles["main__gen-button"] }}>Generate!</Button>
+                        <Button
+                            kind="hollow"
+                            __cssFor={{ root: styles["main__opts-button"] }}
+                        >
+                            More Options
+                        </Button>
+                    </div>
+                </section>
+                <section className={`${styles.step} ${styles.section}`}>
+                    <h2 className={styles.step__title}>1. Define Configuration</h2>
+                    <p className={styles.step__body}>Describe your configuration in JSON with help from our TypeScript interfaces.</p>
+                    <pre className={styles.step__code}>
+                        <div className={styles.main__actions}>
+                            <Button __cssFor={{ root: styles["main__gen-button"] }}>Generate!</Button>
+                            <Button kind="hollow">More Options</Button>
+                        </div>
+                    </pre>
+                </section>
+                <section className={`${styles.step} ${styles.section}`}>
+                    <h2 className={styles.step__title}>2. Send To Interweave</h2>
+                    <p className={styles.step__body}>Describe your configuration in JSON with help from our TypeScript interfaces.</p>
+                    <pre className={styles.step__code}>
+                        <div className={styles.main__actions}>
+                            <Button __cssFor={{ root: styles["main__gen-button"] }}>Generate!</Button>
+                            <Button kind="hollow">More Options</Button>
+                        </div>
+                    </pre>
+                </section>
+                <section className={`${styles.step} ${styles.section}`}>
+                    <h2 className={styles.step__title}>3. Run In Browser</h2>
+                    <p className={styles.step__body}>Describe your configuration in JSON with help from our TypeScript interfaces.</p>
+                    <pre className={styles.step__code}>
+                        <div className={styles.main__actions}>
+                            <Button __cssFor={{ root: styles["main__gen-button"] }}>Generate!</Button>
+                            <Button kind="hollow">More Options</Button>
+                        </div>
+                    </pre>
+                </section>
             </main>
             <Footer />
         </>
     );
-}
-
-async function getProjects() {
-    return await serverRequest("/api/v1/interfaces");
 }
