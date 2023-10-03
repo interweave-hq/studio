@@ -27,7 +27,8 @@
     --color-red-dark: #5d2020;
     --color-red-light: #ba1f1f;
 
-    --color-brand-primary: #bcefce;
+    --color-brand-primary: #26574d;
+    --color-brand-100: rgb(226, 241, 231);
     --color-brand-300: rgba(188, 239, 206, 0.4);
 }
 
@@ -52,4 +53,16 @@ main {
 a {
     color: inherit;
     text-decoration: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

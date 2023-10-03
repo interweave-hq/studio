@@ -54,7 +54,7 @@
 .table__header {
     color: var(--grey-1);
     font-size: var(--font-size);
-    font-weight: 400;
+    font-weight: 600;
     padding: 16px 32px;
     position: sticky;
     text-align: center;

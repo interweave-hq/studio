@@ -2,7 +2,7 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
-import styles from "../../home.module.css";
+import styles from "./styles.module.css";
 import { type Interfacer as InterfacerType } from "@/interfaces";
 import { serverRequest } from "@/lib/api/serverRequest";
 import { AuthorizationKeysWizard } from "@/experience/interfacer/AuthorizationKeysWizard";
@@ -104,9 +104,6 @@ export default async function InterfaceView({ params }: { params: Params }) {
                         modalProps={{
                             isOpen: true,
                             isDismissible: false,
-                            __cssFor: {
-                                dialog: styles["create-account-modal"],
-                            },
                         }}
                     >
                         <CreateAccount

@@ -1,0 +1,10 @@
+.delete-authentication-button-container {
+    display: flex;
+    margin: 0 auto;
+    max-width: var(--max-width-md);
+    justify-content: flex-end;
+}
+
+.container {
+    padding: 16px 0;
+}

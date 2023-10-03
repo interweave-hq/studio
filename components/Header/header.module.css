@@ -1,5 +1,5 @@
 .header {
-    border-bottom: 1px solid var(--grey-2);
+    border-bottom: 1px solid var(--grey-3);
 }
 
 .header__interior {
@@ -20,6 +20,10 @@
     list-style-type: none;
 }
 
+.header__button {
+    margin-left: 24px;
+}
+
 .header__anchor {
     color: var(--grey-5);
     display: block;
@@ -37,17 +41,32 @@
 .header__profile-picture {
     border: 1px solid var(--grey-4);
     border-radius: 100%;
-    filter: saturate(0.55);
     height: 28px;
     transition: all ease-in-out 0.15s;
     width: 28px;
     vertical-align: middle;
 }
 
-.header__profile-picture:hover {
-    filter: saturate(1);
-}
-
 .header__logo {
     width: 150px;
+}
+
+@media (max-width: 800px) {
+    .header__interior {
+        flex-wrap: wrap;
+    }
+
+    .header__list {
+        flex-wrap: wrap;
+    }
+
+    .header__list-item:first-child a {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .header__anchor {
+        margin-left: 16px;
+    }
 }
