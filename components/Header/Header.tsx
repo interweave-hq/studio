@@ -3,8 +3,10 @@ import Link from "next/link";
 import styles from "./header.module.css";
 import { Logo } from "@/components";
 import { UserAuth } from "@/interfaces";
+import { getButtonStyle } from "../Button";
+import { combineCss } from "@/lib/helpers";
 
-export default function Header({ user }: { user?: UserAuth }) {
+export default function Header({ user, hideDashboardButton }: { user?: UserAuth; hideDashboardButton?: boolean }) {
     return (
         <header className={styles.header}>
             <div className={styles.header__interior}>
@@ -12,22 +14,36 @@ export default function Header({ user }: { user?: UserAuth }) {
                     <Logo __cssFor={{ root: styles.header__logo }} />
                 </Link>
                 <ul className={styles.header__list}>
-                    {/* <li className={styles["header__list-item"]}>
+                    <li className={styles["header__list-item"]}>
                         <Link
                             className={styles.header__anchor}
-                            href="/"
+                            href="https://docs.interwv.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
-                            Screens
+                            Documentation
                         </Link>
                     </li>
                     <li className={styles["header__list-item"]}>
                         <Link
                             className={styles.header__anchor}
-                            href="/"
+                            href="https://docs.interwv.com/pricing"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
-                            Projects
+                            Pricing
                         </Link>
-                    </li> */}
+                    </li>
+                    {hideDashboardButton ? null : (
+                        <li className={styles["header__list-item"]}>
+                            <Link
+                                className={combineCss([styles.header__button, getButtonStyle()])}
+                                href="/dashboard"
+                            >
+                                {!user ? "Get Started" : "Dashboard"}
+                            </Link>
+                        </li>
+                    )}
                     {user?.picture ? (
                         <li className={styles["header__list-item"]}>
                             <Link
@@ -41,16 +57,6 @@ export default function Header({ user }: { user?: UserAuth }) {
                                     alt=""
                                     className={styles["header__profile-picture"]}
                                 />
-                            </Link>
-                        </li>
-                    ) : null}
-                    {!user ? (
-                        <li className={styles["header__list-item"]}>
-                            <Link
-                                className={styles.header__anchor}
-                                href="/login"
-                            >
-                                Sign In
                             </Link>
                         </li>
                     ) : null}

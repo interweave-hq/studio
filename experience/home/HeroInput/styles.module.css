@@ -1,0 +1,54 @@
+.hero__input {
+    color: #333333;
+    font-size: 18px;
+    padding: 16px 16px 16px 24px;
+    min-width: 300px;
+    width: 100%;
+}
+
+.hero__input::placeholder {
+    color: #d3eddf;
+}
+
+.hero__input-container {
+    margin: 32px 0;
+    width: 100%;
+}
+
+.hero__input-inner-container {
+    border: 1px solid #d3eddf;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.hero__gen-button {
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-100);
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 12px 32px;
+    line-height: 2;
+    transition: all 0.1s ease-in-out;
+}
+
+.hero__gen-button:hover {
+    transform: scale(1.025);
+}
+
+.hero__input-label {
+    color: var(--grey-1);
+    margin-bottom: 4px;
+}
+
+@media (max-width: 1000px) {
+    .hero__input-inner-container {
+        flex-direction: column;
+    }
+
+    .hero__gen-button {
+        text-align: center;
+    }
+}

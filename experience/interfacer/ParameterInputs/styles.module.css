@@ -18,7 +18,7 @@
 }
 
 .button {
-    align-self: center;
+    align-self: normal;
     display: block;
     margin-top: 16px;
 }

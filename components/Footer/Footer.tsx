@@ -16,6 +16,14 @@ export function Footer() {
                     Docs
                 </a>
                 <a
+                    href="https://docs.interwv.com/support"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.footer__link}
+                >
+                    Support
+                </a>
+                <a
                     href="https://docs.interwv.com/pricing"
                     target="_blank"
                     rel="noopener noreferrer"
