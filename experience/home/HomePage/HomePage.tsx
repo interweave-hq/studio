@@ -66,6 +66,18 @@ export async function HomePage() {
                         </div>
                     </div>
                 </section>
+                <section className={styles.section}>
+                    <Image
+                        src="/interface-oct-2023.jpg"
+                        width={1600}
+                        height={800}
+                        quality={100}
+                        priority={true}
+                        className={styles.display__image}
+                        alt="Screenshot of Interweave interface showing a table of values, actions, and details about data."
+                    />
+                    <p className={styles.display__caption}>Fully-functional interfaces generated in seconds!</p>
+                </section>
                 <section className={`${styles.step} ${styles.section}`}>
                     <h2 className="visually-hidden">Steps to build an interface with Interweave</h2>
                     <div>
@@ -101,7 +113,7 @@ export async function HomePage() {
         "method": "POST"
         }
     }
-    }`}
+}`}
                         </pre>
                     </div>
                 </section>
@@ -124,12 +136,12 @@ export async function HomePage() {
                     <div>
                         <pre className={styles.step__code}>
                             {`// JS Library
-    import { buildInterface } from "@interweave/interweave";
+import { buildInterface } from "@interweave/interweave";
 
-    buildInterface(INTERWEAVE_API, INTERWEAVE_CONFIG);
+buildInterface(INTERWEAVE_API, INTERWEAVE_CONFIG);
 
-    // Regular HTTP Request
-    const result = fetch(INTERWEAVE_API, INTERWEAVE_CONFIG);`}
+// Regular HTTP Request
+const result = fetch(INTERWEAVE_API, INTERWEAVE_CONFIG);`}
                         </pre>
                     </div>
                 </section>
@@ -140,16 +152,15 @@ export async function HomePage() {
                         </h3>
                         <p className={styles.step__body}>Your fully-functional interface is ready to go. Share with your team and keep moving fast.</p>
                     </div>
-                    <div>
-                        <Image
-                            src="/interface-oct-2023.jpg"
-                            width={1600}
-                            height={800}
-                            quality={100}
-                            className={styles.step__image}
-                            alt="Screenshot of Interweave interface showing a table of values, actions, and details about data."
-                        />
-                    </div>
+                    <Image
+                        src="/interface-oct-2023.jpg"
+                        width={1600}
+                        height={800}
+                        quality={100}
+                        priority={true}
+                        className={styles.display__image}
+                        alt="Screenshot of Interweave interface showing a table of values, actions, and details about data."
+                    />
                 </section>
                 <section className={`${styles.join} ${styles.section} ${styles["section--last"]}`}>
                     <div className={styles.join__inner}>
