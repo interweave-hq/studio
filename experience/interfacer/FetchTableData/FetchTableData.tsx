@@ -13,6 +13,7 @@ import { VariableState } from "@/interfaces";
 import { extractVariables } from "@/lib/parsers";
 import { get } from "@/lib/helpers";
 import { logMakeRequestResults } from "@/lib/loggers";
+import { formatFormObject } from "@/lib/formatters";
 
 const DEFAULT_ERROR: ErrorType = { userError: "", technicalError: "" };
 
@@ -67,16 +68,26 @@ export function FetchTableData({
                 setLoading(true);
                 if (parametersLoading) return;
 
+                let formattedParameters = variables.parameters;
+                if (getRequest.parameters) {
+                    formattedParameters = formatFormObject(variables.parameters, getRequest.parameters);
+                }
+
+                const formattedVariables = {
+                    ...variables,
+                    parameters: formattedParameters,
+                };
+
                 const {
                     data: tableData,
                     error,
                     duration,
                 } = await getTableData({
                     interfaceId,
-                    ...variables,
+                    ...formattedVariables,
                 });
 
-                logMakeRequestResults({ key: "get", data: tableData, error });
+                logMakeRequestResults({ key: "get", data: { ...tableData, variables }, error });
 
                 // When the table is reloaded with a different query parameter
                 // if (

@@ -4,8 +4,6 @@ import styles from "./styles.module.css";
 import { Button } from "@/components";
 import { GetComponent } from "@/experience/interfacer/GetComponent";
 import { type Parameter } from "@interweave/interweave";
-import { PrivacyBadge } from "@/components/PrivacyBadge";
-import { timeAgo } from "@/lib/dates/timeAgo";
 
 export function ParameterInputs({
     parameters,
@@ -48,10 +46,6 @@ export function ParameterInputs({
             return setFormState(getValues());
         }
     }, [loadingStates]);
-
-    // if (!parameters) {
-    // 	return null;
-    // }
 
     const submitForm = (data: any) => {
         setFormState(data);

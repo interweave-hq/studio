@@ -1,8 +1,8 @@
-import { type Fields } from "@interweave/interweave";
+import { type Fields, type Parameter } from "@interweave/interweave";
 
 import { isEmpty } from "../helpers";
 
-export function formatFormObject(data: Record<string, unknown>, keys: Fields) {
+export function formatFormObject(data: Record<string, unknown>, keys: Fields | { [key: string]: Parameter }) {
     const dataKeys = Object.keys(data);
     dataKeys.forEach(d => {
         const value = data[d];
@@ -10,6 +10,7 @@ export function formatFormObject(data: Record<string, unknown>, keys: Fields) {
         if (!keyConfig) {
             // If you can't find the key config, look for the outKey
             const keysArr = Object.keys(keys);
+            // @ts-ignore out_key doesnt exist on Parameter
             const correctKey = keysArr.find(k => keys[k].interface?.form?.out_key === d);
             if (!correctKey) {
                 return;
@@ -24,7 +25,7 @@ export function formatFormObject(data: Record<string, unknown>, keys: Fields) {
         }
 
         // Format null values
-        if ((isEmpty(value) || value === "None") && type !== "boolean" && !keyConfig.schema.is_array) {
+        if ((isEmpty(value) || value === "None" || value === "INTERWEAVE_MAKE_UNDEFINED") && type !== "boolean" && !keyConfig.schema.is_array) {
             data[d] = null;
         }
 

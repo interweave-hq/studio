@@ -176,7 +176,7 @@ export function GetComponent(
                         },
                     });
 
-                    logMakeRequestResults({ key, data, error });
+                    logMakeRequestResults({ key, data: { ...data, variables }, error });
 
                     if (error) {
                         console.error(error);
@@ -289,7 +289,7 @@ export function GetComponent(
             ? [
                   {
                       label: "None",
-                      value: undefined,
+                      value: "INTERWEAVE_MAKE_UNDEFINED",
                       keyOverride: `empty-option-${key}`,
                   },
               ]

@@ -102,9 +102,9 @@ export async function HomePage() {
     "title": "Names",
     "fields": {
         "firstName": {
-        "schema": {
-            "type": "string"
-        }
+            "schema": {
+                "type": "string"
+            }
         }
     },
     "requests": {
