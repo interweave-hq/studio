@@ -37,7 +37,7 @@
     border-top: 1px solid var(--grey-3);
     border-bottom: 1px solid var(--grey-3);
     min-width: var(--column-min-width);
-    padding: 20px 32px;
+    padding: 20px 48px;
 }
 
 .table__cell-text {
@@ -55,7 +55,7 @@
     color: var(--grey-1);
     font-size: var(--font-size);
     font-weight: 600;
-    padding: 16px 32px;
+    padding: 16px 48px;
     position: sticky;
     text-align: center;
     text-transform: capitalize;
