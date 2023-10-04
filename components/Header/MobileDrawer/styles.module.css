@@ -1,0 +1,39 @@
+.overlay {
+    background-color: black;
+    opacity: 0.5 !important;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.content {
+    background-color: #fff;
+    bottom: 0;
+    height: 65%;
+    left: 0;
+    padding: 8px 32px 32px 32px;
+    position: fixed;
+    width: 100%;
+}
+
+.thumb {
+    width: 10%;
+    background-color: grey;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    height: 4px;
+}
+
+.icon {
+    display: block;
+    fill: grey;
+    height: 32px;
+    width: 32px;
+}
+
+.inner-content {
+    padding-top: 64px;
+}

@@ -9,6 +9,7 @@ import styles from "./styles.module.css";
 import { authenticate } from "@/lib/auth";
 
 import { HeroInput } from "@/experience/home/HeroInput";
+import { getButtonStyle } from "@/components/Button";
 
 export const metadata = getMetadata({ title: "Home" });
 
@@ -25,7 +26,13 @@ export async function HomePage() {
                             Live in seconds, functional immediately, and <span className={styles["hero__subtitle-highlight"]}>keeps your team moving fast</span>
                             .
                         </p>
-                        <HeroInput />
+                        {/* <HeroInput /> */}
+                        <a
+                            href="https://docs.interwv.com/getting-started"
+                            className={getButtonStyle()}
+                        >
+                            Get Started
+                        </a>
                     </div>
                     <div className={styles.hero__right}>
                         <div className={styles["hero__right-content"]}>
@@ -79,22 +86,22 @@ export async function HomePage() {
                     <div>
                         <pre className={styles.step__code}>
                             {`{
-  "key": "names-interface",
-  "title": "Names",
-  "fields": {
-    "firstName": {
-      "schema": {
-        "type": "string"
-      }
+    "key": "names-interface",
+    "title": "Names",
+    "fields": {
+        "firstName": {
+        "schema": {
+            "type": "string"
+        }
+        }
+    },
+    "requests": {
+        "create": {
+        "uri": "https://example.com/names",
+        "method": "POST"
+        }
     }
-  },
-  "requests": {
-    "create": {
-      "uri": "https://example.com/names",
-      "method": "POST"
-    }
-  }
-}`}
+    }`}
                         </pre>
                     </div>
                 </section>
@@ -117,12 +124,12 @@ export async function HomePage() {
                     <div>
                         <pre className={styles.step__code}>
                             {`// JS Library
-import { buildInterface } from "@interweave/interweave";
+    import { buildInterface } from "@interweave/interweave";
 
-buildInterface(INTERWEAVE_API, INTERWEAVE_CONFIG);
+    buildInterface(INTERWEAVE_API, INTERWEAVE_CONFIG);
 
-// Regular HTTP Request
-const result = fetch(INTERWEAVE_API, INTERWEAVE_CONFIG);`}
+    // Regular HTTP Request
+    const result = fetch(INTERWEAVE_API, INTERWEAVE_CONFIG);`}
                         </pre>
                     </div>
                 </section>
