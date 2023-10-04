@@ -22,8 +22,8 @@ export async function HomePage() {
                     <div className={styles.hero__left}>
                         <h1 className={styles.hero__title}>Generate user&#8209;interfaces for your&nbsp;API</h1>
                         <p className={styles.hero__subtitle}>
-                            Live in seconds, functional immediately, and keeps <span className={styles["hero__subtitle-highlight"]}>your team</span> moving
-                            fast.
+                            Live in seconds, functional immediately, and <span className={styles["hero__subtitle-highlight"]}>keeps your team moving fast</span>
+                            .
                         </p>
                         <HeroInput />
                     </div>

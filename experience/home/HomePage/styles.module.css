@@ -47,9 +47,8 @@
 }
 
 .hero__interface-container {
-    container-type: inline-size;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     justify-content: flex-end;
     gap: 24px;
     width: 100%;
