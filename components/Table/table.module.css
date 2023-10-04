@@ -45,7 +45,6 @@
     font-weight: 400;
     max-height: 30px;
     max-width: 350px;
-    overflow-y: scroll;
     text-overflow: ellipsis;
     scrollbar-width: thin;
     white-space: pre;
