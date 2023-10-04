@@ -250,7 +250,7 @@ export function TableAndForm({
                 }}
                 cancelCtaProps={{
                     children: "Cancel",
-                    kind: "solid",
+                    kind: "hollow",
                 }}
                 title={`Confirm Deletion`}
                 body="Are you sure you want to delete this record?"

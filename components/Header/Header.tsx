@@ -6,7 +6,7 @@ import { UserAuth } from "@/interfaces";
 import { getButtonStyle } from "../Button";
 import { combineCss } from "@/lib/helpers";
 
-export default function Header({ user }: { user?: UserAuth }) {
+export default function Header({ user, hideDashboardButton }: { user?: UserAuth; hideDashboardButton?: boolean }) {
     return (
         <header className={styles.header}>
             <div className={styles.header__interior}>
@@ -34,14 +34,16 @@ export default function Header({ user }: { user?: UserAuth }) {
                             Pricing
                         </Link>
                     </li>
-                    <li className={styles["header__list-item"]}>
-                        <Link
-                            className={combineCss([styles.header__button, getButtonStyle()])}
-                            href="/dashboard"
-                        >
-                            {!user ? "Get Started" : "Dashboard"}
-                        </Link>
-                    </li>
+                    {hideDashboardButton ? null : (
+                        <li className={styles["header__list-item"]}>
+                            <Link
+                                className={combineCss([styles.header__button, getButtonStyle()])}
+                                href="/dashboard"
+                            >
+                                {!user ? "Get Started" : "Dashboard"}
+                            </Link>
+                        </li>
+                    )}
                     {user?.picture ? (
                         <li className={styles["header__list-item"]}>
                             <Link

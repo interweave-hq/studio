@@ -10,7 +10,7 @@ export default function InnerProjectHeader({ user }: { user?: UserAuth }) {
         <header className={styles.header}>
             <div className={styles.header__interior}>
                 <div className={styles.header__left}>
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <LogoIcon __cssFor={{ root: styles.header__logo }} />
                     </Link>
                     <HeaderLinks />

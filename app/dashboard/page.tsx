@@ -11,13 +11,16 @@ import { getMetadata } from "@/lib/metadata";
 export const metadata = getMetadata({ title: "Dashboard" });
 
 export default async function Dashboard() {
-    const { user } = await authenticate({ optional: true });
+    const { user } = await authenticate();
     const { data, error } = await getProjects();
     return (
         <>
-            <Header user={user} />
+            <Header
+                user={user}
+                hideDashboardButton
+            />
             <section className={styles.section}>
-                <h1>Welcome</h1>
+                <h1 className={styles.title}>Dashboard</h1>
                 <div className={styles["main-links"]}>
                     <Link
                         href="/create"

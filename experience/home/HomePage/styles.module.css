@@ -5,6 +5,7 @@
 }
 
 .section--top {
+    background-color: var(--color-brand-100);
     margin: 0px auto 80px auto;
     padding: 144px 42px 64px 42px;
 }
@@ -116,7 +117,7 @@
 }
 
 .step__link {
-    color: #008a22;
+    color: var(--color-brand-primary);
     font-size: 18px;
     text-decoration: underline;
 }

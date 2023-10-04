@@ -32,7 +32,9 @@
 }
 
 .tab--active {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid var(--color-brand-primary);
+    color: var(--grey-1);
+    font-weight: 600;
 }
 
 .creator {
