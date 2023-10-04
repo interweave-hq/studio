@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/Button";
 import { type ReactNode } from "react";
 import { Drawer } from "vaul";
 
