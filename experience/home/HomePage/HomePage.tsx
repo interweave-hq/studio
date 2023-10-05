@@ -58,7 +58,7 @@ export async function HomePage() {
                                 />
                                 <InterfaceCard
                                     title="Products"
-                                    description="Products that are offered from our imaginary API"
+                                    description="Products from a DummyJSON API."
                                     privacy="Public"
                                     relativePathLink="/examples/products"
                                 />
