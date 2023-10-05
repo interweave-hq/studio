@@ -52,15 +52,15 @@ export async function HomePage() {
                                 />
                                 <InterfaceCard
                                     title="Trivia Questions"
-                                    description="Products that are offered from our imaginary API"
+                                    description="Collection of questions from the Open Trivia database."
                                     privacy="Public"
-                                    relativePathLink="/interweave/harry-potter"
+                                    relativePathLink="/examples/trivia"
                                 />
                                 <InterfaceCard
                                     title="Products"
                                     description="Products that are offered from our imaginary API"
                                     privacy="Public"
-                                    relativePathLink="/interweave/harry-potter"
+                                    relativePathLink="/examples/products"
                                 />
                             </div>
                         </div>
