@@ -93,6 +93,7 @@ interface GetComponentOptions {
     styles?: string;
     hidden?: boolean;
     error?: string;
+    placeholder?: string;
     maxLength?: number;
     form: {
         register: (key: string, opts?: RegisterOptions) => object;

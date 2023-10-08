@@ -37,6 +37,7 @@ export function UpdateForm({
                 styles: styles["shared-styles"],
                 description: keyConfig?.interface?.form?.description || optionalText,
                 disabled: keyConfig?.interface?.form?.disabled,
+                placeholder: keyConfig?.interface?.form?.placeholder,
                 form: { register, control },
                 hidden: keyConfig?.interface?.form?.hidden,
             },

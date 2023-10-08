@@ -81,6 +81,7 @@ export function ParameterInputs({
                       styles: styles["input-styles"],
                       description: parameter?.interface?.form?.description || optionalText,
                       disabled: parameter?.interface?.form?.disabled,
+                      placeholder: parameter?.interface?.form?.placeholder,
                       form: { register, control },
                   },
                   {

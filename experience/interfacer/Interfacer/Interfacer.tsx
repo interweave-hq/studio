@@ -77,6 +77,7 @@ export function Interfacer({
                     styles: styles["shared-styles"],
                     description: typeConfig?.interface?.form?.description,
                     disabled: typeConfig?.interface?.form?.disabled,
+                    placeholder: typeConfig?.interface?.form?.placeholder,
                     // Errors object is post form-combine so we have to parse our key out for nested value errors
                     error: get(errors, `${formKey}.message`),
                     form: { register, control },
