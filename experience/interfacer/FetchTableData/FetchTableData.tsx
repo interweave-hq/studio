@@ -56,6 +56,7 @@ export function FetchTableData({
 }) {
     const [data, setData] = useState<any[] | null>(null);
     const [error, setError] = useState(DEFAULT_ERROR);
+    const [displayUrl, setDisplayUrl] = useState("");
     const [isLoading, setLoading] = useState(true);
     const [requestDuration, setRequestDuration] = useState(0);
     const [restatePagination, setRestatePagination] = useState(false);
@@ -86,6 +87,8 @@ export function FetchTableData({
                     interfaceId,
                     ...formattedVariables,
                 });
+
+                setDisplayUrl(tableData.uri);
 
                 logMakeRequestResults({ key: "get", data: { ...tableData, variables }, error });
 
@@ -133,14 +136,6 @@ export function FetchTableData({
         };
         setError(badConfigError.error);
     }
-
-    let displayUrl = url;
-    const possibleVariables = extractVariables(displayUrl);
-    possibleVariables.forEach(v => {
-        const possibleValue = get(variables, v, null);
-        const newUrl = displayUrl.replaceAll(`<<${v}>>`, possibleValue);
-        displayUrl = newUrl;
-    });
 
     return (
         <div>
