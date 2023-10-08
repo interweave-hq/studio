@@ -135,6 +135,7 @@ export function GetComponent(
     const description = options?.description;
     const register = options?.form?.register;
     const maxLength = options.maxLength;
+    const placeholder = options?.placeholder;
 
     // Handle dynamic Select and MultiSelect values
     useEffect(() => {
@@ -347,6 +348,7 @@ export function GetComponent(
                                   defaultValue,
                                   hidden,
                                   readOnly: disabled,
+                                  placeholder,
                               }}
                               description={description}
                               maxLength={maxLength}
@@ -366,6 +368,7 @@ export function GetComponent(
                                   defaultValue,
                                   hidden,
                                   readOnly: disabled,
+                                  placeholder,
                               }}
                               description={description}
                               maxLength={maxLength}
@@ -388,6 +391,7 @@ export function GetComponent(
                             inputMode: "numeric",
                             pattern: "[-+]?[0-9]*[.,]?[0-9]+",
                             noValidate: true,
+                            placeholder,
                         }}
                         label={label}
                         register={register(key)}
