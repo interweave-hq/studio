@@ -111,6 +111,7 @@ export function ParameterInputs({
                                 <Button
                                     kind="hollow"
                                     size="sm"
+                                    domProps={{ type: "submit" }}
                                     __cssFor={{ root: styles.button }}
                                 >
                                     Refresh Data
