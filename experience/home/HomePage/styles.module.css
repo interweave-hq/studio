@@ -121,6 +121,14 @@
     text-decoration: underline;
 }
 
+.step__image {
+    border: 1px solid var(--grey-3);
+    box-shadow: 6px 6px 0px 0px #f3f3f3;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 700px;
+}
+
 .display__image {
     border: 1px solid var(--grey-3);
     box-shadow: 6px 6px 0px 0px #f3f3f3;

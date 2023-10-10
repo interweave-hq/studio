@@ -42,13 +42,13 @@ export async function HomePage() {
                                     title="Open Brewery DB"
                                     description="Browse thousands of breweries from the Open Brewery DB."
                                     privacy="Public"
-                                    relativePathLink="/interweave/breweries"
+                                    relativePathLink="/examples/breweries"
                                 />
                                 <InterfaceCard
                                     title="FBI Most Wanted"
                                     description="Interfacing with the FBI's Most Wanted API."
                                     privacy="Public"
-                                    relativePathLink="/interweave/fbi-most-wanted"
+                                    relativePathLink="/examples/fbi-most-wanted"
                                 />
                                 <InterfaceCard
                                     title="Trivia Questions"
@@ -239,7 +239,7 @@ const result = fetch(INTERWEAVE_API, INTERWEAVE_CONFIG);`}
                         height={800}
                         quality={100}
                         priority={true}
-                        className={styles.display__image}
+                        className={styles.step__image}
                         alt="Screenshot of Interweave interface showing a table of values, actions, and details about data."
                     />
                 </section>
