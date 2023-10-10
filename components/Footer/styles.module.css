@@ -11,19 +11,24 @@
 .footer__copy {
     color: var(--grey-5);
     font-size: 12px;
-    margin: 8px 0;
+    margin: 16px 0;
 }
 
 .footer__links {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 8px;
+    margin: 16px 0;
 }
 
 .footer__link {
     color: var(--grey-5);
     font-size: 12px;
-    margin: 16px;
+    margin-right: 16px;
+    transition: all ease-in-out 0.15s;
+}
+
+.footer__link:hover {
+    color: var(--grey-1);
 }
 
 .footer__link:first-child {
@@ -41,11 +46,8 @@
 .footer__icon-link {
     color: var(--grey-5);
     font-size: 12px;
-    margin: 16px;
-}
-
-.footer__icon-link:first-child {
-    margin-left: 0;
+    margin-right: 24px;
+    transition: all ease-in-out 0.15s;
 }
 
 .footer__icon {
@@ -53,4 +55,13 @@
     transform: translateY(-1px);
     width: 18px;
     height: 18px;
+}
+
+.footer__icon-link:hover {
+    color: var(--grey-1);
+}
+
+.footer__icon--x {
+    width: 16px;
+    height: 16px;
 }
