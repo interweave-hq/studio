@@ -226,7 +226,7 @@
 }
 
 @media (max-width: 1000px) {
-    .hero {
+    .hero__inner {
         display: grid;
         grid-template-columns: 100%;
     }
@@ -245,7 +245,7 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .step {
+    .step__inner {
         flex-direction: column;
     }
 
