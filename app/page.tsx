@@ -1,8 +1,12 @@
 import { HomePage } from "@/experience/home";
 
 import { getMetadata } from "@/lib/metadata";
+import { DEFAULT_META_DESCRIPTION_SHORT } from "@/lib/constants";
 
-export const metadata = getMetadata({ title: "Home" });
+export const metadata = {
+    ...getMetadata({ title: "Home" }),
+    title: `Interweave | ${DEFAULT_META_DESCRIPTION_SHORT}`,
+};
 
 export default async function Home() {
     // @ts-expect-error server component

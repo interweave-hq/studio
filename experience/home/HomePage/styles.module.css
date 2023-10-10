@@ -7,7 +7,7 @@
 .section__inner {
     max-width: var(--max-width);
     margin-left: auto;
-    margin-top: auto;
+    margin-right: auto;
 }
 
 .section--top {

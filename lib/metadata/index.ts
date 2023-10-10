@@ -1,32 +1,59 @@
 import type { Metadata } from "next";
 
-export const METADATA_DEFAULTS = {
-    title: "Home",
-    description:
-        "Accelerate your team with generated user-interfaces synced to your API data. Built-in support for authentication, permissions, validation, and more. Start for free!",
-    keywords: "interweave,api,interface,generate",
-    viewport: "width=device-width, initial-scale=1",
-    url: "https://interwv.com",
-} as const;
+import { APP_URL, DEFAULT_META_DESCRIPTION, DEFAULT_META_IMAGE_PATH, DEFAULT_META_TITLE, GET_META_TITLE } from "../constants";
 
-export const getMetadata = ({ title, description }: { title: string; description?: string }): Metadata => {
-    const renderedTitle = `${title || METADATA_DEFAULTS.title} | Interweave`;
+export const getMetadata = ({
+    title,
+    description,
+    image,
+    shouldIndex = true,
+}: {
+    title: string;
+    description?: string;
+    image?: string;
+    shouldIndex?: boolean;
+}): Metadata => {
+    const renderedTitle = GET_META_TITLE(title || DEFAULT_META_TITLE);
+    const renderedImage = image || DEFAULT_META_IMAGE_PATH;
     return {
+        applicationName: "Interweave",
+        generator: "Next.js",
+        authors: [{ name: "Carbonology Interactive LLC", url: "https://carbonology.in" }],
+        colorScheme: "light",
+        creator: "Carbonology Interactive LLC",
+        publisher: "Carbonology Interactive LLC",
+        metadataBase: new URL(APP_URL),
+        alternates: {
+            canonical: "/",
+        },
         title: renderedTitle,
-        description: description || METADATA_DEFAULTS.description,
-        keywords: METADATA_DEFAULTS.keywords,
-        viewport: METADATA_DEFAULTS.viewport,
+        description: description || DEFAULT_META_DESCRIPTION,
+        keywords: "interweave,api,interface,generate",
+        viewport: "width=device-width, initial-scale=1",
         twitter: {
             card: "summary_large_image",
-            site: METADATA_DEFAULTS.url,
-            images: [],
+            site: APP_URL,
+            images: renderedImage,
             title: renderedTitle,
         },
         openGraph: {
             title: renderedTitle,
-            description: description || METADATA_DEFAULTS.description,
-            images: [],
-            url: METADATA_DEFAULTS.url,
+            description: description || DEFAULT_META_DESCRIPTION,
+            images: renderedImage,
+            url: APP_URL,
+        },
+        robots: {
+            index: shouldIndex,
+            follow: true,
+            nocache: true,
+            googleBot: {
+                index: shouldIndex,
+                follow: true,
+                noimageindex: false,
+                "max-video-preview": -1,
+                "max-image-preview": "large",
+                "max-snippet": -1,
+            },
         },
     };
 };

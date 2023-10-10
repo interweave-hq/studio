@@ -12,7 +12,7 @@ import { TableAndForm } from "@/experience/interfacer/TableAndForm";
 import { getMetadata } from "@/lib/metadata";
 import { InfoModal } from "@/components";
 import { CreateAccount } from "@/experience/interfacer/CreateAccount";
-import { APP_URL } from "@/lib/constants";
+import { APP_URL, GET_META_DESCRIPTION } from "@/lib/constants";
 import { PageLayout } from "@/layouts/PageLayout";
 
 type Params = {
@@ -25,7 +25,11 @@ export async function generateMetadata({ params }: { params: Params }) {
         projectSlug: params.projectSlug,
         interfaceSlug: params.interfaceSlug,
     });
-    return getMetadata({ title: `${interfacer.title} - ${project.title}` });
+    return getMetadata({
+        title: `${interfacer.title} - ${project.title}`,
+        description: GET_META_DESCRIPTION({ projectTitle: project.title, interfaceTitle: interfacer.title }),
+        shouldIndex: interfacer.privacy === "Public",
+    });
 }
 
 export default async function InterfaceView({ params }: { params: Params }) {
