@@ -33,3 +33,24 @@
 .footer__logo {
     width: 150px;
 }
+
+.footer__socials {
+    margin: 8px 0;
+}
+
+.footer__icon-link {
+    color: var(--grey-5);
+    font-size: 12px;
+    margin: 16px;
+}
+
+.footer__icon-link:first-child {
+    margin-left: 0;
+}
+
+.footer__icon {
+    display: inline;
+    transform: translateY(-1px);
+    width: 18px;
+    height: 18px;
+}

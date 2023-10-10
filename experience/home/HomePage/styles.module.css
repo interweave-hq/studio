@@ -1,11 +1,16 @@
 .section {
-    margin: 80px auto;
-    max-width: var(--max-width);
     padding: 64px 42px;
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.section__inner {
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-top: auto;
 }
 
 .section--top {
-    background-color: var(--color-brand-100);
     margin: 0px auto 80px auto;
     padding: 144px 42px 64px 42px;
 }
@@ -19,10 +24,15 @@
 }
 
 .hero {
+    background-color: var(--color-brand-100);
+}
+
+.hero__inner {
     display: grid;
     grid-template-columns: 40% 55%;
     width: 100%;
     justify-content: space-between;
+    max-width: 1700px;
 }
 
 .hero__right {
@@ -77,6 +87,9 @@
 .step {
     margin: 36px auto;
     max-width: 1400px;
+}
+
+.step__inner {
     display: flex;
     justify-content: space-between;
 }
@@ -144,8 +157,8 @@
 }
 
 .join {
-    background-color: #f6f6f6;
-    padding: 120px 42px;
+    margin-top: 0;
+    padding: 64px 42px 168px 42px;
 }
 
 .join__inner {
@@ -156,6 +169,15 @@
 .join__title {
     font-size: 48px;
     font-weight: 600;
+    text-align: center;
+}
+
+.join__button-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .join p {
@@ -163,24 +185,8 @@
     font-weight: 300;
     line-height: 1.7;
     max-width: 75%;
-    margin: 24px 0 48px 0;
-}
-
-.discord-button {
-    background-color: #9656ce;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 18px;
-    padding: 12px 18px;
-}
-
-.discord-button__icon {
-    display: inline;
-    margin-right: 12px;
-    transform: translateY(-1px);
-    width: 24px;
+    margin: 24px auto 48px auto;
+    text-align: center;
 }
 
 .features {
@@ -189,6 +195,9 @@
     justify-content: flex-end;
     gap: 24px;
     width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .feature {
