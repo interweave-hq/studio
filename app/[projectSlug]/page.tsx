@@ -4,6 +4,7 @@ import { TokenPage, InterfacePage, PROJECT_TABS } from "@/experience/project";
 import { getMetadata } from "@/lib/metadata";
 import { authenticate } from "@/lib/auth";
 import { PageLayout } from "@/layouts/PageLayout";
+import { mixpanelServer } from "@/lib/analytics";
 
 type Params = {
     projectSlug: string;
@@ -23,6 +24,8 @@ export default async function ProjectListing({ params, searchParams }: { params:
     const tab = searchParams["tab"];
     const isOwner = projectData.created_by_user_id === user?.id;
     const creator = projectData.created_by_user;
+
+    mixpanelServer.track("page_viewed", { page: `/${projectSlug}`, distinct_id: user?.id });
 
     if (tab === PROJECT_TABS.tokens.slug) {
         return (

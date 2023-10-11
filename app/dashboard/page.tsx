@@ -7,12 +7,14 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
 import { getMetadata } from "@/lib/metadata";
+import { mixpanelServer } from "@/lib/analytics";
 
 export const metadata = getMetadata({ title: "Dashboard" });
 
 export default async function Dashboard() {
     const { user } = await authenticate();
     const { data, error } = await getProjects();
+    mixpanelServer.track("page_viewed", { page: "/dashboard", distinct_id: user.id });
     return (
         <>
             <Header

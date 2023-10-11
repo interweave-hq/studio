@@ -14,6 +14,8 @@ import { InfoModal } from "@/components";
 import { CreateAccount } from "@/experience/interfacer/CreateAccount";
 import { APP_URL, GET_META_DESCRIPTION } from "@/lib/constants";
 import { PageLayout } from "@/layouts/PageLayout";
+import { mixpanelServer } from "@/lib/analytics";
+import { authenticate } from "@/lib/auth";
 
 type Params = {
     projectSlug: string;
@@ -35,6 +37,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 export default async function InterfaceView({ params }: { params: Params }) {
     const projectSlug = params["projectSlug"];
     const interfaceSlug = params["interfaceSlug"];
+    const { user } = await authenticate({ optional: true });
     const { project, interfacer, access, needsKeys, isOwner, isUser } = await getData({
         projectSlug,
         interfaceSlug,
@@ -133,6 +136,11 @@ export default async function InterfaceView({ params }: { params: Params }) {
             </PageLayout>
         );
     }
+
+    mixpanelServer.track("page_viewed", {
+        page: `/${projectSlug}/${interfaceSlug}`,
+        distinct_id: user?.id,
+    });
 
     return (
         <main>
