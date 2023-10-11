@@ -2,7 +2,7 @@ import LogIn from "./login";
 import { Logo } from "@/components";
 import styles from "./styles.module.css";
 import { getMetadata } from "@/lib/metadata";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 export const metadata = getMetadata({ title: "Log In" });
 

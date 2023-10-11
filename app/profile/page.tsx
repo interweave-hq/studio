@@ -3,7 +3,7 @@ import "server-only";
 import { Profile } from "@/experience/profile";
 import { getMetadata } from "@/lib/metadata";
 import { PageLayout } from "@/layouts/PageLayout";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 export const metadata = getMetadata({ title: "Profile" });
 

@@ -1,6 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+// Let's get mixpanel loaded ASAP
+import "@/lib/analytics/mixpanelClient";
+
 export const metadata = {
     title: "Interweave",
     description: "",

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getMetadata } from "@/lib/metadata";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 export const metadata = getMetadata({ title: "Join The Discord" });
 

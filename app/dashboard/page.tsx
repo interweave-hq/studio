@@ -7,7 +7,7 @@ import { serverRequest } from "@/lib/api/serverRequest";
 import { Suspense } from "react";
 import { authenticate } from "@/lib/auth";
 import { getMetadata } from "@/lib/metadata";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 export const metadata = getMetadata({ title: "Dashboard" });
 

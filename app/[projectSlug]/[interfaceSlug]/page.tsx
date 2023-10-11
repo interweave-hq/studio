@@ -14,7 +14,7 @@ import { InfoModal } from "@/components";
 import { CreateAccount } from "@/experience/interfacer/CreateAccount";
 import { APP_URL, GET_META_DESCRIPTION } from "@/lib/constants";
 import { PageLayout } from "@/layouts/PageLayout";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 import { authenticate } from "@/lib/auth";
 
 type Params = {

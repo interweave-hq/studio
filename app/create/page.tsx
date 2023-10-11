@@ -1,7 +1,7 @@
 import { CreateProject } from "@/experience/project/create";
 import { PageLayout } from "@/layouts/PageLayout";
 import { getMetadata } from "@/lib/metadata";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 export const metadata = getMetadata({ title: "Create Project" });
 

@@ -4,7 +4,7 @@ import { TokenPage, InterfacePage, PROJECT_TABS } from "@/experience/project";
 import { getMetadata } from "@/lib/metadata";
 import { authenticate } from "@/lib/auth";
 import { PageLayout } from "@/layouts/PageLayout";
-import { mixpanelServer } from "@/lib/analytics";
+import { mixpanelServer } from "@/lib/analytics/mixpanelServer";
 
 type Params = {
     projectSlug: string;

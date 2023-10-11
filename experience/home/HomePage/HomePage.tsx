@@ -3,15 +3,13 @@ import "server-only";
 import Link from "next/link";
 import Image from "next/image";
 import { Header, Footer, InterfaceCard } from "@/components";
-import { getMetadata } from "@/lib/metadata";
 
 import styles from "./styles.module.css";
 import { authenticate } from "@/lib/auth";
 
 import { HeroInput } from "@/experience/home/HeroInput";
 import { getButtonStyle } from "@/components/Button";
-
-export const metadata = getMetadata({ title: "Home" });
+import { CtaButton } from "./CtaButton";
 
 export async function HomePage() {
     const { user } = await authenticate({ optional: true });
@@ -28,12 +26,7 @@ export async function HomePage() {
                                 <span className={styles["hero__subtitle-highlight"]}>keeps your team moving fast</span>.
                             </p>
                             {/* <HeroInput /> */}
-                            <a
-                                href="https://docs.interwv.com/getting-started"
-                                className={getButtonStyle()}
-                            >
-                                Get Started
-                            </a>
+                            <CtaButton />
                         </div>
                         <div className={styles.hero__right}>
                             <div className={styles["hero__right-content"]}>
