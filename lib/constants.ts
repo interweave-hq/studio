@@ -3,7 +3,7 @@ export const APP_URL = process.env.NODE_ENV === "development" ? "http://localhos
 export const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:8000" : "https://api.interwv.com";
 
 export const DEFAULT_META_DESCRIPTION = "User‑interfaces for your API. Live in seconds, functional immediately, and keeps your team moving fast.";
-export const DEFAULT_META_DESCRIPTION_SHORT = "User‑interfaces for your API.";
+export const DEFAULT_META_DESCRIPTION_SHORT = "User‑interfaces for your API";
 export const DEFAULT_META_TITLE = "Interweave";
 export const DEFAULT_META_IMAGE_PATH = "/interweave-meta.jpg";
 export const DEFAULT_META_IMAGE_URL = `${APP_URL}${DEFAULT_META_IMAGE_PATH}`;

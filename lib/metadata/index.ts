@@ -7,13 +7,15 @@ export const getMetadata = ({
     description,
     image,
     shouldIndex = true,
+    fullTitle,
 }: {
-    title: string;
+    title?: string;
     description?: string;
     image?: string;
     shouldIndex?: boolean;
+    fullTitle?: string;
 }): Metadata => {
-    const renderedTitle = GET_META_TITLE(title || DEFAULT_META_TITLE);
+    const renderedTitle = fullTitle ? fullTitle : title ? GET_META_TITLE(title) : DEFAULT_META_TITLE;
     const renderedImage = image || DEFAULT_META_IMAGE_PATH;
     return {
         applicationName: "Interweave",
